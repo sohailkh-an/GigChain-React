@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import axios from "axios";
+import axios from "redaxios";
 import styles from "./styles/page.module.scss";
 
 const CreateGigPage = () => {

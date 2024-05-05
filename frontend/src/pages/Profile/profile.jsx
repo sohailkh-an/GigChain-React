@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import axios from "axios";
+import axios from "redaxios";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 import ServiceCard from "../../components/serviceCard/serviceCard";

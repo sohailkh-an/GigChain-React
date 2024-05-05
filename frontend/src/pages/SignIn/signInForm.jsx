@@ -3,7 +3,7 @@ import { Web3 } from "web3";
 import styles from "./styles/page.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import axios from "axios";
+import axios from "redaxios";
 
 export default function SignInPage() {
   const { login } = useAuth();
