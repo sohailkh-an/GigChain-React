@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
   // origin: 'http://localhost:5173', 
-  origin: 'https://gigchain-frontend.vercel.app/', 
+  origin: 'https://gigchain-frontend.vercel.app', 
   optionsSuccessStatus: 200
   };
   
