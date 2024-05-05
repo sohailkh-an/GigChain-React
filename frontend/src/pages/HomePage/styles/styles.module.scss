@@ -1,0 +1,62 @@
+@use "../../../styles/base" as base;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+
+.hero_container {
+  padding: 100px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  background-color: base.$white;
+  border-bottom: 1px solid base.$background_light;
+
+  .headings_container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h5 {
+      font: base.$h5;
+      color: base.$black;
+    }
+
+    h1 {
+      font: base.$h1xx;
+      color: base.$black;
+    }
+  }
+
+  .hero_searchBar {
+    width: 580px;
+    height: 60px;
+    background-color: base.$background_light;
+    border-radius: 4px 0 0 4px;
+    border: none;
+    padding: 20px;
+    font: base.$p_large;
+    outline:none;
+  }
+  .hero_searchButton {
+    cursor:pointer;
+    width: 100px;
+    height: 60px;
+    background-color: base.$primary;
+    border-radius: 0 4px 4px 0;
+    border: none;
+    color: base.$white;
+    font: base.$p_large;
+  }
+}
+
+.featuredServicesContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    background-color: base.$white;
+    padding:40px 0;
+}

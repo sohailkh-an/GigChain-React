@@ -1,0 +1,139 @@
+.signUp_wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+}
+.signUp_wrapper .parent_cont_left {
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #EEF0FF;
+}
+.signUp_wrapper .parent_cont_left .main_content_container {
+  width: 450px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .h3 {
+  font: normal 700 40.1px/1.5 "Inter", sans-serif;
+  color: #000000;
+  margin: 0;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .h4 {
+  margin: 0;
+  font: normal 700 33.42px/1.5 "Inter", sans-serif;
+  color: #000000;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  box-sizing: border-box;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container {
+  background-color: #f4f4f9; /* Adjust the color to match your form */
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  /* Style for when a radio button is checked */
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container label {
+  font-size: 16px;
+  margin: 0;
+  color: #333333; /* Adjust the color to match your form's text */
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container label {
+  display: block;
+  color: #333333; /* Adjust the color to match your form's text */
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container .freelancerInput[type=radio], .signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container .clientInput[type=radio] {
+  margin-right: 10px;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .user_type_container input[type=radio]:checked {
+  /* Add styles for checked state if necessary */
+}
+.signUp_wrapper .parent_cont_left .main_content_container .input_container .input {
+  width: 450px;
+  height: 60px;
+  background-color: #D6D8FC;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  font: normal 400 19.2px/1.5 "Inter", sans-serif;
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .button_primary {
+  width: 450px;
+  height: 60px;
+  background-color: #2B0046;
+  border: none;
+  border-radius: 4px;
+  color: #EEF0FF;
+  font: normal 700 27.85px/1.5 "Inter", sans-serif;
+  cursor: pointer;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .or_container {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6c757d;
+  width: 80%;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .or_container .line {
+  flex: 1;
+  height: 1px;
+  background-color: #6c757d;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .or_container .or_text {
+  padding: 0 30px;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .button_secondary {
+  width: 450px;
+  height: 60px;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  color: #000000;
+  font: normal 400 23px/1.5 "Inter", sans-serif;
+  cursor: pointer;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .welcome_text {
+  font: normal 400 13.3px/1.5 "Inter", sans-serif;
+  color: #000000;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .signIn_link_container {
+  align-self: center;
+}
+.signUp_wrapper .parent_cont_left .main_content_container .signIn_link {
+  font: normal 400 19.2px/1.5 "Inter", sans-serif;
+  color: #000000;
+}
+.signUp_wrapper .parent_cont_right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 100vh;
+  background-color: #2B0046;
+}
+.signUp_wrapper .parent_cont_right .h1 {
+  font: normal 700 57.34px/1.5 "Inter", sans-serif;
+  color: #EEF0FF;
+}
+.signUp_wrapper .parent_cont_right .p {
+  font: normal 400 19.2px/1.5 "Inter", sans-serif;
+  color: #EEF0FF;
+}/*# sourceMappingURL=page.module.css.map */

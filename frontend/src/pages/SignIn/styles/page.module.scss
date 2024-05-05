@@ -1,0 +1,179 @@
+@use "../../../styles/_base.scss" as base;
+
+.signIn_wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+
+  .parent_cont_left {
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: base.$background;
+
+    .main_content_container {
+      width: 450px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap:15px;
+
+
+      .h3 {
+        font: base.$h3;
+        color: base.$black;
+      }
+
+      .h4 {
+        font: base.$h5;
+        color: base.$black;
+        margin:0;
+
+      }
+
+      .input_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+
+        .input {
+          box-sizing: border-box;
+          width: 450px;
+          height: 60px;
+          background-color: base.$background_light;
+          border: none;
+          border-radius: 4px;
+          outline: none;
+          font: base.$p_large;
+          padding: 15px 20px;
+          box-sizing: border-box;
+        }
+      }
+
+      .button_primary {
+        width: 450px;
+        height: 60px;
+        background-color: base.$primary;
+        border: none;
+        border-radius: 4px;
+        color: base.$background;
+        font: base.$h5;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      .or_container {
+        align-self: center;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #6c757d;
+        width: 80%;
+
+        .line {
+          flex: 1;
+          height: 1px;
+          background-color: #6c757d;
+        }
+
+        .or_text {
+          padding: 0 30px;
+        }
+      }
+
+      .misc_fields {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .custom_checkbox input[type="checkbox"] {
+          display: none;
+        }
+
+        .custom_checkbox .checkbox_label:before {
+          content: "";
+          display: inline-block;
+          margin-right: 10px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #ddd;
+          background-color: #fff;
+          vertical-align: middle;
+        }
+
+        .custom_checkbox
+          input[type="checkbox"]:checked
+          + .checkbox-label:before {
+          background-color: #bada55;
+        }
+
+        .custom_checkbox .checkbox_label {
+          cursor: pointer;
+          color: base.$black;
+        }
+
+        p {
+          font: base.$p_small;
+          color: base.$primary;
+        }
+        .forgetPassLink{
+          color: base.$black;
+        }
+      }
+
+      .button_secondary {
+        width: 450px;
+        height: 60px;
+        background-color: base.$white;
+        border: 1px solid base.$black;
+        border-radius: 4px;
+        color: base.$black;
+        font: base.$p_xlarge;
+        cursor: pointer;
+      }
+
+      .welcome_text {
+        font: base.$p_small;
+        color: base.$black;
+
+      }
+
+
+      .register_link_container {
+        align-self: center;
+      }
+      .register_link {
+        font: base.$p_large;
+        color: base.$black;
+      }
+    }
+  }
+  .parent_cont_right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 100vh;
+    background-color: base.$primary;
+
+    .h1 {
+      font: base.$h1;
+      color: base.$background;
+    }
+    .p {
+      font: base.$p_large;
+      color: base.$background;
+    }
+  }
+}

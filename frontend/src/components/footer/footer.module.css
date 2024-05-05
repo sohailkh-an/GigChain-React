@@ -1,0 +1,51 @@
+.main_footer {
+  height: 500px;
+  width: 100vw;
+  background-color: #866E96;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main_footer .footer_content_container {
+  width: 1166px;
+  height: 80%;
+  background-color: #EEF0FF;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3fr 1fr;
+}
+.main_footer .footer_content_container .main_footer_primary {
+  padding: 50px 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.main_footer .footer_content_container .main_footer_primary .about_company_container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.main_footer .footer_content_container .main_footer_primary .footer_links_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 100px;
+}
+.main_footer .footer_content_container .main_footer_primary .footer_links_container .footer_links_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.main_footer .footer_content_container .main_footer_secondary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 50px;
+}
+.main_footer .footer_content_container .main_footer_secondary .footer_secondary_links {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}/*# sourceMappingURL=footer.module.css.map */

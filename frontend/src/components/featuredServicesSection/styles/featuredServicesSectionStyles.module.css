@@ -1,0 +1,23 @@
+.slick-prev:before,
+.slick-next:before {
+  color: red;
+}
+
+.featuredServices_main_container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 30px;
+  background-color: #EEF0FF;
+}
+.featuredServices_main_container .service_card_wrapper {
+  margin-right: 16px;
+}
+.featuredServices_main_container .services_container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}/*# sourceMappingURL=featuredServicesSectionStyles.module.css.map */
