@@ -40,7 +40,7 @@ const CreateGigPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/gig/create",
+        "https://gigchain-backend.vercel.app:5000/api/gig/create",
         formDataToSend,
         {
           headers: {

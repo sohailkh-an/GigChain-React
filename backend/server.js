@@ -7,8 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: 'http://localhost:5173', 
-    optionsSuccessStatus: 200
+  // origin: 'http://localhost:5173', 
+  origin: 'https://gigchain-frontend.vercel.app/', 
+  optionsSuccessStatus: 200
   };
   
   app.use(cors(corsOptions));
