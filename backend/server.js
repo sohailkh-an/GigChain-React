@@ -6,31 +6,13 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// const corsOptions = {
-//   // origin: 'http://localhost:5173',
-//   origin: 'https://gigchain-frontend.vercel.app',
-//   optionsSuccessStatus: 200
-//   };
-
-// app.use(cors(corsOptions));
-
 const corsOptions = {
   origin: "https://gigchain-frontend.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    req.headers.origin
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://gigchain-frontend.vercel.app");
@@ -38,13 +20,11 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
-    res.sendStatus(200);
+    res.sendStatus(204);
   } else {
     next();
   }
 });
-
-
 
 app.use(express.json());
 
