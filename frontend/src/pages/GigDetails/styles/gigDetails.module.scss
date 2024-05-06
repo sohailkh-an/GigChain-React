@@ -1,0 +1,90 @@
+@use "../../../styles/base" as base;
+
+.parentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px;
+
+  .gigDetailsParentWrapper {
+    display: flex;
+    width: 70vw;
+    background-color: base.$background_light;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+
+
+    h1{
+        align-self: flex-start;
+        margin-bottom: 10px;
+    }
+    .gigProvider {
+        align-self: flex-start;
+        font: base.$p_large;
+        margin-bottom: 30px;
+      }
+
+    .thumbnailImg {
+      width: 500px;
+      margin-bottom: 50px;
+      // height:300px;
+    }
+
+    .actionsParentWrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      gap: 30px;
+
+      .orderButton {
+        width: 200px;
+        height: 50px;
+        background-color: base.$primary;
+        color: base.$white;
+        border: none;
+        border-radius: 5px;
+        font: base.$p_large;
+        cursor: pointer;
+      }
+      .saveButton {
+        width: 200px;
+        height: 50px;
+        background-color: base.$white;
+        color: base.$primary;
+        border: 1px solid base.$primary;
+        border-radius: 5px;
+        font: base.$p_large;
+        cursor: pointer;
+      }
+    }
+
+    .gigDetailsWrapper {
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      .gigDescription {
+        font: base.$p_xlarge;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+      }
+      .gigPrice {
+        font: base.$h6;
+      }
+      .gigCategory {
+        font: base.$p_large;
+      }
+      
+      .gigRating {
+        font: base.$h6;
+      }
+    }
+  }
+}

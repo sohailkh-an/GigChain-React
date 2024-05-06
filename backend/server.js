@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 // app.use(cors(corsOptions));
 
 const corsOptions = {
-  origin: "https://gigchain-frontend.vercel.app",
+  origin:  'http://localhost:5173',
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
@@ -25,15 +25,25 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://gigchain-frontend.vercel.app"
+    req.headers.origin
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
+
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://gigchain-frontend.vercel.app");
+  console.log('Incoming Request:', req.method, req.path);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  next();
+});
+
+
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", 'http://localhost:5173');
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
@@ -60,3 +70,4 @@ app.use("/api/users", userRoutes);
 
 const gigRoutes = require("./routes/gig");
 app.use("/api/gig", gigRoutes);
+

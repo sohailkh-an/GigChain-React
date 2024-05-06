@@ -4,6 +4,9 @@
   width: 400px;
   height: 320px;
 }
+.service_card .thumbnailImage {
+  border-radius: 5px 5px 0 0;
+}
 .service_card .cardDetails {
   width: 400px;
   height: 120px;
@@ -12,7 +15,17 @@
   grid-template-rows: 1fr 1fr;
   padding: 20px 20px;
   background-color: #D6D8FC;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 5px 5px;
+}
+.service_card .cardDetails h3 {
+  font: normal 700 23.21px/1.5 "Inter", sans-serif;
+  color: #000000;
+  margin: 0;
+}
+.service_card .cardDetails .serviceDescription {
+  font: normal 400 16px/1.5 "system ui", sans-serif;
+  color: #000000;
+  margin: 0;
 }
 .service_card .cardDetails .serviceDescription {
   grid-column: 1/3;

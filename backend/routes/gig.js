@@ -3,7 +3,6 @@ const router = express.Router();
 const Gig = require("../models/Gig");
 const authMiddleware = require("../middleware/auth");
 const multer = require("multer");
-// const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
 const { S3Client } = require('@aws-sdk/client-s3');
 
@@ -19,6 +18,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.AWS_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     // acl: 'public-read',
     key: function (req, file, cb) {
       cb(null, Date.now().toString() + '-' + file.originalname);
@@ -50,12 +50,35 @@ const upload = multer({
 //   }),
 // });
 
+router.get('/user', authMiddleware, async (req, res) => {
+  try {
+    const {gigId} = req.params;
+    console.log(gigId);
+    const userId = req.user._id;
+    const gigs = await Gig.find({ user: userId });
+    res.json({ gigs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+router.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.url);
+  console.log("Request headers:", req.headers);
+  console.log("Request body:", req.body);
+  next();
+});
+
+
 router.post(
   "/create",
   authMiddleware,
   upload.single("thumbnailImage"),
   async (req, res) => {
     try {
+      console.log("Request Body:", req.body);
       const { title, description, price, category } = req.body;
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
@@ -81,11 +104,17 @@ router.post(
 );
 
 
-router.get('/user', authMiddleware, async (req, res) => {
+
+router.get('/:gigId', async (req, res) => {
   try {
-    const userId = req.user._id;
-    const gigs = await Gig.find({ user: userId });
-    res.json({ gigs });
+    const { gigId } = req.params;
+    const gig = await Gig.findById(gigId);
+
+    if (!gig) {
+      return res.status(404).json({ message: 'Gig not found' });
+    }
+
+    res.json({ gig });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

@@ -1,6 +1,9 @@
 import styles from "./styles/serviceCard.module.scss";
+import { Link } from "react-router-dom";
+
 
 function ServiceCard({
+  gigId,
   title,
   price,
   thumbnailUrl,
@@ -11,10 +14,13 @@ function ServiceCard({
   description,
 }) {
   return (
+    
+    <Link to={`/gig/${gigId}`}>
     <div className={styles.service_card}>
       <img className={styles.thumbnailImage} width={400} height={200} src={thumbnailUrl} alt={category} />
       <div className={styles.cardDetails}>
         <h3>{title}</h3>
+        {/* <h3>{gigId}</h3> */}
         <p>
           ⭐ {rating} ({reviews})
         </p>
@@ -23,6 +29,7 @@ function ServiceCard({
         </p>
       </div>
     </div>
+    </Link>
   );
 }
 

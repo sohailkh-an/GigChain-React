@@ -11,9 +11,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://gigchain-backend.vercel.app',
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },

@@ -1,0 +1,11 @@
+.gigsWrapper {
+  width: 100%;
+  background-color: cornsilk;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 50px;
+  gap: 30px;
+  flex-wrap: wrap;
+}/*# sourceMappingURL=page.module.css.map */

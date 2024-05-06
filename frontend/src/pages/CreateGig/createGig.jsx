@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
 import styles from "./styles/page.module.scss";
+import Navigation from "../../components/navigation/navigation";
+import Footer from "../../components/footer/footer";
 
 const CreateGigPage = () => {
   const { currentUser } = useAuth();
@@ -40,12 +42,12 @@ const CreateGigPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://gigchain-backend.vercel.app/api/gig/create",
+        "http://localhost:5000/api/gig/create",
         formDataToSend,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -58,65 +60,78 @@ const CreateGigPage = () => {
   };
 
   return (
-    <div className={styles.parentWrapper}>
-      <h2>Create Gig</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div>
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        <div>
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="category">Category:</label>
-          <input
-            type="text"
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="thumbnailImage">Thumbnail Image:</label>
-          <input
-            type="file"
-            id="thumbnailImage"
-            name="thumbnailImage"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Create Gig</button>
-      </form>
-    </div>
+    <>
+    <Navigation />
+      <div className={styles.parentWrapper}>
+        <h2>Create Gig</h2>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div>
+            <label htmlFor="title">Title:</label>
+            <br />
+            
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="description">Description:</label>
+            <br />
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </div>
+          <div>
+            <label htmlFor="price">Price:</label>
+            <br />
+            
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="category">Category:</label>
+            <br />
+            
+            <input
+              type="text"
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="thumbnailImage">Thumbnail Image:</label>
+            <br />
+            
+            <input
+              type="file"
+              id="thumbnailImage"
+              name="thumbnailImage"
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">Create Gig</button>
+        </form>
+      </div>
+      <Footer />
+    </>
   );
 };
 

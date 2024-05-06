@@ -25,6 +25,17 @@
         background-color: base.$background_light;
         border-radius: 0 0 5px 5px;
 
+        h3{
+            font: base.$h6;
+            color: base.$black;
+            margin: 0;
+        }
+        .serviceDescription{
+            font: base.$p_reg;
+            color: base.$black;
+            margin: 0;
+        }
+
         .serviceDescription{
             grid-column: 1 / 3;
             grid-row: 2 / 2;
