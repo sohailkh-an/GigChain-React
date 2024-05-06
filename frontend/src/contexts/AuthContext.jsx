@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
 
-          const response = await fetch('https://www.gigchain-backend.vercel.app/api/users/user', {
+          const response = await fetch('https://gigchain-backend.vercel.app/api/users/user', {
             headers: {
               Authorization: `Bearer ${token}`
             }
