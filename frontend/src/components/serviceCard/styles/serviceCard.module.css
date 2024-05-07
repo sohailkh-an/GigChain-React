@@ -9,16 +9,17 @@
 }
 .service_card .cardDetails {
   width: 400px;
-  height: 120px;
+  height: 130px;
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 3fr 1fr;
   grid-template-rows: 1fr 1fr;
   padding: 20px 20px;
   background-color: #D6D8FC;
   border-radius: 0 0 5px 5px;
 }
 .service_card .cardDetails h3 {
-  font: normal 700 23.21px/1.5 "Inter", sans-serif;
+  font: normal 400 16px/1.5 "system ui", sans-serif;
+  font-weight: bold;
   color: #000000;
   margin: 0;
 }
@@ -26,6 +27,12 @@
   font: normal 400 16px/1.5 "system ui", sans-serif;
   color: #000000;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines you want to display */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-wrap; /* Preserves spaces and line breaks */
 }
 .service_card .cardDetails .serviceDescription {
   grid-column: 1/3;

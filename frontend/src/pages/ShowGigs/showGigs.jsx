@@ -40,27 +40,44 @@ const ViewGigs = () => {
     <div>
       <Navigation />
 
-      <h1>Your Gigs</h1>
       <div className={styles.gigsParentWrapper}>
         {userGigs.length === 0 ? (
-          <p>No gigs found.</p>
+          <>
+            <p>
+              Now gigs found.
+              <br />
+              Begin by creating your first gig.
+            </p>
+            <Link to="/create_gig">
+              <button>Create Gig</button>
+            </Link>
+          </>
         ) : (
-          <div className={styles.gigsWrapper}>
-            {userGigs.map((gig) => (
-              <ServiceCard
-                key={gig._id}
-                gigId={gig._id}
-                title={gig.title}
-                price={gig.price}
-                thumbnailUrl={gig.thumbnailUrl}
-                category={gig.category}
-                serviceProvider={gig.serviceProvider}
-                rating={gig.rating}
-                reviews={gig.numReviews}
-                description={gig.description}
-              />
-            ))}
-          </div>
+          <>
+          <div className={styles.gigsActionsWrapper}>
+            <h2 >Your Gigs</h2>
+            <Link to="/create_gig">
+              <button>Create Gig</button>
+            </Link>
+            </div>
+
+            <div className={styles.gigsWrapper}>
+              {userGigs.map((gig) => (
+                <ServiceCard
+                  key={gig._id}
+                  gigId={gig._id}
+                  title={gig.title}
+                  price={gig.price}
+                  thumbnailUrl={gig.thumbnailUrl}
+                  category={gig.category}
+                  serviceProvider={gig.serviceProvider}
+                  rating={gig.rating}
+                  reviews={gig.numReviews}
+                  description={gig.description}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
       <Footer />

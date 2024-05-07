@@ -6,7 +6,7 @@ import styles from "./styles/page.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 
-const CreateGigPage = () => {
+const CreateGigPage = () => {         
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
@@ -46,14 +46,14 @@ const CreateGigPage = () => {
         formDataToSend,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            // "Content-Type": "multipart/form-data", BIG MISTAKE RIGHT HERE!!!!
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log("Gig created successfully:", response.data);
-      navigate("/profile");
+      navigate("/gigs");
     } catch (error) {
       console.error("Error creating gig:", error);
     }

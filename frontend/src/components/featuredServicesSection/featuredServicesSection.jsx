@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import ServiceCard from "../serviceCard/serviceCard";
+import ServiceCard from "../featuredGigCard/featuredGigCard";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./styles/featuredServicesSectionStyles.module.scss";
-
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
 
 // function SampleNextArrow(props: { className: any; style: any; onClick: any; }) {
 //   const { className, style, onClick } = props;
@@ -28,7 +29,7 @@ import styles from "./styles/featuredServicesSectionStyles.module.scss";
 //   );
 // }
 
-function FeaturedServicesSection() {
+function FeaturedServicesSection(props) {
   const sliderSettings = {
     dots: false,
     infinite: false,
@@ -39,32 +40,39 @@ function FeaturedServicesSection() {
     // prevArrow: <SamplePrevArrow />,
   };
 
+  const { currentUser } = useAuth();
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    async function fetchFeaturedServices() {
-      const response = await fetch('http://localhost:3001/api/featured-services');
-      console.log(response);
-      if (response.ok) {
-        const data = await response.json();
-        setServices(data);
+    async function fetchGigsByCategory(category) {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/gig/category/${category}`
+        );
+        setServices(response.data);
+      } catch (error) {
+        console.error("Error fetching featured services:", error);
       }
     }
 
-    fetchFeaturedServices();
-  }, []);
+    fetchGigsByCategory(props.serviceType);
+  }, [props.serviceType]);
+
+  services.map((service) => {
+    console.log("Coming from the work area: ", service.gigId);
+  });
 
   return (
-    <section className={styles.featuredServices_main_container}>
-      <h2>Featured </h2>
-      <Slider {...sliderSettings}>
+    <>
+      <h2>Featured in {props.serviceType} </h2>
+      <section className={styles.featuredServices_main_container}>
+        {/* <Slider {...sliderSettings}> */}
         {services.map((service, index) => (
-          <div key={index}>
-            <ServiceCard service={service} />
-          </div>
+          <ServiceCard key={index} service={service} />
         ))}
-      </Slider>
-    </section>
+        {/* </Slider> */}
+      </section>
+    </>
   );
 }
 

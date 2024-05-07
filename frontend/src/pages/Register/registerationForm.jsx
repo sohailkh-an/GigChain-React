@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export default function RegisterationForm() {
 
   const [userData, setUserData] = useState({
-    userName: '',
+    name: '',
     email: '',
     password: '',
   });
@@ -58,8 +58,8 @@ export default function RegisterationForm() {
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Username"
-                name="userName"
+                placeholder="Name"
+                name="name"
                 onChange={handleChange}
               />
 

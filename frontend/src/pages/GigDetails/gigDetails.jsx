@@ -32,13 +32,14 @@ const GigDetails = () => {
     return <div>Loading...</div>;
   }
 
+
   return (
     <>
       <Navigation />
       <div className={styles.parentWrapper}>
         <div className={styles.gigDetailsParentWrapper}>
           <h1>{gigDetails.title}</h1>
-          <p className={styles.gigProvider}>
+          <p className={styles.gigProvider}> {/* NEEDS TO BE FIXED */}
             Service Provider: {currentUser.name}
           </p>
           <img

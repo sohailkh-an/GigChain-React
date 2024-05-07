@@ -4,7 +4,7 @@ const Gig = require("../models/Gig");
 const authMiddleware = require("../middleware/auth");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const { S3Client } = require('@aws-sdk/client-s3');
+const { S3Client } = require("@aws-sdk/client-s3");
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -21,11 +21,10 @@ const upload = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE,
     // acl: 'public-read',
     key: function (req, file, cb) {
-      cb(null, Date.now().toString() + '-' + file.originalname);
+      cb(null, Date.now().toString() + "-" + file.originalname);
     },
   }),
 });
-
 
 // try {
 //   aws.config.update({
@@ -50,19 +49,36 @@ const upload = multer({
 //   }),
 // });
 
-router.get('/user', authMiddleware, async (req, res) => {
+
+router.get("/category/:category", async (req, res) => {
+  console.log("Fetching featured gigs");
+  const { category } = req.params;
   try {
-    const {gigId} = req.params;
+    const gigs = await Gig.find({ category});
+    res.json(gigs);
+    if (!gigs) {
+      return res.status(404).json({ message: "No gigs found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+router.get("/user", authMiddleware, async (req, res) => {
+  try {
+    const { gigId } = req.params;
     console.log(gigId);
     const userId = req.user._id;
     const gigs = await Gig.find({ user: userId });
     res.json({ gigs });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
-
 
 router.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);
@@ -70,7 +86,6 @@ router.use((req, res, next) => {
   console.log("Request body:", req.body);
   next();
 });
-
 
 router.post(
   "/create",
@@ -103,21 +118,19 @@ router.post(
   }
 );
 
-
-
-router.get('/:gigId', async (req, res) => {
+router.get("/:gigId", async (req, res) => {
   try {
     const { gigId } = req.params;
     const gig = await Gig.findById(gigId);
 
     if (!gig) {
-      return res.status(404).json({ message: 'Gig not found' });
+      return res.status(404).json({ message: "Gig not found" });
     }
 
     res.json({ gig });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

@@ -31,9 +31,9 @@ function HomePage() {
         </div>
 
         <div className={styles.featuredServicesContainer}>
-          {/* <FeaturedServicesSection serviceType={"Graphic Design"} /> */}
-          {/* <FeaturedServicesSection serviceType={"Web Design"} /> */}
-          {/* <FeaturedServicesSection serviceType={"App Development"} /> */}
+          <FeaturedServicesSection serviceType={"Development"} />
+          <FeaturedServicesSection serviceType={"Web Development"} />
+          <FeaturedServicesSection serviceType={"Graphic Design"} />
         </div>
       </div>
       <Footer />
