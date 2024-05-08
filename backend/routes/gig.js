@@ -51,7 +51,7 @@ const upload = multer({
 
 
 router.get("/category/:category", async (req, res) => {
-  console.log("Fetching featured gigs");
+  // console.log("Fetching featured gigs");
   const { category } = req.params;
   try {
     const gigs = await Gig.find({ category});
@@ -70,7 +70,7 @@ router.get("/category/:category", async (req, res) => {
 router.get("/user", authMiddleware, async (req, res) => {
   try {
     const { gigId } = req.params;
-    console.log(gigId);
+    // console.log(gigId);
     const userId = req.user._id;
     const gigs = await Gig.find({ user: userId });
     res.json({ gigs });

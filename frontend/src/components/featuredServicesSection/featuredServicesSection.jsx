@@ -58,9 +58,9 @@ function FeaturedServicesSection(props) {
     fetchGigsByCategory(props.serviceType);
   }, [props.serviceType]);
 
-  services.map((service) => {
-    console.log("Coming from the work area: ", service.gigId);
-  });
+  // services.map((service) => {
+  //   console.log("Coming from the work area: ", service.gigId);
+  // });
 
   return (
     <>

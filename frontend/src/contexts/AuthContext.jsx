@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
           
           
           const data = await response.json();
-          console.log(data.user);
+          // console.log(data.user);
 
           setCurrentUser(data.user);
         } catch (error) {

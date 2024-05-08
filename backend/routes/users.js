@@ -107,7 +107,7 @@ router.get("/user", async (req, res) => {
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
-    console.log("User object from api/user", user);
+    // console.log("User object from api/user", user);
 
     res.json({ user });
   } catch (err) {
@@ -119,10 +119,10 @@ router.get("/user", async (req, res) => {
 });
 
 router.get("/:userId/profile-picture", async (req, res) => {
-  console.log(
-    "This is the userid in profile picture api endpoint ",
-    req.params.userId
-  );
+  // console.log(
+  //   "This is the userid in profile picture api endpoint ",
+  //   req.params.userId
+  // );
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {

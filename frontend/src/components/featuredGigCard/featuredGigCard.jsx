@@ -3,7 +3,7 @@ import styles from "./styles/serviceCard.module.scss";
 import { Link } from "react-router-dom";
 
 function ServiceCard(props) {
-  console.log("description: ", props.service.description);
+  // console.log("description: ", props.service.description);
   const Id = props.service._id;
   return (
     <Link to={`/gig/${Id}`}>
