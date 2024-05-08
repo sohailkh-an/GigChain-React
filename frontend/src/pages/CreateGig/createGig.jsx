@@ -9,6 +9,7 @@ import Footer from "../../components/footer/footer";
 const CreateGigPage = () => {         
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  // console.log(currentUser.name);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -37,12 +38,12 @@ const CreateGigPage = () => {
       formDataToSend.append("category", formData.category);
       formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       formDataToSend.append("user", currentUser._id);
-      formDataToSend.append("serviceProvider", currentUser._id);
+      formDataToSend.append("serviceProvider", currentUser.name);
 
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://gigchain-backend.vercel.app/api/gig/create",
+        `${import.meta.env.VITE_API_URL}/api/gig/create`,
         formDataToSend,
         {
           headers: {

@@ -46,6 +46,21 @@
   font: normal 400 19.2px/1.5 "Inter", sans-serif;
 }
 
+.searchResultsParentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: #FFFFFF;
+  padding: 40px 0;
+}
+.searchResultsParentContainer .searchResultsMainContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 0 50px;
+}
+
 .featuredServicesContainer {
   display: flex;
   flex-direction: column;

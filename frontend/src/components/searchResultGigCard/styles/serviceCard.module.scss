@@ -35,11 +35,11 @@
       color: base.$black;
       margin: 0;
       display: -webkit-box;
-      -webkit-line-clamp: 2; 
+      -webkit-line-clamp: 2; /* Number of lines you want to display */
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: pre-wrap; 
+      white-space: pre-wrap; /* Preserves spaces and line breaks */
     }
 
     .serviceDescription {

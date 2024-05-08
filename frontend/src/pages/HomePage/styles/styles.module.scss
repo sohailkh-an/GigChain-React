@@ -1,11 +1,9 @@
 @use "../../../styles/base" as base;
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 
 .hero_container {
   padding: 100px 50px;
@@ -39,10 +37,10 @@
     border: none;
     padding: 20px;
     font: base.$p_large;
-    outline:none;
+    outline: none;
   }
   .hero_searchButton {
-    cursor:pointer;
+    cursor: pointer;
     width: 100px;
     height: 60px;
     background-color: base.$primary;
@@ -53,10 +51,26 @@
   }
 }
 
-.featuredServicesContainer{
+.searchResultsParentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: base.$white;
+  padding: 40px 0;
+
+  .searchResultsMainContainer {
     display: flex;
-    flex-direction: column;
-    gap: 40px;
-    background-color: base.$white;
-    padding:40px 0;
+    flex-direction: row;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 0 50px;
+  }
+}
+
+.featuredServicesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: base.$white;
+  padding: 40px 0;
 }

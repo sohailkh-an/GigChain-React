@@ -19,7 +19,7 @@ export default function RegisterationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://gigchain-backend.vercel.app/api/users/register', userData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/register`, userData);
       console.log(res.data);
       alert('Registration successful');
     } catch (err) {

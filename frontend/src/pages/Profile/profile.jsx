@@ -16,7 +16,7 @@ const Profile = () => {
     const fetchProfilePicture = async () => {
       try {
         const response = await axios.get(
-          `https://gigchain-backend.vercel.app/api/users/${currentUser._id}/profile-picture`
+          `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/profile-picture`
         );
         setProfilePicture(response.data.profilePictureUrl);
       } catch (error) {
@@ -26,7 +26,7 @@ const Profile = () => {
     const fetchCoverPicture = async () => {
       try {
         const response = await axios.get(
-          `https://gigchain-backend.vercel.app/api/users/${currentUser._id}/cover-picture`
+          `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/cover-picture`
         );
         setCoverPicture(response.data.coverPictureUrl);
       } catch (error) {

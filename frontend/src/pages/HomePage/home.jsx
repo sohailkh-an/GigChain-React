@@ -1,28 +1,53 @@
 "use client";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import NavBar from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 import styles from "./styles/styles.module.scss";
 import FeaturedServicesSection from "../../components/featuredServicesSection/featuredServicesSection";
-import ServiceCard from "../../components/featuredGigCard/featuredGigCard";
+import ServiceCard from "../../components/searchResultGigCard/searchResultGigCard";
 
 function HomePage() {
-
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  // const handleSearch = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_URL}/api/gig/search?query=${searchQuery}`
+  //     );
+  //     console.log(response.data[0]);
+  //     setSearchResults(response.data);
+  //   } catch (error) {
+  //     console.error("Error searching gigs:", error);
+  //   }
+  // };
+
+
+  const handleSearch = async (query) => {
+    if (query.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
     try {
       const response = await axios.get(
-        `https://gigchain-backend.vercel.app/api/gig/search?query=${searchQuery}`
+        `${import.meta.env.VITE_API_URL}/api/gig/search?query=${query}`
       );
-      setSearchResults(response.data.gigs);
+      console.log(response.data[0]);
+      setSearchResults(response.data);
     } catch (error) {
       console.error("Error searching gigs:", error);
     }
   };
+
+  const handleInputChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    handleSearch(query);
+  };
+
 
   return (
     <React.Fragment>
@@ -43,19 +68,35 @@ function HomePage() {
                 className={styles.hero_searchBar}
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-
+                onChange={handleInputChange}
               />
-              <button className={styles.hero_searchButton}>Search</button>
+              {/* <button className={styles.hero_searchButton}>Search</button> */}
             </form>
           </div>
         </div>
 
-        <div className={styles.searchResultsContainer}>
+        {searchQuery ? (
+          <div className={styles.searchResultsParentContainer}>
+            <h2>Search Results for {searchQuery}</h2>
+            <div className={styles.searchResultsMainContainer}>
+              {searchResults.map((gig) => (
+                <ServiceCard key={gig._id} gig={gig} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className={styles.featuredServicesContainer}>
+            <FeaturedServicesSection serviceType={"Development"} />
+            <FeaturedServicesSection serviceType={"Web Development"} />
+            <FeaturedServicesSection serviceType={"Graphic Design"} />
+          </div>
+        )}
+
+        {/* <div className={styles.searchResultsContainer}>
           <h2>Search Results for {searchQuery}</h2>
           <div className={styles.searchResults}>
-            {searchResults.map((gig) => (
-              <ServiceCard key={gig._id} gig={gig} />
+            {searchResults.map((gig, index) => (
+              <ServiceCard key={index} gig={gig} />
               
             ))}
           </div>
@@ -66,6 +107,7 @@ function HomePage() {
           <FeaturedServicesSection serviceType={"Web Development"} />
           <FeaturedServicesSection serviceType={"Graphic Design"} />
         </div>
+      </div> */}
       </div>
       <Footer />
     </React.Fragment>

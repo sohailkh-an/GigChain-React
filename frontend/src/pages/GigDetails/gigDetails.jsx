@@ -17,7 +17,7 @@ const GigDetails = () => {
     const fetchGigDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gigchain-backend.vercel.app/api/gig/${gigId}`
+          `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`
         );
         setGigDetails(response.data.gig);
       } catch (error) {
@@ -40,7 +40,7 @@ const GigDetails = () => {
         <div className={styles.gigDetailsParentWrapper}>
           <h1>{gigDetails.title}</h1>
           <p className={styles.gigProvider}> {/* NEEDS TO BE FIXED */}
-            Service Provider: {currentUser.name}
+            Service Provider: {gigDetails.name}
           </p>
           <img
             src={gigDetails.thumbnailUrl}

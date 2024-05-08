@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import styles from "./styles/featuredServicesSectionStyles.module.scss";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import SkeletonCard from "../skeletonCard/skeletonCard";
 
 // function SampleNextArrow(props: { className: any; style: any; onClick: any; }) {
 //   const { className, style, onClick } = props;
@@ -29,7 +30,7 @@ import { useAuth } from "../../contexts/AuthContext";
 //   );
 // }
 
-function FeaturedServicesSection(props) {
+function FeaturedServicesSection({ serviceType }) {
   const sliderSettings = {
     dots: false,
     infinite: false,
@@ -42,21 +43,25 @@ function FeaturedServicesSection(props) {
 
   const { currentUser } = useAuth();
   const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchGigsByCategory(category) {
+      setLoading(true);
       try {
         const response = await axios.get(
-          `https://gigchain-backend.vercel.app/api/gig/category/${category}`
+          `${import.meta.env.VITE_API_URL}/api/gig/category/${category}`
         );
         setServices(response.data);
       } catch (error) {
         console.error("Error fetching featured services:", error);
       }
+      setTimeout(() => setLoading(false), 2000);
+      // setLoading(false);
     }
 
-    fetchGigsByCategory(props.serviceType);
-  }, [props.serviceType]);
+    fetchGigsByCategory(serviceType);
+  }, [serviceType]);
 
   // services.map((service) => {
   //   console.log("Coming from the work area: ", service.gigId);
@@ -64,15 +69,28 @@ function FeaturedServicesSection(props) {
 
   return (
     <>
-      <h2>Featured in {props.serviceType} </h2>
-      <section className={styles.featuredServices_main_container}>
-        {/* <Slider {...sliderSettings}> */}
-        {services.map((service, index) => (
-          <ServiceCard key={index} service={service} />
-        ))}
-        {/* </Slider> */}
-      </section>
-    </>
+    <h2>Featured in {serviceType}</h2>
+    <section className={styles.featuredServices_main_container}>
+        {loading ? (
+            Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
+        ) : (
+            services.map((service, index) => (
+                <ServiceCard key={index} service={service} />
+            ))
+        )}
+    </section>
+</>
+
+    // <>
+    //   <h2>Featured in {serviceType} </h2>
+    //   <section className={styles.featuredServices_main_container}>
+    //     {/* <Slider {...sliderSettings}> */}
+    //     {services.map((service, index) => (
+    //       <ServiceCard key={index} service={service} />
+    //     ))}
+    //     {/* </Slider> */}
+    //   </section>
+    // </>
   );
 }
 
