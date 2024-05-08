@@ -6,12 +6,22 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: 'https://gigchain-frontend.vercel.app',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
 
-app.use(cors(corsOptions));
+app.use(cors(
+  {
+    origin: ["https://gigchain-frontend.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    
+  }
+))
+
+
+// const corsOptions = {
+//   origin: 'https://gigchain-frontend.vercel.app',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+
+// app.use(cors(corsOptions));
 
 
 // app.use(cors());
@@ -67,6 +77,10 @@ mongoose
   .catch((err) => console.log(err));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.get("/", (req, res) => {
+  res.send("Server is up and running!");
+});
 
 const userRoutes = require("./routes/users");
 app.use("/api/users", userRoutes);
