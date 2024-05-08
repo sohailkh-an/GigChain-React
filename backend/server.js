@@ -6,47 +6,51 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin:  '*',
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
 
-app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    // "https://gigchain-frontend.vercel.app"
-    req.headers.origin
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
-  next();
-});
+app.use(cors());
 
 
-app.use((req, res, next) => {
-  console.log('Incoming Request:', req.method, req.path);
-  console.log('Headers:', req.headers);
-  console.log('Body:', req.body);
-  next();
-});
+// const corsOptions = {
+//   origin:  '*',
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// };
+
+// app.use(cors(corsOptions));
+
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     "Access-Control-Allow-Origin",
+//     // "https://gigchain-frontend.vercel.app"
+//     req.headers.origin
+//   );
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
+//   next();
+// });
+
+
+// app.use((req, res, next) => {
+//   console.log('Incoming Request:', req.method, req.path);
+//   console.log('Headers:', req.headers);
+//   console.log('Body:', req.body);
+//   next();
+// });
 
 
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", '*');
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", '*');
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
 
-  if (req.method === "OPTIONS") {
-    res.sendStatus(204);
-  } else {
-    next();
-  }
-});
+//   if (req.method === "OPTIONS") {
+//     res.sendStatus(204);
+//   } else {
+//     next();
+//   }
+// });
 
 app.use(express.json());
 
