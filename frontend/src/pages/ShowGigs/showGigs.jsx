@@ -18,7 +18,7 @@ const ViewGigs = () => {
     const fetchUserGigs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/gig/user", {
+        const response = await axios.get("http://gigchain-backend.vercel.app/api/gig/user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

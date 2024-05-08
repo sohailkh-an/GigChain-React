@@ -17,7 +17,7 @@ const GigDetails = () => {
     const fetchGigDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/gig/${gigId}`
+          `http://gigchain-backend.vercel.app/api/gig/${gigId}`
         );
         setGigDetails(response.data.gig);
       } catch (error) {
