@@ -50,6 +50,17 @@ const upload = multer({
 // });
 
 
+router.get("/search", async(req, res) => {
+  const { query } = req.query;
+  try {
+    const gigs = await Gig.find({ title: { $regex: query, $options: "i" } });
+    res.json(gigs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
 router.get("/category/:category", async (req, res) => {
   // console.log("Fetching featured gigs");
   const { category } = req.params;
