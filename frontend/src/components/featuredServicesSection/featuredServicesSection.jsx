@@ -47,7 +47,7 @@ function FeaturedServicesSection(props) {
     async function fetchGigsByCategory(category) {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/gig/category/${category}`
+          `https://gigchain-backend.vercel.app/api/gig/category/${category}`
         );
         setServices(response.data);
       } catch (error) {
