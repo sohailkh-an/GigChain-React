@@ -64,7 +64,7 @@
 .featuredServicesContainer {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   background-color: #FFFFFF;
   padding: 40px 0;
 }/*# sourceMappingURL=styles.module.css.map */

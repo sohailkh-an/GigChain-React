@@ -9,7 +9,6 @@ import { useAuth } from "../../contexts/AuthContext";
 const GigDetails = () => {
   const { currentUser } = useAuth();
   const { gigId } = useParams();
-  console.log(gigId);
 
   const [gigDetails, setGigDetails] = useState(null);
 
@@ -40,7 +39,7 @@ const GigDetails = () => {
         <div className={styles.gigDetailsParentWrapper}>
           <h1>{gigDetails.title}</h1>
           <p className={styles.gigProvider}> {/* NEEDS TO BE FIXED */}
-            Service Provider: {gigDetails.name}
+            Service Provider: {gigDetails.serviceProvider}
           </p>
           <img
             src={gigDetails.thumbnailUrl}

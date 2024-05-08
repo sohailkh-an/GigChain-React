@@ -40,6 +40,7 @@ const CreateGigPage = () => {
       formDataToSend.append("user", currentUser._id);
       formDataToSend.append("serviceProvider", currentUser.name);
 
+
       const token = localStorage.getItem("token");
 
       const response = await axios.post(

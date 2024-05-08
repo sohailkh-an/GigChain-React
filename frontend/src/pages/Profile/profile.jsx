@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
 import Navigation from "../../components/navigation/navigation";
@@ -11,8 +10,9 @@ const Profile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [coverPicture, setCoverPicture] = useState(null);
 
+
+
   useEffect(() => {
-    // Fetch the user's profile picture URL from the server
     const fetchProfilePicture = async () => {
       try {
         const response = await axios.get(
@@ -20,6 +20,7 @@ const Profile = () => {
         );
         setProfilePicture(response.data.profilePictureUrl);
       } catch (error) {
+        console.log("Error occured in fetching profile picture: ", error.message);
         console.error("Error fetching profile picture:", error);
       }
     };
@@ -45,12 +46,11 @@ const Profile = () => {
 
     try {
       await axios.post(
-        `/api/users/${currentUser._id}/profile-picture`,
+        `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/profile-picture`,
         formData
       );
-      // Refresh the profile picture URL after successful upload
       const response = await axios.get(
-        `/api/users/${currentUser._id}/profile-picture`
+        `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/profile-picture`
       );
       setProfilePicture(response.data.profilePictureUrl);
     } catch (error) {
@@ -64,10 +64,9 @@ const Profile = () => {
     formData.append("coverPicture", file);
 
     try {
-      await axios.post(`/api/users/${currentUser._id}/cover-picture`, formData);
-      // Refresh the profile picture URL after successful upload
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/cover-picture`, formData);
       const response = await axios.get(
-        `/api/users/${currentUser._id}/cover-picture`
+        `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/cover-picture`
       );
       setCoverPicture(response.data.coverPictureUrl);
     } catch (error) {
@@ -124,7 +123,7 @@ const Profile = () => {
             />
           </div>
 
-          <h2>{currentUser.name}!</h2>
+          <h2>{currentUser.name}</h2>
           <p>Email: {currentUser.email}</p>
           <p>User ID: {currentUser._id}</p>
           

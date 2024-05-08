@@ -56,7 +56,7 @@ function FeaturedServicesSection({ serviceType }) {
       } catch (error) {
         console.error("Error fetching featured services:", error);
       }
-      setTimeout(() => setLoading(false), 2000);
+      setTimeout(() => setLoading(false), 1500);
       // setLoading(false);
     }
 
@@ -68,18 +68,18 @@ function FeaturedServicesSection({ serviceType }) {
   // });
 
   return (
-    <>
-    <h2>Featured in {serviceType}</h2>
-    <section className={styles.featuredServices_main_container}>
-        {loading ? (
-            Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
-        ) : (
-            services.map((service, index) => (
-                <ServiceCard key={index} service={service} />
+    <div>
+      <h2 style={{ marginLeft: 50, marginTop:50, marginBottom:30  }}>Featured in {serviceType}</h2>
+      <section className={styles.featuredServices_main_container}>
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonCard key={index} />
             ))
-        )}
-    </section>
-</>
+          : services.map((service, index) => (
+              <ServiceCard key={index} service={service} />
+            ))}
+      </section>
+    </div>
 
     // <>
     //   <h2>Featured in {serviceType} </h2>

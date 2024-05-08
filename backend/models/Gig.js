@@ -36,8 +36,7 @@ const gigSchema = new mongoose.Schema({
     default: 0
   },
   serviceProvider:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true
   }
 

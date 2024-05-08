@@ -10,7 +10,6 @@ import { useParams } from "react-router-dom";
 
 const ViewGigs = () => {
   const { gigId } = useParams();
-  console.log(gigId);
   const { currentUser } = useAuth();
   const [userGigs, setUserGigs] = useState([]);
 

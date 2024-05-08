@@ -65,7 +65,8 @@ router.get("/category/:category", async (req, res) => {
   // console.log("Fetching featured gigs");
   const { category } = req.params;
   try {
-    const gigs = await Gig.find({ category});
+    // const gigs = await Gig.find({ category});
+    const gigs = await Gig.find({ category }).sort({ _id: -1 }).limit(3);
     res.json(gigs);
     if (!gigs) {
       return res.status(404).json({ message: "No gigs found" });
@@ -105,7 +106,7 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const { title, description, price, category } = req.body;
+      const { title, description, price, category, serviceProvider } = req.body;
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
 
@@ -116,7 +117,7 @@ router.post(
         category,
         thumbnailUrl,
         user: userId,
-        serviceProvider: userId,
+        serviceProvider
       });
 
       await gig.save();
