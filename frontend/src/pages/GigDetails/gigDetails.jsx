@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./styles/gigDetails.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 import { useAuth } from "../../contexts/AuthContext";
 
+
 const GigDetails = () => {
   const { currentUser } = useAuth();
   const { gigId } = useParams();
+  console.log(gigId);
 
   const [gigDetails, setGigDetails] = useState(null);
 
@@ -31,16 +33,20 @@ const GigDetails = () => {
     return <div>Loading...</div>;
   }
 
-
   return (
     <>
       <Navigation />
       <div className={styles.parentWrapper}>
         <div className={styles.gigDetailsParentWrapper}>
           <h1>{gigDetails.title}</h1>
-          <p className={styles.gigProvider}> {/* NEEDS TO BE FIXED */}
-            Service Provider: {gigDetails.serviceProvider}
-          </p>
+
+          <Link to={`/user/${gigDetails.user}`}>
+            <p className={styles.gigProvider}>
+              {" "}
+              {/* NEEDS TO BE FIXED */}
+              Service Provider: {gigDetails.serviceProvider}
+            </p>
+          </Link>
           <img
             src={gigDetails.thumbnailUrl}
             width={"500px"}

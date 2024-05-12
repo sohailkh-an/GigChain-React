@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage/home";
 import SignInPage from "./pages/SignIn/signInForm";
-import Profile from "./pages/Profile/profile";
+import CurrentUserProfile from "./pages/Profile/currentUserProfile";
+import UserProfile from "./pages/UserProfile/userProfile";
+import Inbox from "./pages/Inbox/inbox";
 import CreateGig from "./pages/CreateGig/createGig";
 import ViewGig from "./pages/ShowGigs/showGigs";
 import GigDetails from "./pages/GigDetails/gigDetails";
@@ -9,7 +11,6 @@ import RegisterationPage from "./pages/Register/registerationForm";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import PublicRoute from "./auth/PublicRoute";
-
 
 function App() {
   return (
@@ -19,10 +20,12 @@ function App() {
           <Route path="/" element={<ProtectedRoute element={HomePage} />} />
           <Route path="/signIn" element={<PublicRoute element= {SignInPage} />} />
           <Route path="/register" element={<PublicRoute element={RegisterationPage} />} />
-          <Route path="/profile" element={<ProtectedRoute element={Profile}/>}/>
+          <Route path="/profile" element={<ProtectedRoute element={CurrentUserProfile}/>}/>
+          <Route path="/inbox" element={<ProtectedRoute element={Inbox}/>}/>
           <Route path="/create_gig" element={<ProtectedRoute element={CreateGig}/>}/>
           <Route path="/gigs" element={<ProtectedRoute element={ViewGig}/>}/>
           <Route path="/gig/:gigId" element={<ProtectedRoute element={GigDetails} />}/>
+          <Route path="/user/:userId" element={<ProtectedRoute element={UserProfile} />}/>
 
           {/* <Route path="/work" element={<ProtectedRoute element={ProjectsPage} />} /> */}
           {/* <Route path="/projectDetails" element={<ProjectDetailsPage />} /> */}

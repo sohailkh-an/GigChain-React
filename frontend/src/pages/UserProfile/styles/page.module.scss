@@ -1,0 +1,92 @@
+@use '../../../styles/base' as base;
+
+
+.coverPictureContainer {
+  width: 100%;
+  height: 300px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .coverPictureLabel {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #f0f0f0;
+    padding: 8px;
+    // border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.mainProfileWrapper {
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom: 150px;
+
+
+
+  .mainProfileContainer {
+    // padding:-100px 0 100px 0;
+    background-color:base.$background_light ;
+    z-index: 1;
+    padding-bottom: 100px;
+    width: 70vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .profilePictureContainer {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      position: relative;
+
+      img {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        position: absolute;
+        top:-100px;
+      }
+
+      .profilePictureLabel {
+        width: 190px;
+        position: absolute;
+        bottom: 100px;
+        text-align: center;
+        right: 30px;
+        background-color: base.$background_light;
+        padding: 8px;
+        border-radius:0 0 100% 100%;
+        cursor: pointer;
+      }
+    }
+
+    .gigsWrapper {
+      width: 100%;
+      background-color: cornsilk;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 50px;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+  }
+}

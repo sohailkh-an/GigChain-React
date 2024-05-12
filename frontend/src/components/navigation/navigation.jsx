@@ -49,7 +49,12 @@ export default function Navigation() {
 
             {currentUser && (
               <>
-                <Link to="/gigs" className={styles.navbar_link}>Gigs</Link>
+                <Link to="/inbox" className={styles.navbar_link}>
+                  Inbox
+                </Link>
+                <Link to="/gigs" className={styles.navbar_link}>
+                  Gigs
+                </Link>
                 <Link to="/profile" className={styles.navbar_link}>
                   Profile
                 </Link>

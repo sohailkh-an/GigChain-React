@@ -29,6 +29,27 @@ const upload = multer({
   }),
 });
 
+
+
+router.get("/user/:userId", async (req, res) => {
+  console.log("This is the userid in user api endpoint ", req.params.userId);
+  // if (!mongoose.Types.ObjectId.isValid(userId)) {
+  //   return res.status(400).json({ msg: "Invalid user ID" });
+  // }
+  try {
+    const {userId} = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 router.post("/register", async (req, res) => {
   const defaultAvatar =
     "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
@@ -56,6 +77,20 @@ router.post("/register", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+router.get('/search', async (req, res) => {
+  try {
+    const { query } = req.query;
+    const users = await User.find({
+      name: { $regex: query, $options: 'i' } 
+    });
+    res.json(users);
+  } catch (error) {
+    console.error('Error searching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 router.post("/signin", async (req, res) => {
   try {
@@ -160,6 +195,8 @@ router.post(
     }
   }
 );
+
+
 
 router.get("/:userId/cover-picture", async (req, res) => {
   console.log(

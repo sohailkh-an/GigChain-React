@@ -5,7 +5,7 @@ import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 import styles from "./styles/page.module.scss";
 
-const Profile = () => {
+const CurrentUserProfile = () => {
   const { currentUser } = useAuth();
   const [profilePicture, setProfilePicture] = useState(null);
   const [coverPicture, setCoverPicture] = useState(null);
@@ -135,4 +135,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default CurrentUserProfile;

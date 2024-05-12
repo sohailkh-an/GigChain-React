@@ -2,75 +2,22 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const http = require("http");
+const socketIO = require("socket.io");
+const Message = require("./models/Message");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: { origin: "http://localhost:5173" },
+  debug: true,
+});
 
+const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [process.env.FRONTEND_URL];
 
-
-// app.use(cors(
-//   {
-//     origin: allowedOrigins,
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-    
-//   }
-// ))
-
-
-// const corsOptions = {
-//   origin: 'https://gigchain-frontend.vercel.app',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-
-// app.use(cors(corsOptions));
-
-
 app.use(cors());
-
-
-// const corsOptions = {
-//   origin:  '*',
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-
-// app.use(cors(corsOptions));
-
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     "Access-Control-Allow-Origin",
-//     // "https://gigchain-frontend.vercel.app"
-//     req.headers.origin
-//   );
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
-//   next();
-// });
-
-
-// app.use((req, res, next) => {
-//   console.log('Incoming Request:', req.method, req.path);
-//   console.log('Headers:', req.headers);
-//   console.log('Body:', req.body);
-//   next();
-// });
-
-
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", '*');
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
-
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(204);
-//   } else {
-//     next();
-//   }
-// });
 
 app.use(express.json());
 
@@ -79,7 +26,84 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// io.on("connection", (socket) => {
+//   console.log("A user connected");
+
+//   socket.on("send-message", async (message) => {
+//     try {
+
+//       const newMessage = new Message({
+//         conversationId: message.conversationId,
+//         sender: message.sender,
+//         content: message.text,
+//         timestamp: new Date(),
+//       });
+
+//       console.log(
+//         "New message:",
+//         message.conversationId,
+//         message.sender,
+//         message.text
+//       );
+//       try {
+//         await newMessage.save();
+
+//         io.to(message.conversationId).emit("new message", newMessage);
+//         console.log("Message saved:", newMessage);
+//       } catch (error) {
+//         socket.emit("error", error.message);
+//         console.error("Error saving message:", error);
+//       }
+//     } catch (error) {
+//       socket.emit("error", error.message);
+//       console.error("Error saving message:", error);
+//     }
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("A user disconnected");
+//   });
+// });
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("join-conversation", (conversationId) => {
+    socket.join(conversationId);
+    console.log("User joined conversation:", conversationId);
+  });
+
+  socket.on("send-message", async (message) => {
+    console.log("Received send-message event:", message);
+    try {
+      const newMessage = new Message({
+        conversationId: message.conversationId,
+        sender: message.sender,
+        content: message.text,
+        timestamp: new Date(),
+      });
+
+      console.log(
+        "New message:",
+        message.conversationId,
+        message.sender,
+        message.text
+      );
+      await newMessage.save();
+
+      io.to(message.conversationId).emit("new message", newMessage);
+      console.log("Message saved:", newMessage);
+
+    } catch (error) {
+      socket.emit("error", error.message);
+      console.error("Error saving message:", error);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("Server is up and running!");
@@ -91,3 +115,22 @@ app.use("/api/users", userRoutes);
 const gigRoutes = require("./routes/gig");
 app.use("/api/gig", gigRoutes);
 
+const messageRoutes = require("./routes/conversations");
+app.use("/api/conversations", messageRoutes);
+
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// app.use(cors(
+//   {
+//     origin: allowedOrigins,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+
+//   }
+// ))
+
+// const corsOptions = {
+//   origin: 'https://gigchain-frontend.vercel.app',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+
+// app.use(cors(corsOptions));

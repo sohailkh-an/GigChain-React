@@ -1,0 +1,10 @@
+.inboxParentContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  height: 100%;
+  padding: 20px 50px;
+  width: 100%;
+}/*# sourceMappingURL=inbox.module.css.map */
