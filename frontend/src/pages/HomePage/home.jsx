@@ -77,7 +77,7 @@ function HomePage() {
 
         {searchQuery ? (
           <div className={styles.searchResultsParentContainer}>
-            <h2>Search Results for {searchQuery}</h2>
+            <h2>Search Results for &quot;{searchQuery}&quot;</h2>
             <div className={styles.searchResultsMainContainer}>
               {searchResults.map((gig) => (
                 <ServiceCard key={gig._id} gig={gig} />

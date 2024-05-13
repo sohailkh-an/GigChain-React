@@ -11,7 +11,7 @@ function MessageInput({ onSendMessage }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <input
         type="text"
         value={message}

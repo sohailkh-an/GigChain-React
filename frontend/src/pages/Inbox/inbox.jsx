@@ -86,7 +86,7 @@ function Inbox() {
   };
 
   const handleSendMessage = async (text) => {
-    console.log("Sending message...", text, activeConversation);
+    console.log("Sending message...", text, currentUser._id, activeConversation);
     if (activeConversation) {
       const message = {
         conversationId: activeConversation,
@@ -150,13 +150,13 @@ function Inbox() {
         <div className={styles.messageParentContainer}>
           {activeConversation && (
             <>
-              <MessageList key={updateKey} messages={messages} />
-              <MessageInput onSendMessage={handleSendMessage} />
+              <MessageList conversations={conversations} activeConversation={activeConversation} key={updateKey} messages={messages} />
+              <MessageInput  onSendMessage={handleSendMessage} />
             </>
           )}
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

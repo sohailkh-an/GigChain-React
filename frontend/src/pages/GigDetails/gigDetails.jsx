@@ -43,7 +43,6 @@ const GigDetails = () => {
           <Link to={`/user/${gigDetails.user}`}>
             <p className={styles.gigProvider}>
               {" "}
-              {/* NEEDS TO BE FIXED */}
               Service Provider: {gigDetails.serviceProvider}
             </p>
           </Link>

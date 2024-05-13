@@ -1,4 +1,6 @@
 .sidebar {
+  overflow-y: auto;
+  max-height: 78vh;
   width: -moz-fit-content;
   width: fit-content;
   padding: 20px;
@@ -13,12 +15,26 @@
   overflow-x: hidden;
   z-index: 1;
   position: relative;
+  /* Scrollbar handle */
+  /* Scrollbar handle on hover */
+}
+.sidebar::-webkit-scrollbar {
+  width: 10px; /* Adjust the width of the scrollbar */
+  background-color: #f9f9f9; /* Color of the scrollbar track */
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #646464; /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Rounded corners on the scrollbar thumb */
+  border: 2px solid #f9f9f9; /* Creates a border around the scrollbar thumb */
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker shade when hovering over the scrollbar thumb */
 }
 .sidebar .message_list {
   border-radius: 5px;
   width: 300px;
   height: 80px;
-  background-color: #EBE7ED;
+  background-color: #ebe7ed;
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -28,10 +44,10 @@
   gap: 10px;
 }
 .sidebar .active {
-  background-color: #330A4D;
+  background-color: #330a4d;
 }
 .sidebar .inActive {
-  background-color: #EBE7ED;
+  background-color: #ebe7ed;
 }
 .sidebar .conversationContainer {
   display: flex;
@@ -45,6 +61,8 @@
 
 .avatarImg {
   width: 50px;
+  -o-object-fit: cover;
+     object-fit: cover;
   height: 50px;
   border-radius: 50%;
 }
@@ -60,7 +78,7 @@
   grid-column-start: 1;
   grid-column-end: 3;
   font-size: 14px;
-  color: #330A4D;
+  color: #330a4d;
 }
 
 .conversationDate {
@@ -70,7 +88,7 @@
 
 .inActiveReciept {
   font-weight: normal;
-  color: #330A4D;
+  color: #330a4d;
 }
 
 .activeMessage {
@@ -78,7 +96,7 @@
 }
 
 .inActiveMessage {
-  color: #330A4D;
+  color: #330a4d;
 }
 
 .activeDate {
@@ -86,5 +104,5 @@
 }
 
 .inActiveDate {
-  color: #330A4D;
+  color: #330a4d;
 }/*# sourceMappingURL=sidebar.module.css.map */

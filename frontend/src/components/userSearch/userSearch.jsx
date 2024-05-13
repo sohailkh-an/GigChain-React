@@ -42,7 +42,6 @@ function UserSearch({ onUserSelect }) {
           className={styles.searchInput}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        {/* You can remove the search button if it's no longer needed */}
       </div>
 
       {searchTerm && results.length > 0 && (

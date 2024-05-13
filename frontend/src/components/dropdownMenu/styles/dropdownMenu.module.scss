@@ -1,0 +1,76 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdownToggle {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+  
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 200px;
+    z-index: 1000;
+  }
+  
+  .menuItem {
+    position: relative;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+  
+  .menuItemText {
+    display: block;
+  }
+  
+  .subMenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .menuItem:hover .subMenu {
+    display: block;
+  }
+  
+  .subMenuItem {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+  

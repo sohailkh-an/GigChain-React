@@ -1,4 +1,5 @@
 .inboxParentContainer {
+  min-height: 92vh;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

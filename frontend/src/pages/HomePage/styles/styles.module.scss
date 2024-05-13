@@ -56,14 +56,14 @@
   flex-direction: column;
   gap: 40px;
   background-color: base.$white;
-  padding: 40px 0;
+  padding: 40px 50px;
 
   .searchResultsMainContainer {
     display: flex;
     flex-direction: row;
     gap: 30px;
     flex-wrap: wrap;
-    padding: 0 50px;
+    // padding: 0 50px;
   }
 }
 

@@ -5,6 +5,7 @@ import styles from "./navigation.module.css";
 // import HelpIcon from '../../public/help.svg';
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import DropdownMenu from "../dropdownMenu/dropdownMenu";
 
 export default function Navigation() {
   const { currentUser, logout } = useAuth();
@@ -22,6 +23,10 @@ export default function Navigation() {
               My Jobs
             </Link>
           </div> */}
+
+          <DropdownMenu />
+
+
           <div className={styles.searchBar_container}>
             <input
               className={styles.searchBar}
