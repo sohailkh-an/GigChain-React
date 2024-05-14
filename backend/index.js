@@ -9,13 +9,12 @@ const Message = require("./models/Message");
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: { origin: "http://localhost:5173" },
+  cors: { origin: process.env.FRONTEND_URL },
   debug: true,
 });
 
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(cors());
 
@@ -25,45 +24,6 @@ mongoose
   .connect(process.env.MONGODB_URI, {})
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
-
-// io.on("connection", (socket) => {
-//   console.log("A user connected");
-
-//   socket.on("send-message", async (message) => {
-//     try {
-
-//       const newMessage = new Message({
-//         conversationId: message.conversationId,
-//         sender: message.sender,
-//         content: message.text,
-//         timestamp: new Date(),
-//       });
-
-//       console.log(
-//         "New message:",
-//         message.conversationId,
-//         message.sender,
-//         message.text
-//       );
-//       try {
-//         await newMessage.save();
-
-//         io.to(message.conversationId).emit("new message", newMessage);
-//         console.log("Message saved:", newMessage);
-//       } catch (error) {
-//         socket.emit("error", error.message);
-//         console.error("Error saving message:", error);
-//       }
-//     } catch (error) {
-//       socket.emit("error", error.message);
-//       console.error("Error saving message:", error);
-//     }
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("A user disconnected");
-//   });
-// });
 
 io.on("connection", (socket) => {
   console.log("A user connected");
@@ -120,17 +80,3 @@ app.use("/api/conversations", messageRoutes);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// app.use(cors(
-//   {
-//     origin: allowedOrigins,
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-
-//   }
-// ))
-
-// const corsOptions = {
-//   origin: 'https://gigchain-frontend.vercel.app',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-
-// app.use(cors(corsOptions));

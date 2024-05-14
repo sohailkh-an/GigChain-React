@@ -15,6 +15,8 @@ const UserProfile = () => {
 
   const [userDetails, setUserDetails] = useState(null);
 
+  console.log("User Details: ", userDetails);
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -44,32 +46,37 @@ const UserProfile = () => {
     <div>
       <Navigation />
       {userDetails ? (
-      <>
-        <div className={styles.coverPictureContainer}>
-          <img
-            src={userDetails.coverPictureUrl}
-            alt="Cover Picture"
-            className={styles.coverPicture}
-          />
-        </div>
-
-        <div className={styles.mainProfileWrapper}>
-          <div className={styles.mainProfileContainer}>
-            <div className={styles.profilePictureContainer}>
-              <img
-                src={userDetails.profilePictureUrl}
-                alt="Profile Picture"
-                className={styles.profilePicture}
-              />
-            </div>
-
-            <h2>{userDetails.name}</h2>
-            <p>Email: {userDetails.email}</p>
-            <p>User ID: {userDetails._id}</p>
+        <>
+          <div className={styles.coverPictureContainer}>
+            <img
+              src={userDetails.coverPictureUrl}
+              alt="Cover Picture"
+              className={styles.coverPicture}
+            />
           </div>
+
+          <div className={styles.mainProfileWrapper}>
+            <div className={styles.mainProfileContainer}>
+              <div className={styles.profilePictureContainer}>
+                <img
+                  src={userDetails.profilePictureUrl}
+                  alt="Profile Picture"
+                  className={styles.profilePicture}
+                />
+              </div>
+
+              <h2>{userDetails.name}</h2>
+              <p>{userDetails.expertise}</p>
+              <p>Languages: {userDetails.languages}</p>
+              <p>About: {userDetails.about}</p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className={styles.loadingWrapper}>
+          <div className={styles.loader}></div>
+          <p className={styles.loadingText}>Loading...</p>
         </div>
-      </>
-      ) : (<div>Loading user profile...</div>
       )}
       <Footer />
     </div>

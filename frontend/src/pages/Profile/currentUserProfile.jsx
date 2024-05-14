@@ -19,38 +19,7 @@ const CurrentUserProfile = () => {
   const [languages, setLanguages] = useState("");
   const [about, setAbout] = useState("About me.....");
   const [isEditing, setIsEditing] = useState(false);
-  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
-  // const onEditorStateChange = (editorState) => {
-  //   setEditorState(editorState);
-  //   const htmlContent = draftToHtml(
-  //     convertToRaw(editorState.getCurrentContent())
-  //   );
-  //   setAbout(htmlContent);
-  // };
-
-  // const modules = {
-  //   toolbar: [
-  //     [{ header: [1, 2, false] }],
-  //     ["bold", "italic", "underline", "strike", "blockquote"],
-  //     [{ list: "ordered" }, { list: "bullet" }],
-  //     ["link", "image"],
-  //     ["clean"],
-  //   ],
-  // };
-
-  // const formats = [
-  //   "header",
-  //   "bold",
-  //   "italic",
-  //   "underline",
-  //   "strike",
-  //   "blockquote",
-  //   "list",
-  //   "bullet",
-  //   "link",
-  //   "image",
-  // ];
+  
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -151,7 +120,7 @@ const CurrentUserProfile = () => {
   const updateProfile = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/users/${currentUser._id}/update`,
+        `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser._id}/update`,
         {
           name,
           expertise,
@@ -306,39 +275,6 @@ const CurrentUserProfile = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className={styles.mainProfileWrapper}>
-        <div className={styles.mainProfileContainer}>
-          <div className={styles.profilePictureContainer}>
-            <img
-              src={profilePicture}
-              alt="Profile Picture"
-              className={styles.profilePicture}
-            />
-            <label
-              htmlFor="profilePictureInput"
-              className={styles.profilePictureLabel}
-            >
-              Change
-            </label>
-            <input
-              id="profilePictureInput"
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePictureUpload}
-              style={{ display: "none" }}
-            />
-          </div>
-
-          <h2>{currentUser.name}</h2>
-          <h5>Backend Developer | MERN Stack</h5>
-
-          <p>Languages</p>
-
-          <h4>About</h4>
-          <p>About me.....</p>
-        </div>
-      </div> */}
 
       <Footer />
     </div>

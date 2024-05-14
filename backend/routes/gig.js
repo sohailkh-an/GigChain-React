@@ -83,7 +83,7 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const { title, description, price, category, serviceProvider } = req.body;
+      const { title, description, price, category, serviceProvider, providerProfilePicture } = req.body;
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
 
@@ -94,7 +94,8 @@ router.post(
         category,
         thumbnailUrl,
         user: userId,
-        serviceProvider
+        serviceProvider,
+        providerProfilePicture
       });
 
       await gig.save();
@@ -106,6 +107,61 @@ router.post(
     }
   }
 );
+
+router.put("/:gigId", async (req, res) => {
+  try {
+    const { gigId } = req.params;
+    const { title, description, price, category, thumbnailUrl } = req.body;
+    const gig = await Gig.findById(gigId);
+
+    if (!gig) {
+      return res.status(404).json({ message: "Gig not found" });
+    }
+
+    // if (gig.user.toString() !== req.user._id.toString()) {
+    //   return res.status(403).json({ message: "Unauthorized" });
+    // }
+
+    gig.title = title;
+    gig.description = description;
+    gig.price = price;
+    gig.category = category;
+    gig.thumbnailUrl = thumbnailUrl;
+    gig.updatedOn = new Date();
+
+    await gig.save();
+
+    res.json({ message: "Gig updated successfully", gig });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+router.delete("/:gigId", async (req, res) => {
+  try {
+    const { gigId } = req.params;
+    const gig = await Gig.findById(gigId);
+
+    if (!gig) {
+      return res.status(404).json({ message: "Gig not found" });
+    }
+
+    // if (gig.user.toString() !== req.user._id.toString()) {
+    //   return res.status(403).json({ message: "Unauthorized" });
+    // }
+
+    await Gig.findByIdAndDelete(gigId);
+
+    res.json({ message: "Gig deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 router.get("/:gigId", async (req, res) => {
   try {

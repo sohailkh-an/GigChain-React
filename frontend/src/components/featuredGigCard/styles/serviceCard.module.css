@@ -6,6 +6,8 @@
 }
 .service_card .thumbnailImage {
   border-radius: 5px 5px 0 0;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .service_card .cardDetails {
   width: 400px;

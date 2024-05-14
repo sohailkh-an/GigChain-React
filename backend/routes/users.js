@@ -33,9 +33,6 @@ const upload = multer({
 
 router.get("/user/:userId", async (req, res) => {
   console.log("This is the userid in user api endpoint ", req.params.userId);
-  // if (!mongoose.Types.ObjectId.isValid(userId)) {
-  //   return res.status(400).json({ msg: "Invalid user ID" });
-  // }
   try {
     const {userId} = req.params;
     const user = await User.findById(userId);
@@ -49,6 +46,28 @@ router.get("/user/:userId", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+router.put("/user/:userId/update", async (req, res) =>{
+  try {
+    const {userId} = req.params;
+    const {name, expertise, languages, about} = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    user.name = name;
+    user.expertise = expertise;
+    user.languages = languages;
+    user.about = about;
+    await user.save();
+    res.json({ msg: "User updated successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+
+})
+
 
 router.post("/register", async (req, res) => {
   const defaultAvatar =

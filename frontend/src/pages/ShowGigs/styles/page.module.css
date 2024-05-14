@@ -26,4 +26,9 @@
   margin-top: 20px;
   gap: 30px;
   flex-wrap: wrap;
+}
+
+.createGigBtn {
+  background-color: #2B0046;
+  color: white;
 }/*# sourceMappingURL=page.module.css.map */

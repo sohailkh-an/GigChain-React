@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import axios from "axios";
 import NavBar from "../../components/navigation/navigation";
@@ -10,19 +9,6 @@ import ServiceCard from "../../components/searchResultGigCard/searchResultGigCar
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
-  // const handleSearch = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.get(
-  //       `${import.meta.env.VITE_API_URL}/api/gig/search?query=${searchQuery}`
-  //     );
-  //     console.log(response.data[0]);
-  //     setSearchResults(response.data);
-  //   } catch (error) {
-  //     console.error("Error searching gigs:", error);
-  //   }
-  // };
 
 
   const handleSearch = async (query) => {
@@ -47,7 +33,6 @@ function HomePage() {
     setSearchQuery(query);
     handleSearch(query);
   };
-
 
   return (
     <React.Fragment>
@@ -91,23 +76,6 @@ function HomePage() {
             <FeaturedServicesSection serviceType={"Graphic Design"} />
           </div>
         )}
-
-        {/* <div className={styles.searchResultsContainer}>
-          <h2>Search Results for {searchQuery}</h2>
-          <div className={styles.searchResults}>
-            {searchResults.map((gig, index) => (
-              <ServiceCard key={index} gig={gig} />
-              
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.featuredServicesContainer}>
-          <FeaturedServicesSection serviceType={"Development"} />
-          <FeaturedServicesSection serviceType={"Web Development"} />
-          <FeaturedServicesSection serviceType={"Graphic Design"} />
-        </div>
-      </div> */}
       </div>
       <Footer />
     </React.Fragment>

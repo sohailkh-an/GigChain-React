@@ -21,31 +21,10 @@
         align-self: flex-start;
         margin-bottom: 10px;
     }
-
-    .providerInfoContainer{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      align-self: flex-start;
-      justify-content: center;
-      gap: 20px;
-    }
-    .providerProfilePicture{
-      align-self: flex-start;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .gigProviderLink{
-      // align-self: flex-start;
-    }
-
     .gigProvider {
-        // align-self: flex-start;
+        align-self: flex-start;
         font: base.$p_large;
-        // margin-bottom: 30px;
+        margin-bottom: 30px;
       }
 
     .thumbnailImg {

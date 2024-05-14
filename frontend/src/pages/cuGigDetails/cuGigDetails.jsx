@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from "./styles/gigDetails.module.scss";
+import styles from "./styles/cuGigDetails.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 import { useAuth } from "../../contexts/AuthContext";
@@ -13,8 +13,6 @@ const GigDetails = () => {
 
   const [gigDetails, setGigDetails] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  console.log("Gig Details: ", gigDetails);
 
   useEffect(() => {
     const fetchGigDetails = async () => {
@@ -35,13 +33,10 @@ const GigDetails = () => {
     navigate(`/gig/${gigId}/edit`);
   };
 
-  const handleOrder = () => {};
-  const handleSave = () => {};
-
   const handleDelete = async () => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/gig/${gigId}`);
-      navigate("/gigs");
+      navigate("/gigs"); // Redirect to the gigs list after deletion
     } catch (error) {
       console.error("Error deleting gig:", error);
     }
@@ -58,15 +53,12 @@ const GigDetails = () => {
         <div className={styles.gigDetailsParentWrapper}>
           <h1>{gigDetails.title}</h1>
 
-          <div className={styles.providerInfoContainer}>
-          <img src={gigDetails.providerProfilePicture} alt={gigDetails.serviceProvider} className={styles.providerProfilePicture} />
-          <Link className={styles.gigProviderLink} to={`/user/${gigDetails.user}`}>
+          <Link to={`/user/${gigDetails.user}`}>
             <p className={styles.gigProvider}>
-              {gigDetails.serviceProvider}
+              {" "}
+              Service Provider: {gigDetails.serviceProvider}
             </p>
           </Link>
-          </div>          
-
           <img
             src={gigDetails.thumbnailUrl}
             width={"500px"}
@@ -86,30 +78,8 @@ const GigDetails = () => {
           </div>
 
           <div className={styles.actionsParentWrapper}>
-            {currentUser._id === gigDetails.user ? (
-              <>
-                <button className={styles.orderButton} onClick={handleEdit}>
-                  Edit
-                </button>
-                <button
-                  className={styles.saveButton}
-                  onClick={() => {
-                    setShowDeleteModal(true);
-                  }}
-                >
-                  Delete
-                </button>
-              </>
-            ) : (
-              <>
-                <button className={styles.orderButton} onClick={handleOrder}>
-                  Order
-                </button>
-                <button className={styles.saveButton} onClick={handleSave}>
-                  Save
-                </button>
-              </>
-            )}
+            <button className={styles.orderButton} onClick={handleEdit}>Edit</button>
+            <button className={styles.saveButton} onClick={() => setShowDeleteModal(true)}>Delete</button>
           </div>
         </div>
       </div>
@@ -123,7 +93,7 @@ const GigDetails = () => {
           </div>
         </div>
       )}
-
+      
       <Footer />
     </>
   );

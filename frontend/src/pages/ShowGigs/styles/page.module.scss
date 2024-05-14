@@ -1,3 +1,5 @@
+@use "../../../styles/base" as base;
+
 .gigsParentWrapper {
 
     width: 100%;
@@ -28,4 +30,10 @@
     gap: 30px;
     flex-wrap: wrap;
   }
+}
+
+
+.createGigBtn{
+  background-color: base.$primary;
+  color:white;
 }

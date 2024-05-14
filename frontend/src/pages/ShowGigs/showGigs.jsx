@@ -43,7 +43,7 @@ const ViewGigs = () => {
         {userGigs.length === 0 ? (
           <>
             <p>
-              Now gigs found.
+              No gigs found.
               <br />
               Begin by creating your first gig.
             </p>
@@ -56,7 +56,7 @@ const ViewGigs = () => {
           <div className={styles.gigsActionsWrapper}>
             <h2 >Your Gigs</h2>
             <Link to="/create_gig">
-              <button>Create Gig</button>
+              <button className={styles.createGigBtn}>Create Gig</button>
             </Link>
             </div>
 

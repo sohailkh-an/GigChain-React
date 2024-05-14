@@ -6,10 +6,10 @@ import styles from "./styles/page.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
 
-const CreateGigPage = () => {         
+const CreateGigPage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  // console.log(currentUser.name);
+  console.log("Current User Details: ", currentUser);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -39,7 +39,7 @@ const CreateGigPage = () => {
       formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       formDataToSend.append("user", currentUser._id);
       formDataToSend.append("serviceProvider", currentUser.name);
-
+      formDataToSend.append("providerProfilePicture", currentUser.profilePictureUrl);
 
       const token = localStorage.getItem("token");
 
@@ -48,7 +48,6 @@ const CreateGigPage = () => {
         formDataToSend,
         {
           headers: {
-            // "Content-Type": "multipart/form-data", BIG MISTAKE RIGHT HERE!!!!
             Authorization: `Bearer ${token}`,
           },
         }
@@ -63,73 +62,69 @@ const CreateGigPage = () => {
 
   return (
     <>
-    <Navigation />
+      <Navigation />
       <div className={styles.parentWrapper}>
-        <h2>Create Gig</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div>
+        <form onSubmit={handleSubmit} className={styles.formWrapper}>
+          <h1 className={styles.formHeading}>Create Gig</h1>
+          <div className={styles.formGroup}>
             <label htmlFor="title">Title:</label>
-            <br />
-            
             <input
               type="text"
               id="title"
               name="title"
               value={formData.title}
               onChange={handleChange}
+              className={styles.inputField}
               required
             />
           </div>
-          <div>
+          <div className={styles.formGroup}>
             <label htmlFor="description">Description:</label>
-            <br />
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
+              className={styles.textareaField}
               required
             ></textarea>
           </div>
-          <div>
+          <div className={styles.formGroup}>
             <label htmlFor="price">Price:</label>
-            <br />
-            
             <input
               type="number"
               id="price"
               name="price"
               value={formData.price}
               onChange={handleChange}
+              className={styles.inputField}
               required
             />
           </div>
-          <div>
+          <div className={styles.formGroup}>
             <label htmlFor="category">Category:</label>
-            <br />
-            
             <input
               type="text"
               id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
+              className={styles.inputField}
               required
             />
           </div>
-          <div>
+          <div className={styles.formGroup}>
             <label htmlFor="thumbnailImage">Thumbnail Image:</label>
-            <br />
-            
             <input
               type="file"
               id="thumbnailImage"
               name="thumbnailImage"
               onChange={handleChange}
+              className={styles.inputField}
               required
             />
           </div>
-          <button type="submit">Create Gig</button>
+          <button type="submit" className={styles.submitButton}>Create Gig</button>
         </form>
       </div>
       <Footer />

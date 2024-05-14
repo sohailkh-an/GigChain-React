@@ -15,7 +15,7 @@ const gigSchema = new mongoose.Schema({
   },
   deliveryTime: {
     type: Number,
-    required: true
+    required: false
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -53,6 +53,10 @@ const gigSchema = new mongoose.Schema({
   status: {
     type: String,
     default: 'active'
+  },
+  providerProfilePicture: {
+    type: String,
+    default: 'https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg'
   }
 
 

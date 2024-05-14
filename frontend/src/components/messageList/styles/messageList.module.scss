@@ -1,5 +1,7 @@
 @use "../../../styles/base" as base;
 
+
+
 .message_list {
   max-height: 78vh;
   min-height: 78vh;
@@ -8,9 +10,23 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #ebe7ed;
+  // background-color: #ebe7ed;
+  background: linear-gradient(135deg, #2b0046 0%, #8e44ad 50%, #3498db 100%);
   padding: 40px 20px;
   border-radius: 5px 5px 0px 0px;
+
+
+  .chatContainer{
+    width: 80%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+  }
+
 
 
   &::-webkit-scrollbar {
@@ -28,35 +44,49 @@
     background-color: #555;
   }
 
-
-
-
-  .main_cont_msg{
+  .main_cont_msg {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    // gap: 10px;
   }
 
+  .chatBubble {
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
 
   .sent {
+    color: base.$primary; /* Light lavender */
+    background-color: base.$background_light; /* Dark grey text */
+    align-self: flex-end;
+
     display: flex;
     flex-direction: row;
-    align-self: flex-end;
     width: fit-content;
     gap: 10px;
     align-items: center;
     justify-content: flex-end;
     padding: 10px;
-    background-color:aquamarine;
+    // background-color: aquamarine;
     border-radius: 10px 10px 0 10px;
   }
   .sentTimestamp {
     align-self: flex-end;
-    color: base.$background_dark;
+    color: base.$background_light;
     font-size: 12px;
+
   }
 
   .received {
+
+    background-color: base.$primary; /* Light purple */
+  color: #D1C4E9; /* Light purple */
+      // color: #333;
+
     display: flex;
     align-self: flex-start;
     width: fit-content;
@@ -64,26 +94,21 @@
     gap: 10px;
     align-items: center;
     padding: 10px;
-    background-color: base.$background_light;
     border-radius: 10px 10px 10px 0;
   }
   .receivedTimestamp {
     align-self: flex-start;
-    color: base.$background_dark;
+    color: base.$background_light;
     font-size: 12px;
   }
 }
 
-
-.receiptNameBar{
-
+.receiptNameBar {
   display: flex;
   flex-direction: row;
   gap: 20px;
   margin-bottom: 20px;
   align-items: center;
-  .receiptName{
-
-
+  .receiptName {
   }
 }

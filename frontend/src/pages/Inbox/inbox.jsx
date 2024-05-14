@@ -17,13 +17,12 @@ function Inbox() {
 
   const [updateKey, setUpdateKey] = useState(0);
 
-  // Use this function to force a re-render
   const forceReRender = () => setUpdateKey((prevKey) => prevKey + 1);
 
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io("http://localhost:5000");
+    socket.current = io(`${import.meta.env.VITE_API_URL}`);
 
     socket.current.on("connect", () => {
       console.log("Connected to server");
