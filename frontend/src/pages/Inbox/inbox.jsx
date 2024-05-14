@@ -23,7 +23,7 @@ function Inbox() {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io("http://localhost:5000");
+    socket.current = io("https://gigchain-backend.vercel.app");
 
     socket.current.on("connect", () => {
       console.log("Connected to server");
