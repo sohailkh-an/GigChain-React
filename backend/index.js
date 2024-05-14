@@ -8,10 +8,7 @@ const Message = require("./models/Message");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server, {
-  cors: {origin: "*",
-  debug: true,
-}});
+const io = socketIO(server);
 
 const PORT = process.env.PORT || 5000;
 
