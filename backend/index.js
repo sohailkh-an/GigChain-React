@@ -8,7 +8,11 @@ const Message = require("./models/Message");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(server, {
+  cors: {
+    origin: "https://gigchain-frontend.vercel.app"
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 
