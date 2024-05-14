@@ -22,11 +22,7 @@ function Inbox() {
   const socket = useRef(null);
 
   useEffect(() => {
-<<<<<<< HEAD
     socket.current = io(`${import.meta.env.VITE_API_URL}`);
-=======
-    socket.current = io("https://gigchain-backend.vercel.app");
->>>>>>> 495728949b54c2e02f60478d44a2fa103fdbfc04
 
     socket.current.on("connect", () => {
       console.log("Connected to server");
