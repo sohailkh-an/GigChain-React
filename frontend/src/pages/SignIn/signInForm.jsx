@@ -37,7 +37,6 @@ export default function SignInPage() {
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    // const res = await axios.post('https://gigchain-backend.vercel.app/api/users/signin', userData);
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/signin`, userData);
     const { token, user } = res.data;
     login({ token, user });
