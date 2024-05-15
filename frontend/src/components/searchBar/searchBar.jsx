@@ -9,7 +9,7 @@ const SearchBar = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `http://gigchain-backend.vercel.app/api/gig/search?query=${searchQuery}`
+        `https://gigchain-backend.up.railway.app//api/gig/search?query=${searchQuery}`
       );
       setSearchResults(response.data.gigs);
     } catch (error) {
