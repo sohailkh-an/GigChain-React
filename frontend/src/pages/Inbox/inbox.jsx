@@ -39,13 +39,13 @@ function Inbox() {
         });
       });
 
-      // if (message.conversationId === activeConversation) {
+      if (message.conversationId === activeConversation) {
       setMessages((prevMessages) => [...prevMessages, message]);
-      // }
+      }
     });
 
     if (activeConversation) {
-      socket.current.emit("join conversation", activeConversation);
+      socket.current.emit("join-conversation", activeConversation);
     }
 
     fetchConversations();

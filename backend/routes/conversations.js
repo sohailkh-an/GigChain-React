@@ -41,7 +41,6 @@ router.post('/', authMiddleware, async (req, res) => {
 router.get('/:conversationId/messages', async (req, res) => {
   try {
     const { conversationId } = req.params;
-    // const conversationId = "663f57abae92c3636e87f865";
     console.log("Conversation ID in messages api endpoint(New): ", conversationId);
     const messages = await Message.find({ conversationId });
     console.log("Messages in messages api endpoint(New): ", messages);

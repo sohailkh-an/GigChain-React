@@ -12,6 +12,7 @@ const ViewGigs = () => {
   const { gigId } = useParams();
   const { currentUser } = useAuth();
   const [userGigs, setUserGigs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserGigs = async () => {
@@ -23,8 +24,10 @@ const ViewGigs = () => {
           },
         });
         setUserGigs(response.data.gigs);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user gigs:", error);
+        setIsLoading(false);
       }
     };
 
@@ -33,6 +36,15 @@ const ViewGigs = () => {
 
   if (!currentUser) {
     return <div>Loading...</div>;
+  }
+
+  if (isLoading) {
+    return (
+      <div className={styles.loadingWrapper}>
+        <div className={styles.loader}></div>
+        <p className={styles.loadingText}>Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -53,11 +65,11 @@ const ViewGigs = () => {
           </>
         ) : (
           <>
-          <div className={styles.gigsActionsWrapper}>
-            <h2 >Your Gigs</h2>
-            <Link to="/create_gig">
-              <button className={styles.createGigBtn}>Create Gig</button>
-            </Link>
+            <div className={styles.gigsActionsWrapper}>
+              <h2>Your Gigs</h2>
+              <Link to="/create_gig">
+                <button className={styles.createGigBtn}>Create Gig</button>
+              </Link>
             </div>
 
             <div className={styles.gigsWrapper}>

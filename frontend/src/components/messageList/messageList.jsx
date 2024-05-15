@@ -15,7 +15,6 @@ function MessageList({ conversations, activeConversation, messages }) {
         setReceiptId(convo.participants[1]._id);
       }
     });
-    console.log("Receipt Name: ", receiptName);
   }, [activeConversation, conversations]);
 
   return (
