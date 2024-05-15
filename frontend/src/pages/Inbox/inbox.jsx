@@ -99,9 +99,7 @@ function Inbox() {
 
   const fetchMessages = async (conversationId) => {
     const response = await fetch(
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/conversations/${conversationId}/messages`,
+      `https://gigchain-backend.up.railway.app/api/conversations/${conversationId}/messages`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
