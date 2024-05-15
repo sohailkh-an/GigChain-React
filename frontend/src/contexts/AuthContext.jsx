@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
 
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/user`, {
+          const response = await fetch(`https://gigchain.backend.up.railway.app/api/users/user`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
