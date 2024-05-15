@@ -5,28 +5,38 @@ import styles from "./styles/messageList.module.scss";
 
 function MessageList({ conversations, activeConversation, messages }) {
   const { currentUser } = useAuth();
-  const [receiptName, setReceiptName] = useState("");
-  const [receiptId, setReceiptId] = useState("");
+  const [otherUser, setOtherUser] = useState({});
+  const [lastMessage, setLastMessage] = useState("");
+
+  console.log(
+    "Active Conversation in MessageList Component: ",
+    activeConversation
+  );
 
   useEffect(() => {
+
+
     conversations.map((convo) => {
       if (convo._id == activeConversation) {
-        setReceiptName(convo.participants[1].name);
-        setReceiptId(convo.participants[1]._id);
+        if (convo.participants[0]._id === currentUser._id) {
+          setOtherUser(convo.participants[1]);
+        } else if (convo.participants[1]._id === currentUser._id) {
+          setOtherUser(convo.participants[0]);
+        }
       }
     });
-  }, [activeConversation, conversations]);
+  }, [activeConversation, currentUser, conversations]);
 
   return (
     <>
       <div className={styles.receiptNameBar}>
-        <h2 className={styles.receiptName}>{receiptName}</h2>
-        <Link to={`/user/${receiptId}`}>
+        <h2 className={styles.receiptName}>{otherUser.name}</h2>
+        <Link to={`/user/${otherUser._id}`}>
           <h4>Go to Profile</h4>
         </Link>
       </div>
-        <div className={styles.chatContainer}>
-      <div className={styles.message_list}>
+      <div className={styles.chatContainer}>
+        <div className={styles.message_list}>
           {messages.map((message) => {
             const messageDate = new Date(message.timestamp);
             const currentDate = new Date();

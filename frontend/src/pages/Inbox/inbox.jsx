@@ -15,9 +15,7 @@ function Inbox() {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
 
-  const [updateKey, setUpdateKey] = useState(0);
 
-  const forceReRender = () => setUpdateKey((prevKey) => prevKey + 1);
 
   const socket = useRef(null);
 
@@ -33,7 +31,8 @@ function Inbox() {
       setConversations((prevConversations) => {
         return prevConversations.map((convo) => {
           if (convo.id === message.conversationId) {
-            return { ...convo, messages: [...convo.messages, message] };
+            // return { ...convo, messages: [...convo.messages, message] };
+            return {...convo, lastMessage: message}
           }
           return convo;
         });
@@ -57,7 +56,7 @@ function Inbox() {
       socket.current.off("connect");
       socket.current.off("new message");
       if (activeConversation) {
-        socket.current.emit("leave conversation", activeConversation); // Adjust based on your backend implementation
+        socket.current.emit("leave-conversation", activeConversation); 
       }
       socket.current.disconnect("disconnect");
     };
@@ -140,6 +139,7 @@ function Inbox() {
         <div className={styles.sidebarParentContainer}>
           <UserSearch onUserSelect={handleUserSelect} />
           <Sidebar
+            messages={messages}
             conversations={conversations}
             activeConversation={activeConversation}
             onSelectConversation={handleSelectConversation}
@@ -149,7 +149,7 @@ function Inbox() {
         <div className={styles.messageParentContainer}>
           {activeConversation && (
             <>
-              <MessageList conversations={conversations} activeConversation={activeConversation} key={updateKey} messages={messages} />
+              <MessageList conversations={conversations} activeConversation={activeConversation} messages={messages} />
               <MessageInput  onSendMessage={handleSendMessage} />
             </>
           )}

@@ -33,6 +33,11 @@ io.on("connection", (socket) => {
     console.log("User joined conversation:", conversationId);
   });
 
+  socket.on("leave-conversation", (conversationId) => {
+    socket.leave(conversationId);
+    console.log("User left conversation:", conversationId);
+  });
+
   socket.on("send-message", async (message) => {
     console.log("Received send-message event:", message);
     try {

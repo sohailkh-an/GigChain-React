@@ -7,11 +7,39 @@ const authMiddleware = require('../middleware/auth');
 
 router.use(authMiddleware);
 
+
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id;
-    // const conversations = await Conversation.find({}).populate('participants');
-    const conversations = await Conversation.find({ participants: userId }).populate('participants');
+    // Fetch conversations and include the last message
+    const conversations = await Conversation.aggregate([
+      { $match: { participants: userId } },
+      {
+        $lookup: {
+          from: 'messages',
+          let: { conversationId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$conversationId', '$$conversationId'] } } },
+            { $sort: { timestamp: -1 } },
+            { $limit: 1 }
+          ],
+          as: 'lastMessage'
+        }
+      },
+      {
+        $addFields: {
+          lastMessage: { $arrayElemAt: ['$lastMessage', 0] }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'participants',
+          foreignField: '_id',
+          as: 'participants'
+        }
+      }
+    ]);
     res.json(conversations);
   } catch (error) {
     console.error('Error fetching conversations:', error);
@@ -19,13 +47,23 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+
+
+// router.get('/', authMiddleware, async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+//     const conversations = await Conversation.find({ participants: userId }).populate('participants');
+//     res.json(conversations);
+//   } catch (error) {
+//     console.error('Error fetching conversations:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
+
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { participant } = req.body; 
-    // const currentUser = req.user; 
-    // const userId = req.user._id;
     console.log("User ID coming from conversations api route: ", req.user);
-
 
     const conversation = new Conversation({
       participants: [req.user._id, participant]

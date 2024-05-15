@@ -1,29 +1,40 @@
-/* eslint-disable react/prop-types */
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./styles/sidebar.module.scss";
 
-function Sidebar({ conversations, activeConversation, onSelectConversation }) {
+function Sidebar({
+  messages,
+  conversations,
+  activeConversation,
+  onSelectConversation,
+}) {
   const { currentUser } = useAuth();
   console.log("Active Conversation in Sidebar Component: ", activeConversation);
 
   return (
     <div className={styles.sidebar}>
-      {conversations.map((convo) => (
-        <div
-          className={`${styles.message_list} ${
-            activeConversation === convo._id ? styles.active : styles.inActive
-          }`}
-          key={convo._id}
-          onClick={() => onSelectConversation(convo._id)}
-        >
-          <img
-            className={styles.avatarImg}
-            src={convo.participants[1].profilePictureUrl}
-            alt="avatar"
-          />
+      {conversations.map((convo) => {
+        const lastMessageText = convo.lastMessage
+          ? convo.lastMessage.content
+          : "No messages yet";
 
-          <div className={styles.converationsDetailsContainer}>
-            {currentUser.name == convo.participants[1].name ? (
+        const otherUser = convo.participants.find(
+          (participant) => participant._id !== currentUser._id
+        );
+
+        return (
+          <div
+            className={`${styles.message_list} ${
+              activeConversation === convo._id ? styles.active : styles.inActive
+            }`}
+            key={convo._id}
+            onClick={() => onSelectConversation(convo._id)}
+          >
+            <img
+              className={styles.avatarImg}
+              src={otherUser.profilePictureUrl}
+              alt="avatar"
+            />
+            <div className={styles.converationsDetailsContainer}>
               <h3
                 className={`${styles.reciept} ${
                   activeConversation === convo._id
@@ -31,40 +42,30 @@ function Sidebar({ conversations, activeConversation, onSelectConversation }) {
                     : styles.inActiveReciept
                 }`}
               >
-                {convo.participants[0].name}
+                {otherUser.name}
               </h3>
-            ) : (
-              <h3
-                className={`${styles.reciept} ${
+              <p
+                className={`${styles.conversationDate} ${
                   activeConversation === convo._id
-                    ? styles.activeReciept
-                    : styles.inActiveReciept
+                    ? styles.activeDate
+                    : styles.inActiveDate
                 }`}
               >
-                {convo.participants[1].name}
-              </h3>
-            )}
-            <p
-              className={`${styles.conversationDate} ${
-                activeConversation === convo._id
-                  ? styles.activeDate
-                  : styles.inActiveDate
-              }`}
-            >
-              {new Date(convo.createdAt).toLocaleDateString()}
-            </p>
-            <p
-              className={`${styles.lastMessage} ${
-                activeConversation === convo._id
-                  ? styles.activeMessage
-                  : styles.inActiveMessage
-              }`}
-            >
-              An example last message...
-            </p>
+                {new Date(convo.createdAt).toLocaleDateString()}
+              </p>
+              <p
+                className={`${styles.lastMessage} ${
+                  activeConversation === convo._id
+                    ? styles.activeMessage
+                    : styles.inActiveMessage
+                }`}
+              >
+                {lastMessageText}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
