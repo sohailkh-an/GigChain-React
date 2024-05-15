@@ -20,7 +20,7 @@ function Inbox() {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_API_URL}`);
+    socket.current = io('https://gigchain-backend.up.railway.app');
 
     socket.current.on("connect", () => {
       console.log("Connected to server");
@@ -65,7 +65,7 @@ function Inbox() {
   const fetchConversations = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/conversations`,
+        'https://gigchain-backend.up.railway.app/api/conversations',
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -113,7 +113,7 @@ function Inbox() {
 
   const handleUserSelect = async (user) => {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/conversations`,
+      'https://gigchain-backend.up.railway.app/api/conversations',
       {
         method: "POST",
         headers: {

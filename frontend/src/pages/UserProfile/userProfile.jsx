@@ -21,7 +21,7 @@ const UserProfile = () => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/user/${userId}`
+          `https://gigchain-backend.up.railway.app/api/users/user/${userId}`
         );
 
         if (!response.data.user) {

@@ -48,18 +48,6 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 
-
-// router.get('/', authMiddleware, async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-//     const conversations = await Conversation.find({ participants: userId }).populate('participants');
-//     res.json(conversations);
-//   } catch (error) {
-//     console.error('Error fetching conversations:', error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// });
-
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { participant } = req.body; 

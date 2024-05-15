@@ -50,7 +50,7 @@ function FeaturedServicesSection({ serviceType }) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/gig/category/${category}`
+          `https://gigchain-backend.up.railway.app/api/gig/category/${category}`
         );
         setServices(response.data);
       } catch (error) {
@@ -63,9 +63,6 @@ function FeaturedServicesSection({ serviceType }) {
     fetchGigsByCategory(serviceType);
   }, [serviceType]);
 
-  // services.map((service) => {
-  //   console.log("Coming from the work area: ", service.gigId);
-  // });
 
   return (
     <div>
@@ -80,17 +77,6 @@ function FeaturedServicesSection({ serviceType }) {
             ))}
       </section>
     </div>
-
-    // <>
-    //   <h2>Featured in {serviceType} </h2>
-    //   <section className={styles.featuredServices_main_container}>
-    //     {/* <Slider {...sliderSettings}> */}
-    //     {services.map((service, index) => (
-    //       <ServiceCard key={index} service={service} />
-    //     ))}
-    //     {/* </Slider> */}
-    //   </section>
-    // </>
   );
 }
 

@@ -41,7 +41,7 @@ const CurrentUserProfile = () => {
     const fetchProfilePicture = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/${
+          `https://gigchain.backend.up.railway.app/api/users/${
             currentUser._id
           }/profile-picture`
         );
@@ -57,7 +57,7 @@ const CurrentUserProfile = () => {
     const fetchCoverPicture = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/${
+          `https://gigchain.backend.up.railway.app/api/users/${
             currentUser._id
           }/cover-picture`
         );
@@ -78,13 +78,13 @@ const CurrentUserProfile = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/users/${
+        `$https://gigchain.backend.up.railway.app/api/users/${
           currentUser._id
         }/profile-picture`,
         formData
       );
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/users/${
+        `https://gigchain-frontend.up.railway.app/api/users/${
           currentUser._id
         }/profile-picture`
       );
@@ -101,13 +101,13 @@ const CurrentUserProfile = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/users/${
+        `https://gigchain-backend.up.railway.app/api/users/${
           currentUser._id
         }/cover-picture`,
         formData
       );
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/users/${
+        `https://gigchain-backend.up.railway.app/api/users/${
           currentUser._id
         }/cover-picture`
       );
@@ -120,7 +120,7 @@ const CurrentUserProfile = () => {
   const updateProfile = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser._id}/update`,
+        `https://gigchain-backend.up.railway.app/api/users/user/${currentUser._id}/update`,
         {
           name,
           expertise,
