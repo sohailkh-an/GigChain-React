@@ -9,7 +9,7 @@ const Message = require("./models/Message");
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: { origin: process.env.FRONTEND_URL },
+  cors: { origin: process.env.FRONTEND_URL},
   debug: true,
 });
 
