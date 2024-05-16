@@ -50,7 +50,7 @@ function FeaturedServicesSection({ serviceType }) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://gigchain-backend.up.railway.app/api/gig/category/${category}`
+          `${import.meta.env.VITE_API_URL}/api/gig/category/${category}`
         );
         setServices(response.data);
       } catch (error) {

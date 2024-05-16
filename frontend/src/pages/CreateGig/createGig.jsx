@@ -44,7 +44,7 @@ const CreateGigPage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `https://gigchain-backend.up.railway.app/api/gig/create`,
+        `${import.meta.env.VITE_API_URL}/api/gig/create`,
         formDataToSend,
         {
           headers: {

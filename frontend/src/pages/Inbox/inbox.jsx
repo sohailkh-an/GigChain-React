@@ -20,7 +20,7 @@ function Inbox() {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io('https://gigchain-backend.up.railway.app');
+    socket.current = io(`${import.meta.env.VITE_API_URL}`);
 
     socket.current.on("connect", () => {
       console.log("Connected to server");
@@ -65,7 +65,7 @@ function Inbox() {
   const fetchConversations = async () => {
     try {
       const response = await fetch(
-        'https://gigchain-backend.up.railway.app/api/conversations',
+        `${import.meta.env.VITE_API_URL}/api/conversations`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -99,7 +99,7 @@ function Inbox() {
 
   const fetchMessages = async (conversationId) => {
     const response = await fetch(
-      `https://gigchain-backend.up.railway.app/api/conversations/${conversationId}/messages`,
+      `${import.meta.env.VITE_API_URL}/api/conversations/${conversationId}/messages`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -111,7 +111,7 @@ function Inbox() {
 
   const handleUserSelect = async (user) => {
     const response = await fetch(
-      'https://gigchain-backend.up.railway.app/api/conversations',
+      `${import.meta.env.VITE_API_URL}/api/conversations`,
       {
         method: "POST",
         headers: {

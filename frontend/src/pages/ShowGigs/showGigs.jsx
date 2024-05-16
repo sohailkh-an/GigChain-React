@@ -18,7 +18,7 @@ const ViewGigs = () => {
     const fetchUserGigs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`https://gigchain-backend.up.railway.app/api/gig/user`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/gig/user`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

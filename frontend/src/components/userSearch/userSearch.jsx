@@ -13,7 +13,7 @@ function UserSearch({ onUserSelect }) {
       }
 
       try {
-        const response = await fetch(`https://gigchain-backend.up.railway.app/api/users/search?query=${searchTerm}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/search?query=${searchTerm}`);
         const data = await response.json();
         setResults(data);
       } catch (error) {

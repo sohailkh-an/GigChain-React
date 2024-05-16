@@ -23,7 +23,7 @@ const GigEdit = () => {
     const fetchGigDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gigchain-backend.up.railway.app/api/gig/${gigId}`
+          `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`
         );
         setGigDetails(response.data.gig);
       } catch (error) {
@@ -46,7 +46,7 @@ const GigEdit = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://gigchain-backend.up.railway.app/api/gig/${gigId}`,
+        `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`,
         gigDetails
       );
       navigate(`/gig/${gigId}`);

@@ -9,7 +9,7 @@ const SearchBar = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `https://gigchain-backend.up.railway.app//api/gig/search?query=${searchQuery}`
+        `${import.meta.env.VITE_API_URL}//api/gig/search?query=${searchQuery}`
       );
       setSearchResults(response.data.gigs);
     } catch (error) {

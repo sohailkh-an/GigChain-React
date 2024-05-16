@@ -20,7 +20,7 @@ const GigDetails = () => {
     const fetchGigDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gigchain-backend.up.railway.app/api/gig/${gigId}`
+          `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`
         );
         setGigDetails(response.data.gig);
       } catch (error) {
@@ -40,7 +40,7 @@ const GigDetails = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://gigchain-backend.up.railway.app/api/gig/${gigId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/gig/${gigId}`);
       navigate("/gigs");
     } catch (error) {
       console.error("Error deleting gig:", error);

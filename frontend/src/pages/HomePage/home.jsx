@@ -19,7 +19,7 @@ function HomePage() {
 
     try {
       const response = await axios.get(
-        `https://gigchain-backend.up.railway.app/api/gig/search?query=${query}`
+        `${import.meta.env.VITE_API_URL}/api/gig/search?query=${query}`
       );
       console.log(response.data[0]);
       setSearchResults(response.data);
