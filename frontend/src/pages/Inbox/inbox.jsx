@@ -1,130 +1,32 @@
-import { useState, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import styles from "./styles/inbox.module.scss";
-import io from "socket.io-client";
 import UserSearch from "../../components/userSearch/userSearch";
 import Sidebar from "../../components/inboxSidebar/inboxSidebar";
 import MessageList from "../../components/messageList/messageList";
 import MessageInput from "../../components/messageInput/messageInput";
 import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
 import { useAuth } from "../../contexts/AuthContext";
+import { ChatContext } from "../../contexts/ChatContext";
 
 function Inbox() {
   const { currentUser } = useAuth();
-  const [conversations, setConversations] = useState([]);
-  const [activeConversation, setActiveConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const {
+    conversations,
+    activeConversation,
+    messages,
+    userDetails,
+    fetchUserDetails,
+    handleSelectConversation,
+    handleSendMessage,
+    handleUserSelect,
+  } = useContext(ChatContext);
 
-
-
-  const socket = useRef(null);
+  console.log("Current user in inbox component: ", currentUser);
+  console.log("User Details: ", userDetails);
 
   useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_API_URL}`);
-
-    socket.current.on("connect", () => {
-      console.log("Connected to server");
-    });
-
-    socket.current.on("new message", (message) => {
-      console.log("Received new message: ", message);
-      setConversations((prevConversations) => {
-        return prevConversations.map((convo) => {
-          if (convo.id === message.conversationId) {
-            // return { ...convo, messages: [...convo.messages, message] };
-            return {...convo, lastMessage: message}
-          }
-          return convo;
-        });
-      });
-
-      if (message.conversationId === activeConversation) {
-      setMessages((prevMessages) => [...prevMessages, message]);
-      }
-    });
-
-    if (activeConversation) {
-      socket.current.emit("join-conversation", activeConversation);
-    }
-
-    fetchConversations();
-    if (activeConversation) {
-      fetchMessages(activeConversation);
-    }
-
-    return () => {
-      socket.current.off("connect");
-      socket.current.off("new message");
-      if (activeConversation) {
-        socket.current.emit("leave-conversation", activeConversation); 
-      }
-      socket.current.disconnect("disconnect");
-    };
-  }, [activeConversation]);
-
-  const fetchConversations = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/conversations`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      const data = await response.json();
-      setConversations(data);
-      console.log("Conversations fetched: ", data);
-    } catch (error) {
-      console.error("Error fetching conversations:", error);
-    }
-  };
-
-  const handleSelectConversation = (id) => {
-    console.log("Selected conversation:", id);
-    setActiveConversation(id);
-  };
-
-  const handleSendMessage = async (text) => {
-    console.log("Sending message...", text, currentUser._id, activeConversation);
-    if (activeConversation) {
-      const message = {
-        conversationId: activeConversation,
-        sender: currentUser._id,
-        text: text,
-      };
-      socket.current.emit("send-message", message);
-    } else {
-      console.error("No active conversation found");
-    }
-  };
-
-  const fetchMessages = async (conversationId) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/conversations/${conversationId}/messages`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
-    const data = await response.json();
-    setMessages(data);
-    console.log("Messages fetched: ", data);
-  };
-
-  const handleUserSelect = async (user) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/conversations`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ participant: user._id }),
-      }
-    );
-    const newConversation = await response.json();
-    setConversations([...conversations, newConversation]);
-    setActiveConversation(newConversation._id);
-  };
+    fetchUserDetails(currentUser._id);
+  }, [currentUser._id]);
 
   console.log("Messages extract from state variable: ", messages);
   console.log("Currently active conversation: ", activeConversation);
@@ -132,7 +34,7 @@ function Inbox() {
   return (
     <div className="app">
       <Navigation />
-
+      {/* {userDetails ? ( */}
       <div className={styles.inboxParentContainer}>
         <div className={styles.sidebarParentContainer}>
           <UserSearch onUserSelect={handleUserSelect} />
@@ -147,15 +49,25 @@ function Inbox() {
         <div className={styles.messageParentContainer}>
           {activeConversation && (
             <>
-              <MessageList conversations={conversations} activeConversation={activeConversation} messages={messages} />
-              <MessageInput  onSendMessage={handleSendMessage} />
+              <MessageList
+                conversations={conversations}
+                activeConversation={activeConversation}
+                messages={messages}
+              />
+              <MessageInput onSendMessage={handleSendMessage} />
             </>
           )}
         </div>
       </div>
+      {/* </>
+      ) : (
+        <div className={styles.loadingWrapper}>
+          <div className={styles.loader}></div>
+          <p className={styles.loadingText}>Loading...</p>{" "}
+        </div>
+      )} */}
       {/* <Footer /> */}
     </div>
   );
 }
-
 export default Inbox;

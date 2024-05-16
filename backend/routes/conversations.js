@@ -11,7 +11,6 @@ router.use(authMiddleware);
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id;
-    // Fetch conversations and include the last message
     const conversations = await Conversation.aggregate([
       { $match: { participants: userId } },
       {

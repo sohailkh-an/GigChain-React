@@ -21,6 +21,8 @@ const CurrentUserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   
 
+  console.log("Current user in profile component: ", currentUser)
+
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
