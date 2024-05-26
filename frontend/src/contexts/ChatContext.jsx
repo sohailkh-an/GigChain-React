@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
-import axios from "redaxios";
+import { useAuth } from "./AuthContext";
 
 export const ChatContext = createContext();
 
@@ -8,7 +8,8 @@ export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [userDetails, setUserDetails] = useState(null);
+
+  const { currentUser } = useAuth();
 
   const socket = useRef(null);
 
@@ -76,16 +77,11 @@ export const ChatProvider = ({ children }) => {
   };
 
   const handleSendMessage = async (text) => {
-    console.log(
-      "Sending message...",
-      text,
-      userDetails._id,
-      activeConversation
-    );
+    console.log("Sending message...", text, currentUser.id, activeConversation);
     if (activeConversation) {
       const message = {
         conversationId: activeConversation,
-        sender: userDetails._id,
+        sender: currentUser.id,
         text: text,
       };
       socket.current.emit("send-message", message);
@@ -109,17 +105,32 @@ export const ChatProvider = ({ children }) => {
   };
 
   const handleUserSelect = async (user) => {
-    if (user._id === userDetails._id) {
+    if (user._id === currentUser.id) {
       console.error("Cannot open a conversation with yourself");
       return;
     }
 
-    const existingConversation = conversations.find((conversation) =>
-      conversation.participants.includes(user._id)
+    function findConversationId(conversations, sender, reciever) {
+      for (const conversation of conversations) {
+        const participantIds = conversation.participants.map((p) => p._id);
+        if (
+          participantIds.includes(sender) &&
+          participantIds.includes(reciever)
+        ) {
+          return conversation._id;
+        }
+      }
+      return null;
+    }
+
+    const conversationId = findConversationId(
+      conversations,
+      user._id,
+      currentUser.id
     );
 
-    if (existingConversation) {
-      setActiveConversation(existingConversation._id);
+    if (conversationId !== null) {
+      setActiveConversation(conversationId);
     } else {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/conversations`,
@@ -138,31 +149,13 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  const fetchUserDetails = async (userId) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/users/user/${userId}`
-      );
-
-      if (!response.data.user) {
-        console.log("User not found");
-        return;
-      }
-      console.log(response.data.user);
-      setUserDetails(response.data.user);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
-
   return (
     <ChatContext.Provider
       value={{
         conversations,
         activeConversation,
         messages,
-        userDetails,
-        fetchUserDetails,
+        currentUser,
         handleSelectConversation,
         handleSendMessage,
         handleUserSelect,

@@ -1,10 +1,14 @@
-require("dotenv").config();
+const dotenv = require('dotenv');
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
 const socketIO = require("socket.io");
 const Message = require("./models/Message");
+
+
+const env = process.env.NODE_ENV || 'development';
+dotenv.config({ path: `.env.${env}` });
 
 const app = express();
 const server = http.createServer(app);

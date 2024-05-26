@@ -15,7 +15,7 @@ const CurrentUserProfile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [coverPicture, setCoverPicture] = useState(null);
   const [name, setName] = useState(currentUser.name);
-  const [expertise, setExpertise] = useState("Backend Developer | MERN Stack");
+  const [expertise, setExpertise] = useState("");
   const [languages, setLanguages] = useState("");
   const [about, setAbout] = useState("About me.....");
   const [isEditing, setIsEditing] = useState(false);
@@ -44,7 +44,7 @@ const CurrentUserProfile = () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/users/${
-            currentUser._id
+            currentUser.id
           }/profile-picture`
         );
         setProfilePicture(response.data.profilePictureUrl);
@@ -60,7 +60,7 @@ const CurrentUserProfile = () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/users/${
-            currentUser._id
+            currentUser.id
           }/cover-picture`
         );
         setCoverPicture(response.data.coverPictureUrl);
@@ -81,13 +81,13 @@ const CurrentUserProfile = () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/${
-          currentUser._id
+          currentUser.id
         }/profile-picture`,
         formData
       );
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/users/${
-          currentUser._id
+          currentUser.id
         }/profile-picture`
       );
       setProfilePicture(response.data.profilePictureUrl);
@@ -104,13 +104,13 @@ const CurrentUserProfile = () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/${
-          currentUser._id
+          currentUser.id
         }/cover-picture`,
         formData
       );
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/users/${
-          currentUser._id
+          currentUser.id
         }/cover-picture`
       );
       setCoverPicture(response.data.coverPictureUrl);
@@ -122,7 +122,7 @@ const CurrentUserProfile = () => {
   const updateProfile = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser._id}/update`,
+        `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser.id}/update`,
         {
           name,
           expertise,

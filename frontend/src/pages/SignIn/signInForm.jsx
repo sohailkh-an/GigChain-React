@@ -4,9 +4,12 @@ import styles from "./styles/page.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
+import LoaderStyles from "../../pages/UserProfile/styles/page.module.scss";
+
 
 export default function SignInPage() {
   const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,24 +38,35 @@ export default function SignInPage() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/signin`, userData);
-    const { token, user } = res.data;
-    login({ token, user });
-    console.log(res.data);
-    localStorage.setItem('token', token);
-    navigate('/');
-  } catch (err) {
-    console.error(err.response.data);
-    alert('Error signing in');
-  }
-};
-
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/signin`,
+        userData
+      );
+      const { token, user } = res.data;
+      login({ token, user });
+      console.log(res.data);
+      localStorage.setItem("token", token);
+      navigate("/");
+    } catch (err) {
+      console.error(err.response.data);
+      alert("Error signing in");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <React.Fragment>
       <div className={styles.signIn_wrapper}>
+        {isLoading && (
+          <div className={LoaderStyles.loadingWrapper}>
+            <div className={LoaderStyles.loader}></div>
+            <p className={LoaderStyles.loadingText}>Logging in...</p>
+          </div>
+        )}
         <div className={styles.parent_cont_left}>
           <form
             onSubmit={handleSubmit}

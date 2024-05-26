@@ -5,8 +5,12 @@ import Footer from "../../components/footer/footer";
 import styles from "./styles/styles.module.scss";
 import FeaturedServicesSection from "../../components/featuredServicesSection/featuredServicesSection";
 import ServiceCard from "../../components/searchResultGigCard/searchResultGigCard";
+import { useAuth } from "../../contexts/AuthContext";
 
 function HomePage() {
+
+  const {currentUser} = useAuth();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -28,6 +32,8 @@ function HomePage() {
     }
   };
 
+  console.log("Check");
+
   const handleInputChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -40,6 +46,7 @@ function HomePage() {
         <NavBar />
         <div className={styles.hero_container}>
           <div className={styles.headings_container}>
+            <h5>Welcome, {currentUser.name}</h5>
             <h1>
               Pick top talent at <br />
               your fingertips

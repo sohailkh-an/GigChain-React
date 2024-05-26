@@ -1,31 +1,29 @@
-import { useAuth } from "../../contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles/messageList.module.scss";
 
-function MessageList({ conversations, activeConversation, messages }) {
-  const { currentUser } = useAuth();
+function MessageList({ currentUser, conversations, activeConversation, messages }) {
   const [otherUser, setOtherUser] = useState({});
-  const [lastMessage, setLastMessage] = useState("");
-
-  console.log(
-    "Active Conversation in MessageList Component: ",
-    activeConversation
-  );
+  const messageListRef = useRef(null);
 
   useEffect(() => {
-
-
     conversations.map((convo) => {
-      if (convo._id == activeConversation) {
-        if (convo.participants[0]._id === currentUser._id) {
+      if (convo._id === activeConversation) {
+        if (convo.participants[0]._id === currentUser.id) {
           setOtherUser(convo.participants[1]);
-        } else if (convo.participants[1]._id === currentUser._id) {
+        } else if (convo.participants[1]._id === currentUser.id) {
           setOtherUser(convo.participants[0]);
         }
       }
     });
   }, [activeConversation, currentUser, conversations]);
+
+  useEffect(() => {
+    // Scroll to the bottom of the message list when new messages are added
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <>
@@ -36,7 +34,7 @@ function MessageList({ conversations, activeConversation, messages }) {
         </Link>
       </div>
       <div className={styles.chatContainer}>
-        <div className={styles.message_list}>
+        <div className={styles.message_list} ref={messageListRef}>
           {messages.map((message) => {
             const messageDate = new Date(message.timestamp);
             const currentDate = new Date();
@@ -77,7 +75,7 @@ function MessageList({ conversations, activeConversation, messages }) {
               <div className={styles.main_cont_msg} key={message._id}>
                 <div
                   className={` ${styles.chatBubble} ${
-                    message.sender === currentUser._id
+                    message.sender === currentUser.id
                       ? styles.sent
                       : styles.received
                   }`}
@@ -86,7 +84,7 @@ function MessageList({ conversations, activeConversation, messages }) {
                 </div>
                 <p
                   className={`${
-                    message.sender === currentUser._id
+                    message.sender === currentUser.id
                       ? styles.sentTimestamp
                       : styles.receivedTimestamp
                   }`}

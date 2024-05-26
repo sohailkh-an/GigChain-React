@@ -1,32 +1,25 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import styles from "./styles/inbox.module.scss";
 import UserSearch from "../../components/userSearch/userSearch";
 import Sidebar from "../../components/inboxSidebar/inboxSidebar";
 import MessageList from "../../components/messageList/messageList";
 import MessageInput from "../../components/messageInput/messageInput";
 import Navigation from "../../components/navigation/navigation";
-import { useAuth } from "../../contexts/AuthContext";
 import { ChatContext } from "../../contexts/ChatContext";
 
 function Inbox() {
-  const { currentUser } = useAuth();
   const {
     conversations,
     activeConversation,
     messages,
-    userDetails,
-    fetchUserDetails,
+    currentUser,
     handleSelectConversation,
     handleSendMessage,
     handleUserSelect,
   } = useContext(ChatContext);
 
   console.log("Current user in inbox component: ", currentUser);
-  console.log("User Details: ", userDetails);
-
-  useEffect(() => {
-    fetchUserDetails(currentUser._id);
-  }, [currentUser._id]);
+  console.log("User Details: ", currentUser);
 
   console.log("Messages extract from state variable: ", messages);
   console.log("Currently active conversation: ", activeConversation);
@@ -39,6 +32,7 @@ function Inbox() {
         <div className={styles.sidebarParentContainer}>
           <UserSearch onUserSelect={handleUserSelect} />
           <Sidebar
+            currentUser={currentUser}
             messages={messages}
             conversations={conversations}
             activeConversation={activeConversation}
@@ -50,6 +44,7 @@ function Inbox() {
           {activeConversation && (
             <>
               <MessageList
+                currentUser={currentUser}
                 conversations={conversations}
                 activeConversation={activeConversation}
                 messages={messages}

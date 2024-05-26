@@ -2,12 +2,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import styles from "./styles/sidebar.module.scss";
 
 function Sidebar({
+  currentUser,
   messages,
   conversations,
   activeConversation,
   onSelectConversation,
 }) {
-  const { currentUser } = useAuth();
   console.log("Active Conversation in Sidebar Component: ", activeConversation);
 
   return (
@@ -18,7 +18,7 @@ function Sidebar({
           : "No messages yet";
 
         const otherUser = convo.participants.find(
-          (participant) => participant._id !== currentUser._id
+          (participant) => participant._id !== currentUser.id
         );
 
         return (
