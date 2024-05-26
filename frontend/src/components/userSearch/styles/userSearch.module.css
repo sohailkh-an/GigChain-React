@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 .searchBarParentContainer .searchContainer .searchInput {
   background-color: #ebe7ed;
-  width: 300px;
+  width: 270px;
   height: 40px;
   border: none;
   border-radius: 5px;
@@ -22,7 +23,7 @@
   height: 40px;
 }
 .searchBarParentContainer .searchResults {
-  width: 300px;
+  width: 270px;
   height: -moz-fit-content;
   height: fit-content;
   padding: 20px;

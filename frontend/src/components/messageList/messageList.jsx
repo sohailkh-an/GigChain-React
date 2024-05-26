@@ -26,14 +26,14 @@ function MessageList({ currentUser, conversations, activeConversation, messages 
   }, [messages]);
 
   return (
-    <>
+    <div className={styles.messagesWrapper}>
       <div className={styles.receiptNameBar}>
         <h2 className={styles.receiptName}>{otherUser.name}</h2>
         <Link to={`/user/${otherUser._id}`}>
           <h4>Go to Profile</h4>
         </Link>
       </div>
-      <div className={styles.chatContainer}>
+      {/* <div className={styles.chatContainer}> */}
         <div className={styles.message_list} ref={messageListRef}>
           {messages.map((message) => {
             const messageDate = new Date(message.timestamp);
@@ -95,8 +95,8 @@ function MessageList({ currentUser, conversations, activeConversation, messages 
             );
           })}
         </div>
-      </div>
-    </>
+      {/* </div> */}
+    </div>
   );
 }
 

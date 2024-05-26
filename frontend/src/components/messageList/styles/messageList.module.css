@@ -1,17 +1,13 @@
-.message_list {
-  max-height: 78vh;
-  min-height: 78vh;
-  overflow-y: auto;
-  width: 60vw;
+.messagesWrapper {
+  width: 980px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background: linear-gradient(135deg, #2b0046 0%, #8e44ad 50%, #3498db 100%);
-  padding: 40px 20px;
-  border-radius: 5px 5px 0px 0px;
+  align-items: flex-start;
 }
-.message_list .chatContainer {
+
+.chatContainer {
   width: 80%;
+  height: 400px;
   max-width: 600px;
   background: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
   border-radius: 10px;
@@ -20,6 +16,19 @@
   padding: 20px;
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
+}
+
+.message_list {
+  max-height: 430px;
+  min-height: 430px;
+  overflow-y: auto;
+  width: 950px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #EBE7ED;
+  padding: 40px 20px;
+  border-radius: 5px 5px 0px 0px;
 }
 .message_list::-webkit-scrollbar {
   width: 10px;
@@ -36,12 +45,12 @@
 .message_list .main_cont_msg {
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 .message_list .chatBubble {
   max-width: 75%;
   padding: 10px 15px;
   border-radius: 20px;
-  margin-bottom: 10px;
   font-size: 16px;
   line-height: 1.4;
 }
@@ -49,6 +58,7 @@
   color: #2B0046; /* Light lavender */
   background-color: #D6D8FC; /* Dark grey text */
   align-self: flex-end;
+  font: normal 400 16px/1.5 "system ui", sans-serif;
   display: flex;
   flex-direction: row;
   width: -moz-fit-content;
@@ -60,13 +70,14 @@
   border-radius: 10px 10px 0 10px;
 }
 .message_list .sentTimestamp {
+  color: #767477;
   align-self: flex-end;
-  color: #D6D8FC;
   font-size: 12px;
 }
 .message_list .received {
   background-color: #2B0046; /* Light purple */
-  color: #D1C4E9; /* Light purple */
+  color: #ffffff; /* Light purple */
+  font: normal 400 16px/1.5 "system ui", sans-serif;
   display: flex;
   align-self: flex-start;
   width: -moz-fit-content;
@@ -78,15 +89,22 @@
   border-radius: 10px 10px 10px 0;
 }
 .message_list .receivedTimestamp {
+  color: #767477;
   align-self: flex-start;
-  color: #D6D8FC;
   font-size: 12px;
 }
 
 .receiptNameBar {
   display: flex;
+  width: 950px;
+  height: 60px;
+  padding: 20px;
+  background-color: #D9D9D9;
   flex-direction: row;
   gap: 20px;
-  margin-bottom: 20px;
   align-items: center;
+}
+.receiptNameBar .receiptName {
+  font: normal 400 16px/1.5 "system ui", sans-serif;
+  font-weight: bold;
 }/*# sourceMappingURL=messageList.module.css.map */

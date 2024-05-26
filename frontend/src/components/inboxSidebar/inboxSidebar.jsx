@@ -1,4 +1,3 @@
-import { useAuth } from "../../contexts/AuthContext";
 import styles from "./styles/sidebar.module.scss";
 
 function Sidebar({
