@@ -1,0 +1,25 @@
+@use "../../../styles/base" as base;
+
+.gigListWrapper {
+
+    .heading{
+        margin-left:50px;
+        margin-top:50px;
+    }
+    // padding:50px;
+  .gigListContent {
+    display: flex;
+    flex-wrap: wrap;
+    // justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    flex-direction: row;
+    width: 100vw;
+    background-color: base.$background;
+  }
+}

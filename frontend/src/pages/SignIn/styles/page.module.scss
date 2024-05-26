@@ -24,8 +24,7 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      gap:15px;
-
+      gap: 15px;
 
       .h3 {
         font: base.$h3;
@@ -35,8 +34,7 @@
       .h4 {
         font: base.$h5;
         color: base.$black;
-        margin:0;
-
+        margin: 0;
       }
 
       .input_container {
@@ -57,6 +55,23 @@
           font: base.$p_large;
           padding: 15px 20px;
           box-sizing: border-box;
+        }
+
+        .input_error {
+          border: 2px solid red;
+          animation: blink 0.5s 3;
+        }
+
+        @keyframes blink {
+          0% {
+            border-color: red;
+          }
+          50% {
+            border-color: transparent;
+          }
+          100% {
+            border-color: red;
+          }
         }
       }
 
@@ -127,7 +142,7 @@
           font: base.$p_small;
           color: base.$primary;
         }
-        .forgetPassLink{
+        .forgetPassLink {
           color: base.$black;
         }
       }
@@ -135,20 +150,19 @@
       .button_secondary {
         width: 450px;
         height: 60px;
+        padding: 0;
         background-color: base.$white;
         border: 1px solid base.$black;
         border-radius: 4px;
         color: base.$black;
-        font: base.$p_xlarge;
+        font: base.$p_large;
         cursor: pointer;
       }
 
       .welcome_text {
         font: base.$p_small;
         color: base.$black;
-
       }
-
 
       .register_link_container {
         align-self: center;

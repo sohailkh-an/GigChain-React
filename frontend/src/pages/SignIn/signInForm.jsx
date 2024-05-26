@@ -6,10 +6,13 @@ import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
 import LoaderStyles from "../../pages/UserProfile/styles/page.module.scss";
 
-
 export default function SignInPage() {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorStatus, setErrorStatus] = useState({
+    email: false,
+    password: false,
+  });
 
   const navigate = useNavigate();
 
@@ -40,6 +43,7 @@ export default function SignInPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log("Loggin in with:", userData);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/signin`,
@@ -47,12 +51,16 @@ export default function SignInPage() {
       );
       const { token, user } = res.data;
       login({ token, user });
-      console.log(res.data);
       localStorage.setItem("token", token);
       navigate("/");
     } catch (err) {
-      console.error(err.response.data);
-      alert("Error signing in");
+      if (err.data.msg === "Incorrect email") {
+        setErrorStatus({ email: true, password: false });
+      } else if (err.data.msg === "Incorrect password") {
+        setErrorStatus({ email: false, password: true });
+      } else {
+        alert("Error signing in");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -80,14 +88,18 @@ export default function SignInPage() {
 
             <div className={styles.input_container}>
               <input
-                className={styles.input}
+                className={` ${styles.input} ${
+                  errorStatus.email ? styles.input_error : ""
+                }`}
                 type="text"
                 placeholder="Email"
                 name="email"
                 onChange={handleChange}
               />
               <input
-                className={styles.input}
+                className={` ${styles.input} ${
+                  errorStatus.password ? styles.input_error : ""
+                }`}
                 type="password"
                 placeholder="Password"
                 name="password"
@@ -119,10 +131,12 @@ export default function SignInPage() {
             </div>
 
             <div>
-              <button onClick={connectMetamask} disabled={!!connectedAccount}>
-                {connectedAccount
-                  ? "Wallet Connected:" + connectedAccount
-                  : "Login with MetaMask"}
+              <button
+                className={styles.button_secondary}
+                onClick={connectMetamask}
+                disabled={!!connectedAccount}
+              >
+                {connectedAccount ? "Wallet Connected" : "Login with MetaMask"}
               </button>
             </div>
 

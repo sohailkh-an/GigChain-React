@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./navigation.module.css";
+import axios from "axios";
 // import InboxIcon from '../../public/chat message.svg';
 // import NotificationIcon from '../../public/notification.svg';
 // import HelpIcon from '../../public/help.svg';
@@ -9,6 +10,49 @@ import DropdownMenu from "../dropdownMenu/dropdownMenu";
 
 export default function Navigation() {
   const { currentUser, logout } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const searchBarRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target)
+      ) {
+        setSearchSuggestions([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion.title);
+    setSearchSuggestions([]);
+  };
+
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() !== "") {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/gig/search?query=${query}`
+        );
+        setSearchSuggestions(response.data);
+      } catch (error) {
+        console.error("Error fetching search suggestions:", error);
+      }
+    } else {
+      setSearchSuggestions([]);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -24,16 +68,32 @@ export default function Navigation() {
             </Link>
           </div> */}
 
-          <DropdownMenu />
-
-
           <div className={styles.searchBar_container}>
-            <input
-              className={styles.searchBar}
-              type="text"
-              placeholder="Search for jobs"
-            />
-            {/* <button className={styles.searchButton}>Search</button> */}
+            <DropdownMenu />
+            <div className={styles.input_wrapper} ref={searchBarRef}>
+              {" "}
+              <input
+                className={styles.searchBar}
+                type="text"
+                placeholder="Search for jobs"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              {searchSuggestions.length > 0 && (
+                <ul className={styles.suggestionsList}>
+                  {searchSuggestions.map((suggestion) => (
+                    <li
+                      key={suggestion._id}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      {suggestion.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <button className={styles.searchButton}>Search</button>
           </div>
 
           <div className={styles.navbar_right}>
@@ -63,7 +123,9 @@ export default function Navigation() {
                 <Link to="/profile" className={styles.navbar_link}>
                   Profile
                 </Link>
-                <button onClick={logout}>Logout</button>
+                <button className={styles.btn_logout} onClick={logout}>
+                  Logout
+                </button>
               </>
             )}
           </div>

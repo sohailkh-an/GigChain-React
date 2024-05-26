@@ -5,12 +5,12 @@ import CurrentUserProfile from "./pages/Profile/currentUserProfile";
 import UserProfile from "./pages/UserProfile/userProfile";
 import Inbox from "./pages/Inbox/inboxChatProvider";
 import CreateGig from "./pages/CreateGig/createGig";
+import CategoryGigResults from "./pages/CategoryGigResults/categoryGigResults";
 import ViewGig from "./pages/ShowGigs/showGigs";
 import GigDetails from "./pages/GigDetails/gigDetails";
 import CUGigDetails from "./pages/cuGigDetails/cuGigDetails";
 import RegisterationPage from "./pages/Register/registerationForm";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ChatProvider } from "./contexts/ChatContext"; // Import the ChatProvider
 import ProtectedRoute from "./auth/ProtectedRoute";
 import PublicRoute from "./auth/PublicRoute";
 import EditGig from "./pages/EditGig/editGig";
@@ -41,6 +41,7 @@ function App() {
             path="/create_gig"
             element={<ProtectedRoute element={CreateGig} />}
           />
+          <Route path="/category/:mainCategory/:subCategory" element={<ProtectedRoute element={CategoryGigResults} />} />
           <Route
             path="/gig/:gigId/edit"
             element={<ProtectedRoute element={EditGig} />}

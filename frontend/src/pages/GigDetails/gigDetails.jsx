@@ -86,7 +86,7 @@ const GigDetails = () => {
           </div>
 
           <div className={styles.actionsParentWrapper}>
-            {currentUser._id === gigDetails.user ? (
+            {currentUser.id === gigDetails.user ? (
               <>
                 <button className={styles.orderButton} onClick={handleEdit}>
                   Edit

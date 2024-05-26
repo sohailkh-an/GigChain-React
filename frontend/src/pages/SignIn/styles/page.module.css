@@ -52,6 +52,21 @@
   padding: 15px 20px;
   box-sizing: border-box;
 }
+.signIn_wrapper .parent_cont_left .main_content_container .input_container .input_error {
+  border: 2px solid red;
+  animation: blink 0.5s 3;
+}
+@keyframes blink {
+  0% {
+    border-color: red;
+  }
+  50% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: red;
+  }
+}
 .signIn_wrapper .parent_cont_left .main_content_container .button_primary {
   width: 450px;
   height: 60px;
@@ -115,11 +130,12 @@
 .signIn_wrapper .parent_cont_left .main_content_container .button_secondary {
   width: 450px;
   height: 60px;
+  padding: 0;
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 4px;
   color: #000000;
-  font: normal 400 23px/1.5 "Inter", sans-serif;
+  font: normal 400 19.2px/1.5 "Inter", sans-serif;
   cursor: pointer;
 }
 .signIn_wrapper .parent_cont_left .main_content_container .welcome_text {

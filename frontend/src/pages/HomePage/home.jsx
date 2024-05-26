@@ -32,7 +32,6 @@ function HomePage() {
     }
   };
 
-  console.log("Check");
 
   const handleInputChange = (e) => {
     const query = e.target.value;

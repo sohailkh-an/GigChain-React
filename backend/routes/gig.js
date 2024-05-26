@@ -38,6 +38,42 @@ router.get("/search", async(req, res) => {
   }
 })
 
+
+// router.get("/search", async (req, res) => {
+//   const { query } = req.query;
+//   try {
+//     const gigs = await Gig.find({ title: { $regex: query, $options: "i" } }).limit(5);
+//     res.json(gigs);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+
+router.get("/category/:mainCategory/:subCategory", async (req, res) => {
+  const { subCategory } = req.params;
+  try {
+    const gigs = await Gig.find({
+      category: subCategory,
+    })
+      .sort({ _id: -1 })
+      
+
+      console.log("Gigs found: ", gigs);
+
+    if (gigs.length === 0) {
+      return res.status(404).json({ message: "No gigs found" });
+    }
+
+    res.json(gigs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 router.get("/category/:category", async (req, res) => {
   // console.log("Fetching featured gigs");
   const { category } = req.params;

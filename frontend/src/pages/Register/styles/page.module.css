@@ -105,8 +105,9 @@
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 4px;
+  padding: 0;
   color: #000000;
-  font: normal 400 23px/1.5 "Inter", sans-serif;
+  font: normal 400 19.2px/1.5 "Inter", sans-serif;
   cursor: pointer;
 }
 .signUp_wrapper .parent_cont_left .main_content_container .welcome_text {
