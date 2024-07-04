@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import styles from "./styles/sidebar.module.scss";
 
 function Sidebar({
@@ -7,6 +8,7 @@ function Sidebar({
   activeConversation,
   onSelectConversation,
 }) {
+
   console.log("Active Conversation in Sidebar Component: ", activeConversation);
 
   return (
