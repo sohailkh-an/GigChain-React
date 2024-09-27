@@ -5,11 +5,35 @@ import axios from "redaxios";
 import styles from "./styles/page.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
+import { useEffect } from "react";
+import { ethers } from "ethers";
+
+import GigFactoryArtifact from "../../contracts/GigFactory.json";
 
 const CreateGigPage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  const [contract, setContract] = useState(null);
   console.log("Current User Details: ", currentUser);
+
+  useEffect(() => {
+    const initializeContract = async () => {
+      if (typeof window.ethereum !== "undefined") {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contractAddress = "YOUR_DEPLOYED_GIGFACTORY_CONTRACT_ADDRESS";
+        const gigFactoryContract = new ethers.Contract(
+          contractAddress,
+          GigFactoryArtifact.abi,
+          signer
+        );
+        setContract(gigFactoryContract);
+      }
+    };
+    initializeContract();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -31,6 +55,19 @@ const CreateGigPage = () => {
     e.preventDefault();
 
     try {
+      if (!contract) {
+        console.error("Contract not initialized");
+        return;
+      }
+
+      const tx = await contract.createGigOrder();
+      const receipt = await tx.wait();
+      const event = receipt.events.find(
+        (event) => event.event === "GigOrderCreated"
+      );
+      const [gigOrderAddress] = event.args;
+      console.log("GigOrder created at:", gigOrderAddress);
+
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
@@ -39,7 +76,12 @@ const CreateGigPage = () => {
       formDataToSend.append("thumbnailImage", formData.thumbnailImage);
       formDataToSend.append("user", currentUser._id);
       formDataToSend.append("serviceProvider", currentUser.name);
-      formDataToSend.append("providerProfilePicture", currentUser.profilePictureUrl);
+      formDataToSend.append(
+        "providerProfilePicture",
+        currentUser.profilePictureUrl
+      );
+
+      formDataToSend.append("gigOrderAddress", gigOrderAddress);
 
       const token = localStorage.getItem("token");
 
@@ -124,7 +166,9 @@ const CreateGigPage = () => {
               required
             />
           </div>
-          <button type="submit" className={styles.submitButton}>Create Gig</button>
+          <button type="submit" className={styles.submitButton}>
+            Create Gig
+          </button>
         </form>
       </div>
       <Footer />

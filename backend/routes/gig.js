@@ -112,6 +112,12 @@ router.use((req, res, next) => {
   next();
 });
 
+
+
+
+const ethers = require('ethers');
+const GigOrderArtifact = require('../../smart-contracts/artifacts/contracts/GigOrder.sol/GigOrder.json');
+
 router.post(
   "/create",
   authMiddleware,
@@ -119,9 +125,18 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const { title, description, price, category, serviceProvider, providerProfilePicture } = req.body;
+      const { title, description, price, category, serviceProvider, providerProfilePicture, gigOrderAddress } = req.body;
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
+
+      const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
+      const gigOrderContract = new ethers.Contract(gigOrderAddress, GigOrderArtifact.abi, provider);
+      
+      
+      const isValid = await gigOrderContract.isValid();  
+      if (!isValid) {
+        return res.status(400).json({ message: "Invalid gig order on blockchain" });
+      }
 
       const gig = new Gig({
         title,
@@ -131,7 +146,8 @@ router.post(
         thumbnailUrl,
         user: userId,
         serviceProvider,
-        providerProfilePicture
+        providerProfilePicture,
+        gigOrderAddress //this thing is new here
       });
 
       await gig.save();
@@ -143,6 +159,45 @@ router.post(
     }
   }
 );
+
+
+
+
+
+
+
+
+// router.post(
+//   "/create",
+//   authMiddleware,
+//   upload.single("thumbnailImage"),
+//   async (req, res) => {
+//     try {
+//       console.log("Request Body:", req.body);
+//       const { title, description, price, category, serviceProvider, providerProfilePicture } = req.body;
+//       const userId = req.user._id;
+//       const thumbnailUrl = req.file.location;
+
+//       const gig = new Gig({
+//         title,
+//         description,
+//         price,
+//         category,
+//         thumbnailUrl,
+//         user: userId,
+//         serviceProvider,
+//         providerProfilePicture
+//       });
+
+//       await gig.save();
+
+//       res.status(201).json({ message: "Gig created successfully", gig });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: "Server error" });
+//     }
+//   }
+// );
 
 router.put("/:gigId", async (req, res) => {
   try {
