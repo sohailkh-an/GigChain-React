@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import axios from "redaxios";
-import styles from "./styles/page.module.css";
+import styles from "./styles/page.module.scss";
 import { Link } from "react-router-dom";
 
 

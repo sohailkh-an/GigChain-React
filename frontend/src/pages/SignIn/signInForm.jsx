@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Web3 } from "web3";
-import styles from "./styles/page.module.css";
+import styles from "./styles/page.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import styles from "./navigation.module.css";
+import styles from "./navigation.module.scss";
 import axios from "axios";
 // import InboxIcon from '../../public/chat message.svg';
 // import NotificationIcon from '../../public/notification.svg';

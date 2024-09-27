@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import styles from "./styles/userSearch.module.scss";
 
 function UserSearch({ onUserSelect }) {
@@ -62,3 +63,8 @@ function UserSearch({ onUserSelect }) {
 }
 
 export default UserSearch;
+
+UserSearch.propTypes = {
+  onUserSelect: PropTypes.func.isRequired,
+};
+

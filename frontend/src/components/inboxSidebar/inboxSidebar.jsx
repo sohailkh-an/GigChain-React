@@ -1,6 +1,5 @@
-import {useEffect} from 'react';
 import styles from "./styles/sidebar.module.scss";
-
+import PropTypes from "prop-types";
 function Sidebar({
   currentUser,
   messages,
@@ -72,3 +71,13 @@ function Sidebar({
 }
 
 export default Sidebar;
+
+Sidebar.propTypes = {
+  currentUser: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
+  conversations: PropTypes.array.isRequired,
+  activeConversation: PropTypes.string.isRequired,
+  onSelectConversation: PropTypes.func.isRequired,
+};
+
+
