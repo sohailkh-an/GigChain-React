@@ -1,33 +1,30 @@
 const hre = require("hardhat");
 
 async function main() {
-  const GigOrder = await hre.ethers.getContractFactory("GigOrder");
-  console.log("Deploying GigOrder...");
-  const gigOrder = await GigOrder.deploy();
-  await gigOrder.waitForDeployment();
-  console.log("GigOrder deployed to:", await gigOrder.getAddress());
-
   const GigFactory = await hre.ethers.getContractFactory("GigFactory");
   console.log("Deploying GigFactory...");
   const gigFactory = await GigFactory.deploy();
+  
   await gigFactory.waitForDeployment();
-  console.log("GigFactory deployed to:", await gigFactory.getAddress());
+  
+  const gigFactoryAddress = await gigFactory.getAddress();
+  console.log("GigFactory deployed to:", gigFactoryAddress);
 
-  console.log("Verifying contracts on Etherscan...");
-  await hre.run("verify:verify", {
-    address: await gigOrder.getAddress(),
-    contract: "contracts/GigOrder.sol:GigOrder"
-  });
+  if (hre.network.name !== "localhost" && hre.network.name !== "hardhat") {
+    console.log("Waiting for Etherscan verification...");
+    await new Promise((resolve) => setTimeout(resolve, 60000)); 
 
-  await hre.run("verify:verify", {
-    address: await gigFactory.getAddress(),
-    contract: "contracts/GigFactory.sol:GigFactory"
-  });
+    console.log("Verifying contract on Etherscan...");
+    await hre.run("verify:verify", {
+      address: gigFactoryAddress,
+      contract: "contracts/GigFactory.sol:GigFactory",
+    });
+  }
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error(error);
+    console.error("Error during deployment:", error);
     process.exit(1);
   });

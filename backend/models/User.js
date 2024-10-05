@@ -2,9 +2,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  userType: { type: String, required: true },
+  email: { type: String, unique: true },
+  password: { type: String },
   profilePictureUrl: { type: String },
   coverPictureUrl: { type: String },
   expertise: {
@@ -19,6 +21,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  verificationCode: String,
+  verificationCodeExpires: Date,
+  isVerified: { type: Boolean, default: false },
 });
 
 UserSchema.pre("save", async function (next) {

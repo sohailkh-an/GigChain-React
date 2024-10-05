@@ -59,13 +59,13 @@
             
             // font-family: base.$p_reg;
             margin: 0;
-            color: #333333; /* Adjust the color to match your form's text */
+            color: #333333; 
           }
 
           label {
             display: block;
             // margin: 10px 0;
-            color: #333333; /* Adjust the color to match your form's text */
+            color: #333333; 
           }
 
           .freelancerInput[type="radio"], .clientInput[type="radio"] {
@@ -165,5 +165,50 @@
       font: base.$p_large;
       color: base.$background;
     }
+  }
+}
+
+
+
+
+
+.userType_container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.userType_button {
+  width: 48%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.selected {
+    background-color: #4a148c;
+    color: #fff;
+    border-color: #4a148c;
+  }
+}
+
+.navigation_container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.nav_button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e0e0e0;
   }
 }

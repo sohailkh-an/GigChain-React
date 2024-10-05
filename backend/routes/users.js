@@ -6,8 +6,22 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
 const authMiddleware = require("../middleware/auth");
+const ethUtil = require("ethereumjs-util");
+const axios = require("axios");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const crypto = require("crypto");
+const { sendVerificationEmail } = require("../utils/emailService");
 
 const router = express.Router();
+
+const generateToken = (user) => {
+  return jwt.sign(
+    { userId: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+};
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -29,12 +43,10 @@ const upload = multer({
   }),
 });
 
-
-
 router.get("/user/:userId", async (req, res) => {
   console.log("This is the userid in user api endpoint ", req.params.userId);
   try {
-    const {userId} = req.params;
+    const { userId } = req.params;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
@@ -47,10 +59,10 @@ router.get("/user/:userId", async (req, res) => {
   }
 });
 
-router.put("/user/:userId/update", async (req, res) =>{
+router.put("/user/:userId/update", async (req, res) => {
   try {
-    const {userId} = req.params;
-    const {name, expertise, languages, about} = req.body;
+    const { userId } = req.params;
+    const { name, expertise, languages, about } = req.body;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
@@ -65,9 +77,7 @@ router.put("/user/:userId/update", async (req, res) =>{
     console.error(err.message);
     res.status(500).send("Server error");
   }
-
-})
-
+});
 
 router.post("/register", async (req, res) => {
   const defaultAvatar =
@@ -76,40 +86,209 @@ router.post("/register", async (req, res) => {
     "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
 
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, userType, email, password, verificationCode } =
+      req.body;
 
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: "User already exists" });
+
+    if (user) {
+      if (
+        user.verificationCode !== verificationCode ||
+        user.verificationCodeExpires < Date.now()
+      ) {
+        return res.status(400).json({
+          message: "Invalid or expired verification code",
+        });
+      }
+    }
 
     user = new User({
-      name,
+      firstName,
+      lastName,
+      userType,
       email,
       password,
+      profilePictureUrl: defaultAvatar,
+      coverPictureUrl: defaultCover,
+      isVerified: true,
+      verificationCode: undefined,
+      verificationCodeExpires: undefined,
+    });
+    await user.save();
+
+    res.status(201).json({
+      msg: "User registered successfully",
+    });
+
+    return res.status(400).json({
+      msg: "Please request a verification code first",
+    });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ message: "Server error", error: err.message || err.toString() });
+  }
+});
+
+router.post("/send-verification", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    const verificationCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    let user = await User.findOne({ email });
+    if (user) {
+      user.verificationCode = verificationCode;
+      user.verificationCodeExpires = verificationCodeExpires;
+    } else {
+      user = new User({
+        email,
+        verificationCode,
+        verificationCodeExpires,
+      });
+    }
+    await user.save();
+
+    await sendVerificationEmail(email, verificationCode);
+
+    res.json({ message: "Verification code sent to your email" });
+  } catch (err) {
+    console.error(
+      "Error sending verification code (Error occured in backend)",
+      err
+    );
+    res.status(500).json({
+      message: "Error sending verification code (Error occured in backend)",
+      error: err.message || err.toString(),
+    });
+  }
+});
+
+router.post("/register-metamask", async (req, res) => {
+  const defaultAvatar =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
+  const defaultCover =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
+
+  try {
+    const { address } = req.body;
+
+    let user = await User.findOne({ ethAddress: address });
+    if (user) {
+      const token = generateToken(user);
+      return res.status(200).json({
+        msg: "User logged in successfully with MetaMask",
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          ethAddress: user.ethAddress,
+          profilePictureUrl: user.profilePictureUrl,
+        },
+      });
+    }
+
+    user = new User({
+      ethAddress: address,
+      name: `User-${address.slice(0, 6)}`,
       profilePictureUrl: defaultAvatar,
       coverPictureUrl: defaultCover,
     });
     await user.save();
 
-    res.status(201).json({ msg: "User registered successfully" });
+    const token = generateToken(user);
+    res.status(201).json({
+      msg: "User registered successfully with MetaMask",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        ethAddress: user.ethAddress,
+        profilePictureUrl: user.profilePictureUrl,
+      },
+    });
   } catch (err) {
     console.error(err.message);
+
     res.status(500).send("Server error");
   }
 });
 
-router.get('/search', async (req, res) => {
+router.post("/register-google", async (req, res) => {
+  const defaultAvatar =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
+  const defaultCover =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
+
   try {
-    const { query } = req.query;
-    const users = await User.find({
-      name: { $regex: query, $options: 'i' } 
+    const { tokenId } = req.body;
+
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
-    res.json(users);
+
+    const payload = ticket.getPayload();
+    const { name, email, picture } = payload;
+
+    let user = await User.findOne({ email });
+    if (user) {
+      const token = generateToken(user);
+      return res.status(200).json({
+        msg: "User logged in successfully with Google",
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          profilePictureUrl: user.profilePictureUrl,
+        },
+      });
+    }
+
+    user = new User({
+      name,
+      email,
+      profilePictureUrl: picture || defaultAvatar,
+      coverPictureUrl: defaultCover,
+    });
+    await user.save();
+
+    const token = generateToken(user);
+    res.status(201).json({
+      msg: "User registered successfully with Google",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePictureUrl: user.profilePictureUrl,
+      },
+    });
   } catch (error) {
-    console.error('Error searching users:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(
+      "Error registering with Google",
+      error.response?.data || error.message
+    );
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    const users = await User.find({
+      name: { $regex: query, $options: "i" },
+    });
+    res.json(users);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.post("/signin", async (req, res) => {
   try {
@@ -130,7 +309,7 @@ router.post("/signin", async (req, res) => {
         coverPictureUrl: user.coverPictureUrl,
         expertise: user.expertise,
         languages: user.languages,
-        about: user.about
+        about: user.about,
       },
     };
 
@@ -177,7 +356,6 @@ router.get("/user", async (req, res) => {
 });
 
 router.get("/:userId/profile-picture", async (req, res) => {
- 
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
@@ -215,8 +393,6 @@ router.post(
     }
   }
 );
-
-
 
 router.get("/:userId/cover-picture", async (req, res) => {
   console.log(

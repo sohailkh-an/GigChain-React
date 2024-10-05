@@ -26,8 +26,7 @@ const upload = multer({
   }),
 });
 
-
-router.get("/search", async(req, res) => {
+router.get("/search", async (req, res) => {
   const { query } = req.query;
   try {
     const gigs = await Gig.find({ title: { $regex: query, $options: "i" } });
@@ -36,8 +35,7 @@ router.get("/search", async(req, res) => {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
-})
-
+});
 
 // router.get("/search", async (req, res) => {
 //   const { query } = req.query;
@@ -50,17 +48,14 @@ router.get("/search", async(req, res) => {
 //   }
 // });
 
-
 router.get("/category/:mainCategory/:subCategory", async (req, res) => {
   const { subCategory } = req.params;
   try {
     const gigs = await Gig.find({
       category: subCategory,
-    })
-      .sort({ _id: -1 })
-      
+    }).sort({ _id: -1 });
 
-      console.log("Gigs found: ", gigs);
+    console.log("Gigs found: ", gigs);
 
     if (gigs.length === 0) {
       return res.status(404).json({ message: "No gigs found" });
@@ -72,7 +67,6 @@ router.get("/category/:mainCategory/:subCategory", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 router.get("/category/:category", async (req, res) => {
   // console.log("Fetching featured gigs");
@@ -89,8 +83,6 @@ router.get("/category/:category", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 
 router.get("/user", authMiddleware, async (req, res) => {
   try {
@@ -112,11 +104,8 @@ router.use((req, res, next) => {
   next();
 });
 
-
-
-
-const ethers = require('ethers');
-const GigOrderArtifact = require('../../smart-contracts/artifacts/contracts/GigOrder.sol/GigOrder.json');
+const ethers = require("ethers");
+const GigFactoryArtifact = require("../../smart-contracts/artifacts/contracts/GigFactory.sol/GigFactory.json");
 
 router.post(
   "/create",
@@ -125,18 +114,34 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const { title, description, price, category, serviceProvider, providerProfilePicture, gigOrderAddress } = req.body;
+      const {
+        title,
+        description,
+        price,
+        category,
+        serviceProvider,
+        providerProfilePicture,
+        gigAddress,
+      } = req.body;
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
 
-      const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
-      const gigOrderContract = new ethers.Contract(gigOrderAddress, GigOrderArtifact.abi, provider);
-      
-      
-      const isValid = await gigOrderContract.isValid();  
-      if (!isValid) {
-        return res.status(400).json({ message: "Invalid gig order on blockchain" });
-      }
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
+      const gigFactoryAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+      const gigFactoryContract = new ethers.Contract(
+        gigFactoryAddress,
+        GigFactoryArtifact.abi,
+        provider
+      );
+
+      // const gigDetails = await gigFactoryContract.gigs(gigId);
+      // if (gigDetails.title !== title) {
+      //   return res
+      //     .status(400)
+      //     .json({ message: "Gig details do not match blockchain data" });
+      // }
 
       const gig = new Gig({
         title,
@@ -147,7 +152,7 @@ router.post(
         user: userId,
         serviceProvider,
         providerProfilePicture,
-        gigOrderAddress //this thing is new here
+        gigAddress,
       });
 
       await gig.save();
@@ -161,43 +166,6 @@ router.post(
 );
 
 
-
-
-
-
-
-
-// router.post(
-//   "/create",
-//   authMiddleware,
-//   upload.single("thumbnailImage"),
-//   async (req, res) => {
-//     try {
-//       console.log("Request Body:", req.body);
-//       const { title, description, price, category, serviceProvider, providerProfilePicture } = req.body;
-//       const userId = req.user._id;
-//       const thumbnailUrl = req.file.location;
-
-//       const gig = new Gig({
-//         title,
-//         description,
-//         price,
-//         category,
-//         thumbnailUrl,
-//         user: userId,
-//         serviceProvider,
-//         providerProfilePicture
-//       });
-
-//       await gig.save();
-
-//       res.status(201).json({ message: "Gig created successfully", gig });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: "Server error" });
-//     }
-//   }
-// );
 
 router.put("/:gigId", async (req, res) => {
   try {
@@ -229,8 +197,6 @@ router.put("/:gigId", async (req, res) => {
   }
 });
 
-
-
 router.delete("/:gigId", async (req, res) => {
   try {
     const { gigId } = req.params;
@@ -253,7 +219,6 @@ router.delete("/:gigId", async (req, res) => {
   }
 });
 
-
 router.get("/:gigId", async (req, res) => {
   try {
     const { gigId } = req.params;
@@ -270,5 +235,5 @@ router.get("/:gigId", async (req, res) => {
   }
 });
 
-
 module.exports = router;
+

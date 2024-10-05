@@ -13,27 +13,7 @@ import GigFactoryArtifact from "../../contracts/GigFactory.json";
 const CreateGigPage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-
-  const [contract, setContract] = useState(null);
   console.log("Current User Details: ", currentUser);
-
-  useEffect(() => {
-    const initializeContract = async () => {
-      if (typeof window.ethereum !== "undefined") {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contractAddress = "YOUR_DEPLOYED_GIGFACTORY_CONTRACT_ADDRESS";
-        const gigFactoryContract = new ethers.Contract(
-          contractAddress,
-          GigFactoryArtifact.abi,
-          signer
-        );
-        setContract(gigFactoryContract);
-      }
-    };
-    initializeContract();
-  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -55,18 +35,46 @@ const CreateGigPage = () => {
     e.preventDefault();
 
     try {
-      if (!contract) {
-        console.error("Contract not initialized");
+      if (!window.ethereum) {
+        alert("Please install MetaMask to use this feature");
         return;
       }
 
-      const tx = await contract.createGigOrder();
-      const receipt = await tx.wait();
-      const event = receipt.events.find(
-        (event) => event.event === "GigOrderCreated"
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      const gigFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      const gigFactoryContract = new ethers.Contract(
+        gigFactoryAddress,
+        GigFactoryArtifact.abi,
+        signer
       );
-      const [gigOrderAddress] = event.args;
-      console.log("GigOrder created at:", gigOrderAddress);
+
+      const tx = await gigFactoryContract.createGig(
+        formData.title,
+        formData.description,
+        ethers.utils.parseEther(formData.price.toString()),
+        formData.category
+      );
+
+      console.log("Transaction hash:", tx.hash);
+
+      const receipt = await tx.wait();
+      console.log("Transaction was mined in block:", receipt.blockNumber);
+
+      console.log("All events:", receipt.events);
+
+      const gigCreatedEvent = receipt.events.find(
+        (event) => event.event === "GigCreated"
+      );
+
+      if (!gigCreatedEvent) {
+        throw new Error("GigCreated event not found in transaction logs");
+      }
+
+      const gigAddress = gigCreatedEvent.args.gigAddress;
+      console.log("New Gig Address:", gigAddress);
 
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
@@ -80,8 +88,7 @@ const CreateGigPage = () => {
         "providerProfilePicture",
         currentUser.profilePictureUrl
       );
-
-      formDataToSend.append("gigOrderAddress", gigOrderAddress);
+      formDataToSend.append("gigAddress", gigAddress);
 
       const token = localStorage.getItem("token");
 

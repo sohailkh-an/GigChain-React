@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const gigSchema = new mongoose.Schema({
-  gigOrderAddress: {
+  
+  gigAddress: {
     type: String,
     required: true,
   },

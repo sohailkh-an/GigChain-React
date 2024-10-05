@@ -1,20 +1,32 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.27;
 
-import "./GigOrder.sol";
+pragma solidity ^0.8.0;
+
+import "./Gig.sol";
 
 contract GigFactory {
-    GigOrder[] public gigOrders;
-    
-    event GigOrderCreated(address gigOrderAddress, address creator);
+    address[] public gigs;
 
-    function createGigOrder() public {
-        GigOrder newGigOrder = new GigOrder();
-        gigOrders.push(newGigOrder);
-        emit GigOrderCreated(address(newGigOrder), msg.sender);
+    event GigCreated(address indexed gigAddress);
+
+    function createGig(
+        string memory _title,
+        string memory _description,
+        uint256 _price,
+        string memory _category
+    ) external {
+        Gig newGig = new Gig(
+            _title,
+            _description,
+            _price,
+            _category,
+            msg.sender
+        );
+        gigs.push(address(newGig));
+        emit GigCreated(address(newGig));
     }
 
-    function getGigOrders() public view returns (GigOrder[] memory) {
-        return gigOrders;
+    function getAllGigs() external view returns (address[] memory) {
+        return gigs;
     }
 }
