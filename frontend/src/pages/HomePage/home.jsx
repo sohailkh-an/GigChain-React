@@ -45,7 +45,7 @@ function HomePage() {
         <NavBar />
         <div className={styles.hero_container}>
           <div className={styles.headings_container}>
-            <h5>Welcome, {currentUser.name}</h5>
+            <h5>Welcome, {currentUser.firstName}</h5>
             <h1>
               Pick top talent at <br />
               your fingertips

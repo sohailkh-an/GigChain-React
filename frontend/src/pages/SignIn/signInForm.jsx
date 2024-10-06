@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Web3 } from "web3";
 import styles from "./styles/page.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -16,21 +15,6 @@ export default function SignInPage() {
 
   const navigate = useNavigate();
 
-  const [connectedAccount, setConnectedAccount] = useState("");
-
-  async function connectMetamask() {
-    if (window.ethereum) {
-      const web3 = new Web3(window.ethereum);
-
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-
-      const accounts = await web3.eth.getAccounts();
-      setConnectedAccount(accounts[0]);
-    } else {
-      alert("Please download metamask");
-    }
-  }
-
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -45,13 +29,19 @@ export default function SignInPage() {
     setIsLoading(true);
     console.log("Loggin in with:", userData);
     try {
+      console.log(
+        "Sending request to:",
+        `${import.meta.env.VITE_API_URL}/api/users/signin`
+      );
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/signin`,
         userData
       );
+      console.log("Response received:", res.data);
       const { token, user } = res.data;
       login({ token, user });
       localStorage.setItem("token", token);
+
       navigate("/");
     } catch (err) {
       if (err.data.msg === "Incorrect email") {
@@ -128,16 +118,6 @@ export default function SignInPage() {
               <div className={styles.line}></div>
               <div className={styles.or_text}>or</div>
               <div className={styles.line}></div>
-            </div>
-
-            <div>
-              <button
-                className={styles.button_secondary}
-                onClick={connectMetamask}
-                disabled={!!connectedAccount}
-              >
-                {connectedAccount ? "Wallet Connected" : "Login with MetaMask"}
-              </button>
             </div>
 
             <div className={styles.register_link_container}>

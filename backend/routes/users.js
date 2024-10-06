@@ -86,20 +86,11 @@ router.post("/register", async (req, res) => {
     "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
 
   try {
-    const { firstName, lastName, userType, email, password, verificationCode } =
-      req.body;
+    const { firstName, lastName, userType, email, password } = req.body;
 
     let user = await User.findOne({ email });
-
     if (user) {
-      if (
-        user.verificationCode !== verificationCode ||
-        user.verificationCodeExpires < Date.now()
-      ) {
-        return res.status(400).json({
-          message: "Invalid or expired verification code",
-        });
-      }
+      return res.status(400).json({ msg: "User already exists" });
     }
 
     user = new User({
@@ -110,18 +101,16 @@ router.post("/register", async (req, res) => {
       password,
       profilePictureUrl: defaultAvatar,
       coverPictureUrl: defaultCover,
-      isVerified: true,
+
       verificationCode: undefined,
       verificationCodeExpires: undefined,
+      isVerified: false,
     });
+
     await user.save();
 
-    res.status(201).json({
-      msg: "User registered successfully",
-    });
-
-    return res.status(400).json({
-      msg: "Please request a verification code first",
+    return res.status(200).json({
+      msg: "User registered successfully, please verify your email",
     });
   } catch (err) {
     console.error(err);
@@ -144,13 +133,8 @@ router.post("/send-verification", async (req, res) => {
       user.verificationCode = verificationCode;
       user.verificationCodeExpires = verificationCodeExpires;
     } else {
-      user = new User({
-        email,
-        verificationCode,
-        verificationCodeExpires,
-      });
+      console.log("Problem in finding user, we'll handle this later");
     }
-    await user.save();
 
     await sendVerificationEmail(email, verificationCode);
 
@@ -167,144 +151,30 @@ router.post("/send-verification", async (req, res) => {
   }
 });
 
-router.post("/register-metamask", async (req, res) => {
-  const defaultAvatar =
-    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
-  const defaultCover =
-    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
-
+router.get("/verify-code", async (req, res) => {
   try {
-    const { address } = req.body;
-
-    let user = await User.findOne({ ethAddress: address });
-    if (user) {
-      const token = generateToken(user);
-      return res.status(200).json({
-        msg: "User logged in successfully with MetaMask",
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          ethAddress: user.ethAddress,
-          profilePictureUrl: user.profilePictureUrl,
-        },
-      });
+    const { email, verificationCode } = req.body;
+    console.log("Request body in verify-code endpoint:", req.body);
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    if (user.verificationCode !== verificationCode) {
+      return res.status(400).json({ msg: "Invalid verification code" });
+    }
+    if (user.verificationCodeExpires < Date.now()) {
+      return res.status(400).json({ msg: "Verification code expired" });
     }
 
-    user = new User({
-      ethAddress: address,
-      name: `User-${address.slice(0, 6)}`,
-      profilePictureUrl: defaultAvatar,
-      coverPictureUrl: defaultCover,
-    });
-    await user.save();
-
-    const token = generateToken(user);
-    res.status(201).json({
-      msg: "User registered successfully with MetaMask",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        ethAddress: user.ethAddress,
-        profilePictureUrl: user.profilePictureUrl,
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-
-    res.status(500).send("Server error");
-  }
-});
-
-router.post("/register-google", async (req, res) => {
-  const defaultAvatar =
-    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
-  const defaultCover =
-    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
-
-  try {
-    const { tokenId } = req.body;
-
-    const ticket = await client.verifyIdToken({
-      idToken: tokenId,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    const { name, email, picture } = payload;
-
-    let user = await User.findOne({ email });
-    if (user) {
-      const token = generateToken(user);
-      return res.status(200).json({
-        msg: "User logged in successfully with Google",
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          profilePictureUrl: user.profilePictureUrl,
-        },
-      });
-    }
-
-    user = new User({
-      name,
-      email,
-      profilePictureUrl: picture || defaultAvatar,
-      coverPictureUrl: defaultCover,
-    });
-    await user.save();
-
-    const token = generateToken(user);
-    res.status(201).json({
-      msg: "User registered successfully with Google",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        profilePictureUrl: user.profilePictureUrl,
-      },
-    });
-  } catch (error) {
-    console.error(
-      "Error registering with Google",
-      error.response?.data || error.message
-    );
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.get("/search", async (req, res) => {
-  try {
-    const { query } = req.query;
-    const users = await User.find({
-      name: { $regex: query, $options: "i" },
-    });
-    res.json(users);
-  } catch (error) {
-    console.error("Error searching users:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.post("/signin", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Incorrect email" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+    console.log("User data for payload:", JSON.stringify(user, null, 2));
 
     const payload = {
       user: {
-        id: user.id,
-        name: user.name,
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        userType: user.userType,
         profilePictureUrl: user.profilePictureUrl,
         coverPictureUrl: user.coverPictureUrl,
         expertise: user.expertise,
@@ -318,13 +188,176 @@ router.post("/signin", async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: 360000 },
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          console.error("Error in JWT signing:", err);
+          throw err;
+        }
+        console.log("JWT token generated successfully");
+        console.log("Sending response to client");
         res.json({ token, user: payload.user });
       }
     );
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    console.error("Error verifying verification code", err);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+router.post("/register-google", async (req, res) => {
+  const defaultAvatar =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg";
+  const defaultCover =
+    "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
+
+  try {
+    const { tokenId, userType } = req.body;
+
+    if (!userType || !["client", "freelancer"].includes(userType)) {
+      return res.status(400).json({ error: "Invalid or missing userType" });
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const googlePayload = ticket.getPayload();
+    const { given_name, family_name, email, picture } = googlePayload;
+
+    let user = await User.findOne({ email });
+    if (user) {
+      if (!user.userType) {
+        user.userType = userType;
+        await user.save();
+      }
+
+      const token = generateToken(user);
+      return res.status(200).json({
+        msg: "User logged in successfully with Google",
+        token,
+        user: {
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          userType: user.userType,
+          profilePictureUrl: user.profilePictureUrl,
+        },
+      });
+    }
+
+    user = new User({
+      firstName: given_name,
+      lastName: family_name,
+      email,
+      userType,
+      profilePictureUrl: picture || defaultAvatar,
+      coverPictureUrl: defaultCover,
+      isVerified: true,
+    });
+    await user.save();
+
+    const token = generateToken(user);
+    res.status(201).json({
+      msg: "User registered successfully with Google",
+      token,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        userType: user.userType,
+        profilePictureUrl: user.profilePictureUrl,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Error registering with Google",
+      error.response?.data || error.message
+    );
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("Received signin request for email:", email);
+
+    let user = await User.findOne({ email });
+    console.log("User found:", user ? "Yes" : "No");
+
+    if (!user) {
+      console.log("User not found for email:", email);
+      return res.status(400).json({ msg: "Incorrect email" });
+    }
+
+    console.log("Checking password matching");
+    console.log("Provided password:", password);
+    console.log("Stored hashed password:", user.password);
+
+    try {
+      const isMatch = await bcrypt.compare(password, user.password);
+      console.log("Password match result:", isMatch);
+
+      if (!isMatch) {
+        console.log("Password does not match");
+        return res.status(400).json({ msg: "Incorrect password" });
+      }
+
+      console.log("Password matched successfully");
+
+      console.log("User data for payload:", JSON.stringify(user, null, 2));
+
+      const payload = {
+        user: {
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          userType: user.userType,
+          profilePictureUrl: user.profilePictureUrl,
+          coverPictureUrl: user.coverPictureUrl,
+          expertise: user.expertise,
+          languages: user.languages,
+          about: user.about,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: 360000 },
+        (err, token) => {
+          if (err) {
+            console.error("Error in JWT signing:", err);
+            throw err;
+          }
+          console.log("JWT token generated successfully");
+          console.log("Sending response to client");
+          res.json({ token, user: payload.user });
+        }
+      );
+    } catch (err) {
+      console.error("Error in password comparison or JWT signing:", err);
+      res.status(500).json({ msg: "Server error during authentication" });
+    }
+  } catch (err) {
+    console.error("Server error in signin route:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+router.get("/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    const users = await User.find({
+      name: { $regex: query, $options: "i" },
+    });
+    res.json(users);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -345,6 +378,7 @@ router.get("/user", async (req, res) => {
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
+    console.log("User mil gaya :", user);
 
     res.json({ user });
   } catch (err) {

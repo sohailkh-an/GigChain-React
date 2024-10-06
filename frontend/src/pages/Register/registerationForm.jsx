@@ -3,16 +3,15 @@ import axios from "redaxios";
 import styles from "./styles/page.module.scss";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Web3 from "web3";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function RegistrationForm() {
   const [step, setStep] = useState(1);
-  const [isCodeSent, setIsCodeSent] = useState(false);
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -22,43 +21,22 @@ export default function RegistrationForm() {
     confirmPassword: "",
     verificationCode: "",
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleUserTypeSelect = (type) => {
     setUserData({ ...userData, userType: type });
+    setErrors({ ...errors, userType: "" });
   };
 
   const handleLoginSuccess = (userData, token) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     navigate("/");
-  };
-
-  const handleMetaMaskLogin = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const web3 = new Web3(window.ethereum);
-        const accounts = await web3.eth.getAccounts();
-        const address = accounts[0];
-
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/users/register-metamask`,
-          { address, userType: userData.userType }
-        );
-        console.log(res.data);
-        alert("Registration with MetaMask successful");
-        handleLoginSuccess(res.data, res.token);
-      } catch (error) {
-        console.error("Error connecting to MetaMask", error);
-        alert("Error connecting to MetaMask");
-      }
-    } else {
-      alert("MetaMask is not installed");
-    }
   };
 
   const handleGoogleSuccess = async (response) => {
@@ -69,42 +47,74 @@ export default function RegistrationForm() {
       );
       console.log(res.data);
       alert("Registration with Google successful, redirecting to home page");
-      handleLoginSuccess(res.data, res.token);
+      handleLoginSuccess(res.data.user, res.data.token);
     } catch (error) {
       console.error("Error registering with Google", error);
       alert("Error registering with Google");
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      try {
-        if (!isCodeSent) {
-          const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/users/send-verification`,
-            { email: userData.email }
-          );
-          setIsCodeSent(true);
-          alert(res.data.message);
-        } else {
-          const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/users/register`,
-            userData
-          );
-          console.log(res.data);
-          alert("Registration successful");
-          navigate("/login");
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/users/verify-code`,
+        {
+          email: userData.email,
+          verificationCode: userData.verificationCode,
         }
-      } catch (err) {
-        console.error(err.response.data);
-        alert(
-          err.response.data.message ||
-            "Error sending verification code (Error occurred in frontend)"
-        );
-      }
+      );
+
+      console.log(
+        "JWT token sent by verification code response endpoint:",
+        res.data
+      );
+      const { token, user } = res.data;
+      login({ token, user });
+      localStorage.setItem("token", token);
+      alert("Registration successful");
+      navigate("/");
+    } catch (error) {
+      console.error("Error verifying code:", error.response.data);
+      alert(error.response.data.message);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!userData.firstName) newErrors.firstName = "First name is required";
+    if (!userData.lastName) newErrors.lastName = "Last name is required";
+    if (!userData.email) newErrors.email = "Email is required";
+    if (!userData.password) newErrors.password = "Password is required";
+    if (userData.password !== userData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/register`,
+        userData
+      );
+      console.log(res.data);
+
+      const codeRes = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/send-verification`,
+        { email: userData.email }
+      );
+      console.log(codeRes.data);
+      alert("Verification code sent to your email");
+      handleNextStep();
+    } catch (error) {
+      console.error("Registration error:", error.response.data);
+      alert(error.response.data.message);
     }
   };
 
@@ -144,6 +154,9 @@ export default function RegistrationForm() {
             >
               Freelancer
             </button>
+            {errors.userType && (
+              <p className={styles.error}>{errors.userType}</p>
+            )}
             <div className={styles.signIn_link_container}>
               <Link to="/signIn" className={styles.signIn_link}>
                 Already a GigChain user? Sign In
@@ -155,16 +168,6 @@ export default function RegistrationForm() {
       case 2:
         return (
           <>
-            <div>
-              <button
-                type="button"
-                className={styles.button_secondary}
-                onClick={handleMetaMaskLogin}
-              >
-                Register with MetaMask
-              </button>
-            </div>
-
             <GoogleOAuthProvider
               clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
             >
@@ -192,6 +195,9 @@ export default function RegistrationForm() {
               value={userData.firstName}
               onChange={handleChange}
             />
+            {errors.firstName && (
+              <p className={styles.error}>{errors.firstName}</p>
+            )}
             <input
               className={styles.input}
               type="text"
@@ -200,6 +206,9 @@ export default function RegistrationForm() {
               value={userData.lastName}
               onChange={handleChange}
             />
+            {errors.lastName && (
+              <p className={styles.error}>{errors.lastName}</p>
+            )}
             <input
               className={styles.input}
               type="email"
@@ -208,6 +217,7 @@ export default function RegistrationForm() {
               value={userData.email}
               onChange={handleChange}
             />
+            {errors.email && <p className={styles.error}>{errors.email}</p>}
             <input
               className={styles.input}
               type="password"
@@ -216,6 +226,9 @@ export default function RegistrationForm() {
               value={userData.password}
               onChange={handleChange}
             />
+            {errors.password && (
+              <p className={styles.error}>{errors.password}</p>
+            )}
             <input
               className={styles.input}
               type="password"
@@ -224,6 +237,9 @@ export default function RegistrationForm() {
               value={userData.confirmPassword}
               onChange={handleChange}
             />
+            {errors.confirmPassword && (
+              <p className={styles.error}>{errors.confirmPassword}</p>
+            )}
           </>
         );
 
@@ -239,15 +255,6 @@ export default function RegistrationForm() {
               value={userData.verificationCode}
               onChange={handleChange}
             />
-            {!isCodeSent && (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className={styles.button_secondary}
-              >
-                Send Verification Code
-              </button>
-            )}
           </>
         );
       default:
@@ -269,7 +276,16 @@ export default function RegistrationForm() {
 
         <div className={styles.parent_cont_left}>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (step === 3) {
+                handleVerifyCode(e);
+              } else if (step === 2) {
+                handleSubmit();
+              } else {
+                handleNextStep();
+              }
+            }}
             className={styles.main_content_container}
           >
             <h1 className={styles.h3}>GigChain</h1>
@@ -292,17 +308,19 @@ export default function RegistrationForm() {
                   <ArrowLeft size={20} /> Back
                 </button>
               )}
-              {step < 3 ? (
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className={styles.nav_button}
-                >
+              {step === 1 && (
+                <button type="submit" className={styles.nav_button}>
                   Next <ArrowRight size={20} />
                 </button>
-              ) : (
+              )}
+              {step === 2 && (
+                <button type="submit" className={styles.nav_button}>
+                  Verify Email <ArrowRight size={20} />
+                </button>
+              )}
+              {step === 3 && (
                 <button type="submit" className={styles.button_primary}>
-                  Sign Up
+                  Complete Registration
                 </button>
               )}
             </div>

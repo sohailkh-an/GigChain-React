@@ -15,10 +15,6 @@ oauth2Client.setCredentials({
 });
 
 const createTransporter = async () => {
-  console.log("GMAIL_CLIENT_ID:", process.env.GMAIL_CLIENT_ID);
-  console.log("GMAIL_CLIENT_SECRET:", process.env.GMAIL_CLIENT_SECRET);
-  console.log("GMAIL_REFRESH_TOKEN:", process.env.GMAIL_REFRESH_TOKEN);
-  console.log("GMAIL_USER:", process.env.GMAIL_USER);
 
   try {
     const accessTokenResponse = await oauth2Client.getAccessToken();
@@ -28,14 +24,6 @@ const createTransporter = async () => {
       throw new Error("Failed to retrieve access token :(");
     }
 
-    // const accessToken = await new Promise((resolve, reject) => {
-    //   oauth2Client.getAccessToken((err, token) => {
-    //     if (err) {
-    //       reject("Failed to create access token :(");
-    //     }
-    //     resolve(token);
-    //   });
-    // });
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

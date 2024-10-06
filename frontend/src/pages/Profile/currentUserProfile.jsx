@@ -12,9 +12,10 @@ import styles from "./styles/page.module.scss";
 
 const CurrentUserProfile = () => {
   const { currentUser } = useAuth();
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [coverPicture, setCoverPicture] = useState(null);
-  const [name, setName] = useState(currentUser.name);
+  const [profilePicture, setProfilePicture] = useState(currentUser.profilePictureUrl);
+  const [coverPicture, setCoverPicture] = useState(currentUser.coverPictureUrl);
+  const [firstName, setFirstName] = useState(currentUser.firstName);
+  const [lastName, setLastName] = useState(currentUser.lastName);
   const [expertise, setExpertise] = useState("");
   const [languages, setLanguages] = useState("");
   const [about, setAbout] = useState("About me.....");
@@ -24,7 +25,7 @@ const CurrentUserProfile = () => {
   console.log("Current user in profile component: ", currentUser)
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    setFirstName(e.target.value);
   };
 
   const handleExpertiseChange = (e) => {
@@ -124,7 +125,8 @@ const CurrentUserProfile = () => {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser.id}/update`,
         {
-          name,
+          firstName,
+          lastName,
           expertise,
           languages,
           about,
@@ -209,12 +211,12 @@ const CurrentUserProfile = () => {
               <input
                 className={styles.nameInput}
                 type="text"
-                value={name}
+                value={firstName}
                 onChange={handleNameChange}
               />
             </>
           ) : (
-            <h2>{name}</h2>
+            <h2>{firstName} {lastName}</h2>
           )}
 
           {isEditing ? (
