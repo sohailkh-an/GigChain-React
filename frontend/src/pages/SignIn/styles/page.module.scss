@@ -180,7 +180,10 @@
     align-items: center;
     width: 50vw;
     height: 100vh;
-    background-color: base.$primary;
+    background-image: url("../../../assets/40-min.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    // background-color: base.$primary;
 
     .h1 {
       font: base.$h1;

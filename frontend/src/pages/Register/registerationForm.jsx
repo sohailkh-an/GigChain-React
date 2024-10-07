@@ -11,7 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 export default function RegistrationForm() {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginGoogle } = useAuth();
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -33,21 +33,18 @@ export default function RegistrationForm() {
     setErrors({ ...errors, userType: "" });
   };
 
-  const handleLoginSuccess = (userData, token) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
-    navigate("/");
-  };
-
   const handleGoogleSuccess = async (response) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/register-google`,
         { tokenId: response.credential, userType: userData.userType }
       );
-      console.log(res.data);
+      console.log("Response from Google registration:", res.data);
       alert("Registration with Google successful, redirecting to home page");
-      handleLoginSuccess(res.data.user, res.data.token);
+      const { token, user } = res.data;
+      login({ token, user });
+      // localStorage.setItem("token", token);
+      navigate("/");
     } catch (error) {
       console.error("Error registering with Google", error);
       alert("Error registering with Google");
@@ -56,27 +53,91 @@ export default function RegistrationForm() {
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
+
+    if (!userData.email) {
+      alert("Email is required to verify the code.");
+      return;
+    }
+    if (!userData.verificationCode) {
+      alert("Verification code is required.");
+      return;
+    }
+
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/users/verify-code`,
         {
-          email: userData.email,
-          verificationCode: userData.verificationCode,
+          params: {
+            email: userData.email,
+            verificationCode: userData.verificationCode,
+          },
         }
       );
 
-      console.log(
-        "JWT token sent by verification code response endpoint:",
-        res.data
-      );
-      const { token, user } = res.data;
-      login({ token, user });
-      localStorage.setItem("token", token);
-      alert("Registration successful");
-      navigate("/");
+      if (res.data && res.data.success) {
+        handleSignIn();
+      } else {
+        alert(res.data.message || "Verification failed. Please try again.");
+      }
     } catch (error) {
-      console.error("Error verifying code:", error.response.data);
-      alert(error.response.data.message);
+      if (error.response) {
+        console.error("Error verifying code:", error.response.data);
+        alert(error.response.data.message || "Verification failed.");
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert(
+          "No response from server. Please check your network and try again."
+        );
+      } else {
+        console.error("Error setting up request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
+  const handleSignIn = async () => {
+    // Validate input fields
+    if (!userData.email) {
+      alert("Email is required to sign in.");
+      return;
+    }
+    if (!userData.password) {
+      alert("Password is required to sign in.");
+      return;
+    }
+
+    try {
+      const signInData = {
+        email: userData.email,
+        password: userData.password,
+      };
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/signin`,
+        signInData
+      );
+
+      if (res.data && res.data.token && res.data.user) {
+        const { token, user } = res.data;
+        login({ token, user });
+        // localStorage.setItem("token", token);
+        // localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
+      } else {
+        alert(res.data.message || "Sign in failed. Please try again.");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Error signing in:", error.response.data);
+        alert(error.response.data.message || "Sign in failed.");
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert(
+          "No response from server. Please check your network and try again."
+        );
+      } else {
+        console.error("Error setting up request:", error.message);
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

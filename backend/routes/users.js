@@ -154,8 +154,8 @@ router.post("/send-verification", async (req, res) => {
 router.get("/verify-code", async (req, res) => {
   try {
     const { email, verificationCode } = req.body;
-    console.log("Request body in verify-code endpoint:", req.body);
     const user = await User.findOne({ email });
+    console.log("User in verify-code endpoint:", user);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
@@ -168,35 +168,11 @@ router.get("/verify-code", async (req, res) => {
 
     console.log("User data for payload:", JSON.stringify(user, null, 2));
 
-    const payload = {
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        userType: user.userType,
-        profilePictureUrl: user.profilePictureUrl,
-        coverPictureUrl: user.coverPictureUrl,
-        expertise: user.expertise,
-        languages: user.languages,
-        about: user.about,
-      },
+    res.data = {
+      success: true,
+      message: "Verification code verified successfully",
     };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err) {
-          console.error("Error in JWT signing:", err);
-          throw err;
-        }
-        console.log("JWT token generated successfully");
-        console.log("Sending response to client");
-        res.json({ token, user: payload.user });
-      }
-    );
+    res.status(200).json(res.data);
   } catch (err) {
     console.error("Error verifying verification code", err);
     res.status(500).json({ msg: "Internal server error" });
@@ -374,13 +350,22 @@ router.get("/user", async (req, res) => {
     );
     const userId = decoded.user.id;
 
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId);
+    const filteredUser = {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      userType: user.userType,
+      profilePictureUrl: user.profilePictureUrl,
+      coverPictureUrl: user.coverPictureUrl,
+    };
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
     console.log("User mil gaya :", user);
 
-    res.json({ user });
+    res.json({ user: user });
   } catch (err) {
     if (err.name === "JsonWebTokenError") {
       return res.status(401).json({ msg: "Invalid token" });
