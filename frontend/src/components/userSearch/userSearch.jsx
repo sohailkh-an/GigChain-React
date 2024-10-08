@@ -53,7 +53,7 @@ function UserSearch({ onUserSelect }) {
                 setSearchTerm("");
               }}
             >
-              {user.name}
+              {user.firstName} {user.lastName}
             </li>
           ))}
         </ul>
@@ -67,4 +67,3 @@ export default UserSearch;
 UserSearch.propTypes = {
   onUserSelect: PropTypes.func.isRequired,
 };
-

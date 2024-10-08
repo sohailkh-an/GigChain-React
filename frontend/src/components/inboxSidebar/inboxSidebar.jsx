@@ -7,8 +7,15 @@ function Sidebar({
   activeConversation,
   onSelectConversation,
 }) {
-
   console.log("Active Conversation in Sidebar Component: ", activeConversation);
+
+  //print otheruser to the console
+  const variable = conversations.map((convo) => {
+    const otherUser = convo.participants.find(
+      (participant) => participant._id !== currentUser.id
+    );
+    console.log("The otherUser we just sent here:", otherUser);
+  });
 
   return (
     <div className={styles.sidebar}>
@@ -42,7 +49,7 @@ function Sidebar({
                     : styles.inActiveReciept
                 }`}
               >
-                {otherUser.name}
+                {otherUser.firstName} {otherUser.lastName}
               </h3>
               <p
                 className={`${styles.conversationDate} ${
@@ -79,5 +86,3 @@ Sidebar.propTypes = {
   activeConversation: PropTypes.string.isRequired,
   onSelectConversation: PropTypes.func.isRequired,
 };
-
-

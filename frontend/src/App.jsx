@@ -14,6 +14,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import PublicRoute from "./auth/PublicRoute";
 import EditGig from "./pages/EditGig/editGig";
+import newGigDetails from "./pages/newGigDetails/newGigDetails";
 
 function App() {
   return (
@@ -33,15 +34,15 @@ function App() {
             path="/profile"
             element={<ProtectedRoute element={CurrentUserProfile} />}
           />
-          <Route
-            path="/inbox"
-            element={<ProtectedRoute element={Inbox} />}
-          />
+          <Route path="/inbox" element={<ProtectedRoute element={Inbox} />} />
           <Route
             path="/create_gig"
             element={<ProtectedRoute element={CreateGig} />}
           />
-          <Route path="/category/:mainCategory/:subCategory" element={<ProtectedRoute element={CategoryGigResults} />} />
+          <Route
+            path="/category/:mainCategory/:subCategory"
+            element={<ProtectedRoute element={CategoryGigResults} />}
+          />
           <Route
             path="/gig/:gigId/edit"
             element={<ProtectedRoute element={EditGig} />}
@@ -54,6 +55,10 @@ function App() {
           <Route
             path="/gig/:gigId"
             element={<ProtectedRoute element={GigDetails} />}
+          />
+          <Route
+            path="/gig/newGigDetails"
+            element={<ProtectedRoute element={newGigDetails} />}
           />
           <Route
             path="/user/:userId"

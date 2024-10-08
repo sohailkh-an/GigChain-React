@@ -328,7 +328,19 @@ router.get("/search", async (req, res) => {
   try {
     const { query } = req.query;
     const users = await User.find({
-      name: { $regex: query, $options: "i" },
+      $or: [
+        { firstName: { $regex: query, $options: "i" } },
+        { lastName: { $regex: query, $options: "i" } },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $concat: ["$firstName", " ", "$lastName"] },
+              regex: query,
+              options: "i"
+            }
+          }
+        }
+      ]
     });
     res.json(users);
   } catch (error) {
@@ -336,6 +348,7 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 router.get("/user", async (req, res) => {
   try {
