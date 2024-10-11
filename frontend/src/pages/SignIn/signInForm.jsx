@@ -129,7 +129,9 @@ export default function SignInPage() {
           <div>
             <h1 className={styles.h1}>GigChain</h1>
             <p className={styles.p}>
-              The first peer-to-peer freelance marketplace
+              It belongs to you.
+              Own your freedom.
+              {/* The first peer-to-peer freelance marketplace */}
             </p>
           </div>
         </div>
