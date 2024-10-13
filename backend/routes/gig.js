@@ -104,8 +104,8 @@ router.use((req, res, next) => {
   next();
 });
 
-const ethers = require("ethers");
-const GigFactoryArtifact = require("../../smart-contracts/artifacts/contracts/GigFactory.sol/GigFactory.json");
+// const ethers = require("ethers");
+// const GigFactoryArtifact = require("../../smart-contracts/artifacts/contracts/GigFactory.sol/GigFactory.json");
 
 router.post(
   "/create",
@@ -126,15 +126,15 @@ router.post(
       const userId = req.user._id;
       const thumbnailUrl = req.file.location;
 
-      const provider = new ethers.providers.JsonRpcProvider(
-        "http://localhost:8545"
-      );
-      const gigFactoryAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-      const gigFactoryContract = new ethers.Contract(
-        gigFactoryAddress,
-        GigFactoryArtifact.abi,
-        provider
-      );
+      // const provider = new ethers.providers.JsonRpcProvider(
+      //   "http://localhost:8545"
+      // );
+      // const gigFactoryAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+      // const gigFactoryContract = new ethers.Contract(
+      //   gigFactoryAddress,
+      //   GigFactoryArtifact.abi,
+      //   provider
+      // );
 
       // const gigDetails = await gigFactoryContract.gigs(gigId);
       // if (gigDetails.title !== title) {
