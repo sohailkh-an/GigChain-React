@@ -25,10 +25,11 @@
     background-color: base.$background_light;
     border-radius: 0 0 5px 5px;
 
-    h3 {
-      font: base.$p_reg;
-      font-weight: bold;
-      color: base.$black;
+    .serviceTitle {
+      font-size: 22px;
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      color: #000000;
       margin: 0;
     }
     .serviceDescription {
@@ -36,6 +37,7 @@
       color: base.$black;
       margin: 0;
       display: -webkit-box;
+      line-clamp: 2;
       -webkit-line-clamp: 2; /* Number of lines you want to display */
       -webkit-box-orient: vertical;
       overflow: hidden;

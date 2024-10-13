@@ -5,6 +5,7 @@ const authMiddleware = require("../middleware/auth");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
+const User = require("../models/User");
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -223,12 +224,13 @@ router.get("/:gigId", async (req, res) => {
   try {
     const { gigId } = req.params;
     const gig = await Gig.findById(gigId);
+    const provider = await User.findById(gig.user);
 
     if (!gig) {
       return res.status(404).json({ message: "Gig not found" });
     }
 
-    res.json({ gig });
+    res.json({ gig, provider });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

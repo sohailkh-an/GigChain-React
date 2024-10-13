@@ -5,7 +5,6 @@ import axios from "redaxios";
 import styles from "./styles/page.module.scss";
 import Navigation from "../../components/navigation/navigation";
 import Footer from "../../components/footer/footer";
-import { useEffect } from "react";
 import { ethers } from "ethers";
 
 import GigFactoryArtifact from "../../contracts/GigFactory.json";

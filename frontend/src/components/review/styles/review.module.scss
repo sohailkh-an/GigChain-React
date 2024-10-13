@@ -1,14 +1,14 @@
 .reviewContainer {
   background-color: #ffffff;
   border-radius: 5px;
-  padding: 50px;
+  padding: 30px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 
   background-color: #f1f1f1;
   //   height: 300px;
-  margin: 25px 50px;
+  margin: 25px 0px;
 }
 
 .reviewerInfo {
@@ -24,14 +24,15 @@
 }
 
 .rating {
-  font-size: 16px;
-  color: #ffcc00;
+  margin-top: 5px;
+  font-size: 18px;
+  color: #000000;
 }
 
 .ratingScore {
   margin-left: 5px;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 18px;
   color: #666;
 }
 
@@ -51,8 +52,8 @@
 }
 
 .imageContainer {
-//   width: 400px;
-//   height: 250px;
+  //   width: 400px;
+  //   height: 250px;
   margin-top: 10px;
 
   .reviewImage {

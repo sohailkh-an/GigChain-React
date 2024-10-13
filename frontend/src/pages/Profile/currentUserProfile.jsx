@@ -12,17 +12,18 @@ import styles from "./styles/page.module.scss";
 
 const CurrentUserProfile = () => {
   const { currentUser } = useAuth();
-  const [profilePicture, setProfilePicture] = useState(currentUser.profilePictureUrl);
+  const [profilePicture, setProfilePicture] = useState(
+    currentUser.profilePictureUrl
+  );
   const [coverPicture, setCoverPicture] = useState(currentUser.coverPictureUrl);
   const [firstName, setFirstName] = useState(currentUser.firstName);
   const [lastName, setLastName] = useState(currentUser.lastName);
-  const [expertise, setExpertise] = useState("");
-  const [languages, setLanguages] = useState("");
-  const [about, setAbout] = useState("About me.....");
+  const [expertise, setExpertise] = useState(currentUser.expertise);
+  const [languages, setLanguages] = useState(currentUser.languages);
+  const [about, setAbout] = useState(currentUser.about);
   const [isEditing, setIsEditing] = useState(false);
-  
 
-  console.log("Current user in profile component: ", currentUser)
+  console.log("Current user in profile component: ", currentUser);
 
   const handleNameChange = (e) => {
     setFirstName(e.target.value);
@@ -122,8 +123,10 @@ const CurrentUserProfile = () => {
 
   const updateProfile = async () => {
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/users/user/${currentUser.id}/update`,
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/users/user/${
+          currentUser.id
+        }/update`,
         {
           firstName,
           lastName,
@@ -132,6 +135,10 @@ const CurrentUserProfile = () => {
           about,
         }
       );
+      setExpertise(response.data.expertise);
+      setLanguages(response.data.languages);
+      setAbout(response.data.about);
+      // setCurrentUser(response.data.user);
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -216,7 +223,9 @@ const CurrentUserProfile = () => {
               />
             </>
           ) : (
-            <h2>{firstName} {lastName}</h2>
+            <h2>
+              {firstName} {lastName}
+            </h2>
           )}
 
           {isEditing ? (
@@ -270,7 +279,7 @@ const CurrentUserProfile = () => {
           )}
 
           <div className={styles.buttonsContainer}>
-            <button  onClick={toggleEditMode}>
+            <button onClick={toggleEditMode}>
               {isEditing ? "Save Changes" : "Edit Profile"}
             </button>
             {isEditing && (

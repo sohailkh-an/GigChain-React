@@ -47,6 +47,7 @@ router.get("/user/:userId", async (req, res) => {
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
+    console.log("User in user api endpoint:", user);
 
     res.json({ user });
   } catch (err) {
@@ -68,7 +69,7 @@ router.put("/user/:userId/update", async (req, res) => {
     user.languages = languages;
     user.about = about;
     await user.save();
-    res.json({ msg: "User updated successfully" });
+    res.json({ user });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

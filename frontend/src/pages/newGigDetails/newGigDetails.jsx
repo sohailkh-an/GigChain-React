@@ -4,12 +4,58 @@ import Navbar from "./../../components/navigation/navigation";
 import Footer from "./../../components/footer/footer";
 import Review from "../../components/review/review";
 
+import { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+
 import pImage1 from "../../assets/pImage1.jpg";
 import pImage2 from "../../assets/pImage2.jpg";
 import pImage3 from "../../assets/pImage3.jpg";
 import pImage4 from "../../assets/pImage4.jpg";
 
 const LogoDesignService = () => {
+  const { currentUser } = useAuth();
+  const { gigId } = useParams();
+  const navigate = useNavigate();
+
+  const [gigDetails, setGigDetails] = useState(null);
+  const [providerDetails, setProviderDetails] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    const fetchGigDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`
+        );
+        setGigDetails(response.data.gig);
+        setProviderDetails(response.data.provider);
+        console.log("Provider details:", response.data.provider);
+      } catch (error) {
+        console.error("Error fetching gig details:", error);
+      }
+    };
+    fetchGigDetails();
+  }, [gigId]);
+
+  const handleEdit = () => {
+    navigate(`/gig/${gigId}/edit`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/gig/${gigId}`);
+      navigate("/gigs");
+    } catch (error) {
+      console.error("Error deleting gig:", error);
+    }
+  };
+
+  if (!gigDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <Navbar />
@@ -19,30 +65,26 @@ const LogoDesignService = () => {
             <div className={styles.breadcrumb}>
               Category → Graphic Design → Logo Design
             </div>
-            <h1 className={styles.title}>
-              Logo Design Services starting at $100,
-              <br />
-              delivered within 1 week
-            </h1>
+            <h1 className={styles.title}>{gigDetails.title}</h1>
           </div>
           <div className={styles.portfolio}>
             <div className={styles.portfolioItem}>
               <img
-                src={pImage1}
+                src={gigDetails.thumbnailUrl}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={pImage2}
+                src={gigDetails.thumbnailUrl}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={pImage3}
+                src={gigDetails.thumbnailUrl}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
@@ -50,49 +92,15 @@ const LogoDesignService = () => {
             {/* <div className={styles.portfolioItem}></div> */}
           </div>
           <div className={styles.serviceDetails}>
-            <h2>What You Will Get With Our Graphic Design Service:</h2>
-            <h3>Custom Design Concepts:</h3>
-            <p>
-              Receive 2-3 unique design concepts for your project, ensuring a
-              tailored approach that aligns with your vision and brand identity.
-            </p>
-            <h3>Revisions:</h3>
-            <p>
-              Benefit from up to 3 rounds of revisions on your chosen concept,
-              allowing us to fine-tune the design to perfection based on your
-              feedback.
-            </p>
-            <h3>Custom Design Concepts:</h3>
-            <p>
-              Receive 2-3 unique design concepts for your project, ensuring a
-              tailored approach that aligns with your vision and brand identity.
-            </p>
-            <h3>Revisions:</h3>
-            <p>
-              Benefit from up to 3 rounds of revisions on your chosen concept,
-              allowing us to fine-tune the design to perfection based on your
-              feedback.
-            </p>
-            <h3>Custom Design Concepts:</h3>
-            <p>
-              Receive 2-3 unique design concepts for your project, ensuring a
-              tailored approach that aligns with your vision and brand identity.
-            </p>
-            <h3>Custom Design Concepts:</h3>
-            <p>
-              Receive 2-3 unique design concepts for your project, ensuring a
-              tailored approach that aligns with your vision and brand identity.
-            </p>
-            <h3>Revisions:</h3>
-            <p>
-              Benefit from up to 3 rounds of revisions on your chosen concept,
-              allowing us to fine-tune the design to perfection based on your
-              feedback.
-            </p>
-            <h3>Custom Design Concepts:</h3>
-            <p>
-              Receive 2-3 unique design concepts for your project, ensuring a
-              tailored approach that aligns with your vision and brand identity.
+            <p className={styles.description}>
+              {gigDetails.description}
+              <br />
+              <br />
+              {gigDetails.description}
+              {gigDetails.description}
+              <br />
+              <br />
+              {gigDetails.description}
             </p>
           </div>
         </div>
@@ -101,11 +109,19 @@ const LogoDesignService = () => {
             <div className={styles.profileTopContainer}>
               <div className={styles.profilePicAndRatingContainer}>
                 <div className={styles.profilePicContainer}>
-                  <img src="" alt="" className={styles.profilePic} />
+                  <Link to={`/user/${gigDetails.user}`}>
+                    <img
+                      src={providerDetails.profilePictureUrl}
+                      alt={providerDetails.username}
+                      className={styles.profilePic}
+                    />
+                  </Link>
                 </div>
                 <div className={styles.ratingAndNameContainer}>
                   <span className={styles.ratingScore}>4.8 Rating (1400)</span>
-                  <h2 className={styles.designerName}>Sohail Khan</h2>
+                  <h2 className={styles.designerName}>
+                    {providerDetails.name}
+                  </h2>
                 </div>
               </div>
               <div className={styles.miscInfoContainer}>
@@ -115,10 +131,7 @@ const LogoDesignService = () => {
               </div>
             </div>
             <div className={styles.profileBottomContainer}>
-              <p className={styles.bio}>
-                A graphic designer and art director from Islamabad with focus on
-                branding and logo design for startups and SMBs.
-              </p>
+              <p className={styles.bio}>{providerDetails.about}</p>
             </div>
           </div>
           <div className={styles.messageForm}>
@@ -154,7 +167,7 @@ export default LogoDesignService;
 const reviews = [
   {
     reviewer: "Kamran Javaid",
-    rating: 5,
+    rating: 4.9,
     comment:
       "Khan brings unmatched creativity and dedication, a true pleasure to work with! He really has a passion for graphic design and that is what is shown in his work he creates. It’s been two years working with Khan and he always delivers the best and extraordinary work on time beyond our expectations. We always recommend him to our network of colleagues in our circle.",
     project: "Create brand identity for a fin-tech startup",
@@ -163,8 +176,8 @@ const reviews = [
   },
 
   {
-    reviewer: "Kamran Javaid",
-    rating: 5,
+    reviewer: "Leonardo DiCaprio",
+    rating: 4.5,
     comment:
       "Khan brings unmatched creativity and dedication, a true pleasure to work with! He really has a passion for graphic design and that is what is shown in his work he creates. It’s been two years working with Khan and he always delivers the best and extraordinary work on time beyond our expectations. We always recommend him to our network of colleagues in our circle.",
     project: "Create brand identity for a fin-tech startup",
@@ -172,8 +185,8 @@ const reviews = [
     image: pImage2,
   },
   {
-    reviewer: "Kamran Javaid",
-    rating: 5,
+    reviewer: "Tom Hanks",
+    rating: 3.7,
     comment:
       "Khan brings unmatched creativity and dedication, a true pleasure to work with! He really has a passion for graphic design and that is what is shown in his work he creates. It’s been two years working with Khan and he always delivers the best and extraordinary work on time beyond our expectations. We always recommend him to our network of colleagues in our circle.",
     project: "Create brand identity for a fin-tech startup",
@@ -181,8 +194,8 @@ const reviews = [
     image: pImage3,
   },
   {
-    reviewer: "Kamran Javaid",
-    rating: 5,
+    reviewer: "Ben Affleck",
+    rating: 4.8,
     comment:
       "Khan brings unmatched creativity and dedication, a true pleasure to work with! He really has a passion for graphic design and that is what is shown in his work he creates. It’s been two years working with Khan and he always delivers the best and extraordinary work on time beyond our expectations. We always recommend him to our network of colleagues in our circle.",
     project: "Create brand identity for a fin-tech startup",

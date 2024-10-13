@@ -15,6 +15,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import PublicRoute from "./auth/PublicRoute";
 import EditGig from "./pages/EditGig/editGig";
 import newGigDetails from "./pages/newGigDetails/newGigDetails";
+import "./App.css";
 
 function App() {
   return (
@@ -54,7 +55,7 @@ function App() {
           />
           <Route
             path="/gig/:gigId"
-            element={<ProtectedRoute element={GigDetails} />}
+            element={<ProtectedRoute element={newGigDetails} />}
           />
           <Route
             path="/gig/newGigDetails"

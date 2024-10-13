@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 function ServiceCard(service) {
 
-  // console.log("description: ", service.description);
   return (
     <Link to={`/gig/${service.gigId}`}>
       <div className={styles.service_card}>
@@ -15,8 +14,7 @@ function ServiceCard(service) {
           alt={service.category}
         />
         <div className={styles.cardDetails}>
-          <h3>{service.title}</h3>
-          {/* <h3>{gigId}</h3> */}
+          <h3 className={styles.serviceTitle}>{service.title}</h3>
           <p>
             ⭐ {service.rating} ({service.reviews})
           </p>

@@ -65,34 +65,68 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
+  width: 100vw;
+  padding: 0 50px;
   margin-bottom: 150px;
 
-  .mainProfileContainer {
-    // padding:-100px 0 100px 0;
-    background-color: base.$background_light;
-    z-index: 1;
-    padding-bottom: 100px;
-    width: 70vw;
-    position: relative;
+  .profilePictureAndDetailsContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 20px;
+  }
+  .profileContainer {
+    position: relative;
+    top: -150px;
+    width: 100%;
+    padding: 50px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 50px;
+    justify-content: flex-start;
+    height: 200vh;
+
+    .profileOverviewContainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .profileDetailsContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      .profileName {
+        font-size: 30px;
+        margin-bottom: 5px;
+      }
+      .profileLocation,
+      .profileJoined {
+        opacity: 0.7;
+        // margin-bottom: 5px;
+      }
+    }
 
     .profilePictureContainer {
-      width: 250px;
-      height: 250px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       position: relative;
 
       img {
-        width: 250px;
-        height: 250px;
+        width: 200px;
+        height: 200px;
         object-fit: cover;
         border-radius: 50%;
-        position: absolute;
-        top: -100px;
       }
 
       .profilePictureLabel {
@@ -119,5 +153,111 @@
       gap: 30px;
       flex-wrap: wrap;
     }
+  }
+}
+
+.profileInfo {
+  font-family: Arial, sans-serif;
+  width: 430px;
+
+  .infoBox {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .infoTitle {
+    font-size: 14px;
+    color: #888;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+
+  .rating {
+    display: flex;
+    align-items: center;
+
+    .stars {
+      color: #ffd700;
+      margin-right: 10px;
+    }
+
+    .star {
+      font-size: 24px;
+    }
+
+    .ratingScore {
+      font-size: 24px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .reviewCount {
+      color: #888;
+      font-size: 14px;
+    }
+  }
+
+  .skillsList,
+  .languagesList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .skill,
+    .language {
+      background-color: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+    }
+  }
+}
+
+.profileTabs {
+  font-family: "Inter", sans-serif;
+  max-width: 100%;
+  margin: 0 auto;
+
+  .tabsContainer {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+
+    .tab {
+      padding: 10px 0px 10px 0px;
+      border: none;
+      margin-right: 20px;
+      background: none;
+      font-size: 22px;
+      font-family: "Inter", sans-serif;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+
+      &.active {
+        opacity: 1;
+        border-bottom: 1px solid #000000;
+      }
+    }
+  }
+
+  .tabContent {
+    .aboutContent {
+      p {
+        margin-bottom: 15px;
+        line-height: 1.6;
+        color: #333;
+      }
+    }
+  }
+}
+
+.aboutContent {
+  .aboutText {
+    font-size: 18px;
+    line-height: 1.6;
+    font-family: "Inter", sans-serif;
   }
 }
