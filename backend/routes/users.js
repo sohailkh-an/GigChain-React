@@ -5,12 +5,8 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
-const authMiddleware = require("../middleware/auth");
-const ethUtil = require("ethereumjs-util");
-const axios = require("axios");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const crypto = require("crypto");
 const { sendVerificationEmail } = require("../utils/emailService");
 
 const router = express.Router();
@@ -336,11 +332,11 @@ router.get("/search", async (req, res) => {
             $regexMatch: {
               input: { $concat: ["$firstName", " ", "$lastName"] },
               regex: query,
-              options: "i"
-            }
-          }
-        }
-      ]
+              options: "i",
+            },
+          },
+        },
+      ],
     });
     res.json(users);
   } catch (error) {
@@ -348,7 +344,6 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 router.get("/user", async (req, res) => {
   try {

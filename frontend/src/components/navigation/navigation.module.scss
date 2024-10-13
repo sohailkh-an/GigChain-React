@@ -68,9 +68,8 @@
   }
 }
 
-.input_wrapper{
-    position: relative;
-    
+.input_wrapper {
+  position: relative;
 }
 
 .suggestionsList {
@@ -119,6 +118,9 @@
   text-decoration: none;
   color: #333;
   padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
@@ -135,4 +137,10 @@
   padding: 5px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.chatIcon,
+.gigIcon {
+  width: 20px;
+  height: 20px;
 }

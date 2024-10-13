@@ -7,6 +7,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import DropdownMenu from "../dropdownMenu/dropdownMenu";
+import chatIcon from "../../assets/chatIcon.png";
+import gigIcon from "../../assets/gigIcon.png";
 
 export default function Navigation() {
   const { currentUser, logout } = useAuth();
@@ -115,9 +117,11 @@ export default function Navigation() {
             {currentUser && (
               <>
                 <Link to="/inbox" className={styles.navbar_link}>
+                  <img src={chatIcon} alt="Chat" className={styles.chatIcon} />
                   Inbox
                 </Link>
                 <Link to="/gigs" className={styles.navbar_link}>
+                  <img src={gigIcon} alt="Gig" className={styles.gigIcon} />
                   Gigs
                 </Link>
                 <Link to="/profile" className={styles.navbar_link}>
