@@ -3,6 +3,7 @@ import styles from "./styles/newGigDetails.module.scss";
 import Navbar from "./../../components/navigation/navigation";
 import Footer from "./../../components/footer/footer";
 import Review from "../../components/review/review";
+import GigDetailsSkeleton from "./loadingSkeleton/gigDetailsSkeleton";
 
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -53,9 +54,10 @@ const LogoDesignService = () => {
   };
 
   if (!gigDetails) {
-    return <div>Loading...</div>;
+    return <GigDetailsSkeleton />;
   }
 
+  
   return (
     <>
       <Navbar />
@@ -63,33 +65,45 @@ const LogoDesignService = () => {
         <div className={styles.leftColumn}>
           <div className={styles.header}>
             <div className={styles.breadcrumb}>
-              Category → Graphic Design → Logo Design
+              Category → {gigDetails.category}
             </div>
-            <h1 className={styles.title}>{gigDetails.title}</h1>
+
+            <div className={styles.headerMainContainer}>
+              <h1 className={styles.title}>{gigDetails.title}</h1>
+
+              <div className={styles.ratingAndPriceContainer}>
+                <div className={styles.ratingContainer}>
+                  <span className={styles.star}>⭐</span> {gigDetails.rating} (
+                  {gigDetails.numReviews})
+                </div>
+                <div className={styles.priceContainer}>
+                  <h3>${gigDetails.price}</h3>
+                </div>
+              </div>
+            </div>
           </div>
           <div className={styles.portfolio}>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.thumbnailUrl}
+                src={gigDetails.images[0]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.thumbnailUrl}
+                src={gigDetails.images[1]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.thumbnailUrl}
+                src={gigDetails.images[2]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
-            {/* <div className={styles.portfolioItem}></div> */}
           </div>
           <div className={styles.serviceDetails}>
             <p className={styles.description}>
@@ -105,7 +119,7 @@ const LogoDesignService = () => {
           </div>
         </div>
         <div className={styles.rightColumn}>
-          <div className={styles.designerProfile}>
+          <div className={styles.freelancerProfile}>
             <div className={styles.profileTopContainer}>
               <div className={styles.profilePicAndRatingContainer}>
                 <div className={styles.profilePicContainer}>
@@ -118,10 +132,10 @@ const LogoDesignService = () => {
                   </Link>
                 </div>
                 <div className={styles.ratingAndNameContainer}>
-                  <span className={styles.ratingScore}>4.8 Rating (1400)</span>
                   <h2 className={styles.designerName}>
                     {providerDetails.name}
                   </h2>
+                  <span className={styles.ratingScore}>4.8 ⭐⭐⭐⭐ (427)</span>
                 </div>
               </div>
               <div className={styles.miscInfoContainer}>
@@ -130,21 +144,25 @@ const LogoDesignService = () => {
                 <p className={styles.joinDate}>Joined: March 2018</p>
               </div>
             </div>
-            <div className={styles.profileBottomContainer}>
-              <p className={styles.bio}>{providerDetails.about}</p>
-            </div>
           </div>
           <div className={styles.messageForm}>
             <h3>Send a private message</h3>
             <textarea
               className={styles.messageInput}
-              placeholder="Hi! Kamran i noticed your profile and would like to offer you my project"
+              placeholder={`Hi! ${providerDetails.name} i noticed your profile and would like to offer you my project`}
             ></textarea>
             <div className={styles.budgetSection}>
-              <label htmlFor="budget">My Budget (Minimum $100)</label>
+              <label htmlFor="budget">
+                My Budget (Minimum ${gigDetails.price})
+              </label>
               <div className={styles.budgetInput}>
-                <input type="number" id="budget" defaultValue={200} />
-                <span className={styles.currency}>USD</span>
+                <span className={styles.currency}>$</span>
+                <input
+                  type="text"
+                  id="budget"
+                  defaultValue={gigDetails.price}
+                  min={gigDetails.price}
+                />
               </div>
             </div>
             <button className={styles.sendButton}>Send</button>

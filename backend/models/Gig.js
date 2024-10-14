@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const gigSchema = new mongoose.Schema({
-  
-  gigAddress: {
-    type: String,
-    required: true,
-  },
   title: {
     type: String,
     required: true,
@@ -31,10 +26,7 @@ const gigSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  thumbnailUrl: {
-    type: String,
-    required: true,
-  },
+  images: [{ type: String }],
   rating: {
     type: Number,
     default: 0,

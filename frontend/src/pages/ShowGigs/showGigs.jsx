@@ -18,11 +18,14 @@ const ViewGigs = () => {
     const fetchUserGigs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/gig/user`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/gig/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setUserGigs(response.data.gigs);
         setIsLoading(false);
       } catch (error) {
@@ -79,12 +82,12 @@ const ViewGigs = () => {
                   gigId={gig._id}
                   title={gig.title}
                   price={gig.price}
-                  thumbnailUrl={gig.thumbnailUrl}
+                  images={gig.images}
                   category={gig.category}
                   serviceProvider={gig.serviceProvider}
                   rating={gig.rating}
                   reviews={gig.numReviews}
-                  description={gig.description}
+                  // description={gig.description}
                 />
               ))}
             </div>

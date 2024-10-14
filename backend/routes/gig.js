@@ -111,7 +111,7 @@ router.use((req, res, next) => {
 router.post(
   "/create",
   authMiddleware,
-  upload.single("thumbnailImage"),
+  upload.array("images", 5),
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
@@ -121,11 +121,13 @@ router.post(
         price,
         category,
         serviceProvider,
-        providerProfilePicture,
-        gigAddress,
       } = req.body;
       const userId = req.user._id;
-      const thumbnailUrl = req.file.location;
+      const imageUrls = req.files.map((file) => file.location);
+
+      const user = await User.findById(userId);
+      const providerProfilePicture = user.profilePictureUrl;
+      
 
       // const provider = new ethers.providers.JsonRpcProvider(
       //   "http://localhost:8545"
@@ -149,11 +151,10 @@ router.post(
         description,
         price,
         category,
-        thumbnailUrl,
+        images: imageUrls,
         user: userId,
         serviceProvider,
         providerProfilePicture,
-        gigAddress,
       });
 
       await gig.save();
@@ -161,12 +162,10 @@ router.post(
       res.status(201).json({ message: "Gig created successfully", gig });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "Server error to hay, laikin main masla btao na bsdk" });
     }
   }
 );
-
-
 
 router.put("/:gigId", async (req, res) => {
   try {
@@ -238,4 +237,3 @@ router.get("/:gigId", async (req, res) => {
 });
 
 module.exports = router;
-

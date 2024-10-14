@@ -73,7 +73,7 @@ function FeaturedServicesSection({ serviceType }) {
               <SkeletonCard key={index} />
             ))
           : services.map((service, index) => (
-              <ServiceCard key={index} service={service} />
+              <ServiceCard key={index} service={service}  />
             ))}
       </section>
     </div>

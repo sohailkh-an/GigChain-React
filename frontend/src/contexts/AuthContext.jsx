@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 
           const data = await response.json();
           console.log("Data from fetchUser:", data);
-          setCurrentUser(data.user);pp
+          setCurrentUser(data.user);
         } catch (error) {
           console.log("Failed to fetch user:", error);
           console.error("Error details:", error.message);

@@ -1,0 +1,159 @@
+// GigDetailsSkeleton.module.scss
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeletonBg {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: darkgray;
+  background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+  background-size: 800px 104px;
+}
+
+.container {
+  width: 100vw;
+  display: flex;
+  max-width: 1366px;
+  padding: 50px;
+  gap: 50px;
+  background-color: #ffffff;
+}
+
+.leftColumn {
+  flex: 2;
+  background-color: #f1f1f1;
+}
+
+.rightColumn {
+  flex: 1;
+  height: 600px;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #f1f1f1;
+}
+
+.header {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  height: 200px;
+  padding: 20px;
+}
+
+.breadcrumb {
+  @extend .skeletonBg;
+  height: 14px;
+  width: 150px;
+  margin-bottom: 10px;
+}
+
+.titleSkeleton {
+  @extend .skeletonBg;
+  height: 40px;
+  width: 70%;
+  margin-bottom: 20px;
+}
+
+.ratingContainer,
+.priceContainer {
+  @extend .skeletonBg;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.portfolio {
+  background-color: #dadada;
+  border-radius: 5px;
+  height: 250px;
+  padding: 30px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.portfolioItem {
+  @extend .skeletonBg;
+  width: 40%;
+  border-radius: 5px;
+  height: 200px;
+}
+
+.serviceDetails {
+  padding: 30px;
+}
+
+.descriptionSkeleton {
+  @extend .skeletonBg;
+  height: 18px;
+  margin-bottom: 15px;
+}
+
+.profilePicContainer {
+  @extend .skeletonBg;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.designerNameSkeleton {
+  @extend .skeletonBg;
+  height: 20px;
+  width: 150px;
+  margin-bottom: 5px;
+}
+
+.ratingSkeleton {
+  @extend .skeletonBg;
+  height: 14px;
+  width: 100px;
+}
+
+.infoSkeleton {
+  @extend .skeletonBg;
+  height: 14px;
+  width: 100px;
+  margin-bottom: 5px;
+}
+
+.formTitleSkeleton {
+  @extend .skeletonBg;
+  height: 20px;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+.messageInputSkeleton {
+  @extend .skeletonBg;
+  height: 150px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.budgetLabelSkeleton {
+  @extend .skeletonBg;
+  height: 14px;
+  width: 150px;
+  margin-bottom: 5px;
+}
+
+.budgetInputSkeleton {
+  @extend .skeletonBg;
+  height: 35px;
+  width: 100%;
+}
+
+.sendButtonSkeleton {
+  @extend .skeletonBg;
+  height: 40px;
+  width: 100%;
+  margin-top: 15px;
+}
