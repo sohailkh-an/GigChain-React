@@ -19,6 +19,8 @@ function UserSearch({ onUserSelect }) {
         );
         const data = await response.json();
         setResults(data);
+
+        console.log("Results from Inbox Search:", data);
       } catch (error) {
         console.error("Failed to fetch users:", error);
         setResults([]);

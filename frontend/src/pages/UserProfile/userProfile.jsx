@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
 import styles from "./styles/page.module.scss";
 
 const UserProfile = () => {
@@ -50,7 +48,6 @@ const UserProfile = () => {
 
   return (
     <div>
-      <Navigation />
       {userDetails ? (
         <>
           <div className={styles.coverPictureContainer}>
@@ -188,7 +185,6 @@ const UserProfile = () => {
           <p className={styles.loadingText}>Loading...</p>
         </div>
       )}
-      <Footer />
     </div>
   );
 };

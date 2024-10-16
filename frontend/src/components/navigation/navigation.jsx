@@ -15,10 +15,16 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target)
+      ) {
         setSearchSuggestions([]);
       }
-      if (avatarMenuRef.current && !avatarMenuRef.current.contains(event.target)) {
+      if (
+        avatarMenuRef.current &&
+        !avatarMenuRef.current.contains(event.target)
+      ) {
         setShowAvatarMenu(false);
       }
     };
@@ -107,13 +113,22 @@ export default function Navigation() {
               <Link to="/inbox" className={styles.navbar_link}>
                 <i className="fas fa-inbox"></i> Inbox
               </Link>
+              <Link to="/proposals" className={styles.navbar_link}>
+                <i className="fas fa-letter"></i> Proposals
+              </Link>
               <Link to="/gigs" className={styles.navbar_link}>
                 <i className="fas fa-briefcase"></i> Gigs
               </Link>
               <div className={styles.avatar_container} ref={avatarMenuRef}>
-                <button className={styles.avatar_button} onClick={toggleAvatarMenu}>
+                <button
+                  className={styles.avatar_button}
+                  onClick={toggleAvatarMenu}
+                >
                   <img
-                    src={currentUser.profilePictureUrl || 'https://via.placeholder.com/80'}
+                    src={
+                      currentUser.profilePictureUrl ||
+                      "https://via.placeholder.com/80"
+                    }
                     alt="User Avatar"
                     className={styles.avatar_image}
                   />
@@ -123,7 +138,10 @@ export default function Navigation() {
                     <Link to="/profile" className={styles.avatar_menu_item}>
                       <i className="fas fa-user"></i> Profile
                     </Link>
-                    <button className={styles.avatar_menu_item} onClick={logout}>
+                    <button
+                      className={styles.avatar_menu_item}
+                      onClick={logout}
+                    >
                       <i className="fas fa-sign-out-alt"></i> Logout
                     </button>
                   </div>

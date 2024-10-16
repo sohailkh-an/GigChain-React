@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import styles from './styles/messageInput.module.scss';
+import { useState } from "react";
+import styles from "./styles/messageInput.module.scss";
 
 function MessageInput({ onSendMessage }) {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     onSendMessage(message);
-    setMessage('');
+    setMessage("");
   };
 
   return (
@@ -18,7 +18,9 @@ function MessageInput({ onSendMessage }) {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Send a message..."
       />
-      <button className={styles.messageSendBtn} type="submit">Send</button>
+      <button className={styles.messageSendBtn} type="submit">
+        Send
+      </button>
     </form>
   );
 }

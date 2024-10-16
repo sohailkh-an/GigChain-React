@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import NavBar from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
 import styles from "./styles/styles.module.scss";
 import FeaturedServicesSection from "../../components/featuredServicesSection/featuredServicesSection";
 import ServiceCard from "../../components/searchResultGigCard/searchResultGigCard";
 import { useAuth } from "../../contexts/AuthContext";
 
 function HomePage() {
-
-  const {currentUser} = useAuth();
+  const { currentUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
 
   const handleSearch = async (query) => {
     if (query.trim() === "") {
@@ -32,7 +28,6 @@ function HomePage() {
     }
   };
 
-
   const handleInputChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -42,7 +37,6 @@ function HomePage() {
   return (
     <React.Fragment>
       <div className={styles.home_wrapper}>
-        <NavBar />
         <div className={styles.hero_container}>
           <div className={styles.headings_container}>
             <h5>Welcome, {currentUser.firstName}</h5>
@@ -83,7 +77,6 @@ function HomePage() {
           </div>
         )}
       </div>
-      <Footer />
     </React.Fragment>
   );
 }

@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -6,19 +6,17 @@ const http = require("http");
 const socketIO = require("socket.io");
 const Message = require("./models/Message");
 
-
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: { origin: process.env.FRONTEND_URL},
+  cors: { origin: process.env.FRONTEND_URL },
   debug: true,
 });
 
 const PORT = process.env.PORT || 5000;
-
 
 app.use(cors());
 
@@ -29,6 +27,8 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
+
+  
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -62,7 +62,6 @@ io.on("connection", (socket) => {
 
       io.to(message.conversationId).emit("new message", newMessage);
       console.log("Message saved:", newMessage);
-
     } catch (error) {
       socket.emit("error", error.message);
       console.error("Error saving message:", error);
@@ -87,5 +86,7 @@ app.use("/api/gig", cors(), gigRoutes);
 const messageRoutes = require("./routes/conversations");
 app.use("/api/conversations", cors(), messageRoutes);
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const proposalRoutes = require("./routes/proposals");
+app.use("/api/proposals", cors(), proposalRoutes);
 
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

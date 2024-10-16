@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Gig = require("../models/Gig");
 const authMiddleware = require("../middleware/auth");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { S3Client } = require("@aws-sdk/client-s3");
+const Gig = require("../models/Gig");
 const User = require("../models/User");
 
 const s3 = new S3Client({
@@ -115,19 +115,12 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const {
-        title,
-        description,
-        price,
-        category,
-        serviceProvider,
-      } = req.body;
+      const { title, description, price, category, serviceProvider } = req.body;
       const userId = req.user._id;
       const imageUrls = req.files.map((file) => file.location);
 
       const user = await User.findById(userId);
       const providerProfilePicture = user.profilePictureUrl;
-      
 
       // const provider = new ethers.providers.JsonRpcProvider(
       //   "http://localhost:8545"
@@ -162,7 +155,11 @@ router.post(
       res.status(201).json({ message: "Gig created successfully", gig });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Server error to hay, laikin main masla btao na bsdk" });
+      res
+        .status(500)
+        .json({
+          message: "Server error to hay, laikin main masla btao na bsdk",
+        });
     }
   }
 );

@@ -18,6 +18,8 @@ function Inbox() {
     handleUserSelect,
   } = useContext(ChatContext);
 
+  console.log("chat context in inbox:", ChatContext);
+
   console.log("Current user in inbox component: ", currentUser);
   console.log("User Details: ", currentUser);
 

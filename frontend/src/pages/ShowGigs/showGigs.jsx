@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
 import ServiceCard from "../../components/serviceCard/serviceCard";
 import styles from "./styles/page.module.scss";
 import { useParams } from "react-router-dom";
@@ -52,7 +50,6 @@ const ViewGigs = () => {
 
   return (
     <div>
-      <Navigation />
 
       <div className={styles.gigsParentWrapper}>
         {userGigs.length === 0 ? (
@@ -94,7 +91,6 @@ const ViewGigs = () => {
           </>
         )}
       </div>
-      <Footer />
     </div>
   );
 };

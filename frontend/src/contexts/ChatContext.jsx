@@ -6,6 +6,7 @@ export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
+  const [ProposalConversations, setProposalConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
 
@@ -105,7 +106,7 @@ export const ChatProvider = ({ children }) => {
   };
 
   const handleUserSelect = async (user) => {
-    if (user._id === currentUser.id) {
+    if (user._id === currentUser.id || user.user == currentUser.id) {
       console.error("Cannot open a conversation with yourself");
       return;
     }

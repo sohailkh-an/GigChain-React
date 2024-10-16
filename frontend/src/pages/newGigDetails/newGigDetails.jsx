@@ -1,27 +1,35 @@
-// LogoDesignService.js
-import styles from "./styles/newGigDetails.module.scss";
-import Navbar from "./../../components/navigation/navigation";
-import Footer from "./../../components/footer/footer";
-import Review from "../../components/review/review";
-import GigDetailsSkeleton from "./loadingSkeleton/gigDetailsSkeleton";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import Review from "../../components/review/review";
+import GigDetailsSkeleton from "./loadingSkeleton/gigDetailsSkeleton";
+import styles from "./styles/newGigDetails.module.scss";
+
 import { useAuth } from "../../contexts/AuthContext";
+import { ChatContext } from "../../contexts/ChatContext";
 
 import pImage1 from "../../assets/pImage1.jpg";
 import pImage2 from "../../assets/pImage2.jpg";
 import pImage3 from "../../assets/pImage3.jpg";
 import pImage4 from "../../assets/pImage4.jpg";
 
-const LogoDesignService = () => {
+const NewGigDetails = () => {
   const { currentUser } = useAuth();
   const { gigId } = useParams();
   const navigate = useNavigate();
 
+  // console.log("chat context in newGigDetails", ChatContext);
+
+  const { activeConversation, setActiveConversation, handleUserSelect } =
+    useContext(ChatContext);
+
+  // console.log("chat context's currentUser", currentUser);
+
   const [gigDetails, setGigDetails] = useState(null);
+  const [message, setMessage] = useState("");
   const [providerDetails, setProviderDetails] = useState(null);
+  const [budget, setBudget] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
@@ -32,6 +40,7 @@ const LogoDesignService = () => {
         );
         setGigDetails(response.data.gig);
         setProviderDetails(response.data.provider);
+        setBudget(response.data.gig.price);
         console.log("Provider details:", response.data.provider);
       } catch (error) {
         console.error("Error fetching gig details:", error);
@@ -44,6 +53,14 @@ const LogoDesignService = () => {
     navigate(`/gig/${gigId}/edit`);
   };
 
+  const handleMessageInput = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const handleBudgetInput = (e) => {
+    setBudget(e.target.value);
+  };
+
   const handleDelete = async () => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/gig/${gigId}`);
@@ -53,14 +70,38 @@ const LogoDesignService = () => {
     }
   };
 
+  const handleSendProposal = () => {
+    try {
+      console.log("Sending requrest to create a new proposal");
+      handleUserSelect(gigDetails);
+      navigate("/inbox");
+
+      // const response = await axios.post(
+      //   `${import.meta.env.VITE_API_URL}/api/proposals/create`,
+      //   {
+      //     gigId,
+      //     clientId: currentUser.id,
+      //     freelancerId: gigDetails.user,
+      //     message: message,
+      //     budget: budget,
+      //   }
+      // );
+      console.log("Well, something happened apparently");
+
+      // if (response.status == 201) {
+      // alert("Proposal sent successfully");
+      // }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (!gigDetails) {
     return <GigDetailsSkeleton />;
   }
 
-  
   return (
     <>
-      <Navbar />
       <div className={styles.container}>
         <div className={styles.leftColumn}>
           <div className={styles.header}>
@@ -149,6 +190,7 @@ const LogoDesignService = () => {
             <h3>Send a private message</h3>
             <textarea
               className={styles.messageInput}
+              onChange={handleMessageInput}
               placeholder={`Hi! ${providerDetails.name} i noticed your profile and would like to offer you my project`}
             ></textarea>
             <div className={styles.budgetSection}>
@@ -162,10 +204,13 @@ const LogoDesignService = () => {
                   id="budget"
                   defaultValue={gigDetails.price}
                   min={gigDetails.price}
+                  onChange={handleBudgetInput}
                 />
               </div>
             </div>
-            <button className={styles.sendButton}>Send</button>
+            <button className={styles.sendButton} onClick={handleSendProposal}>
+              Send
+            </button>
           </div>
         </div>
       </div>
@@ -175,12 +220,11 @@ const LogoDesignService = () => {
           <Review key={review.reviewer} {...review} />
         ))}
       </div>
-      <Footer />
     </>
   );
 };
 
-export default LogoDesignService;
+export default NewGigDetails;
 
 const reviews = [
   {

@@ -7,20 +7,23 @@ import Inbox from "./pages/Inbox/inboxChatProvider";
 import CreateGig from "./pages/CreateGig/createGig";
 import CategoryGigResults from "./pages/CategoryGigResults/categoryGigResults";
 import ViewGig from "./pages/ShowGigs/showGigs";
-import GigDetails from "./pages/GigDetails/gigDetails";
 import CUGigDetails from "./pages/cuGigDetails/cuGigDetails";
 import RegisterationPage from "./pages/Register/registerationForm";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import PublicRoute from "./auth/PublicRoute";
 import EditGig from "./pages/EditGig/editGig";
-import newGigDetails from "./pages/newGigDetails/newGigDetails";
+import NewGigDetails from "./pages/newGigDetails/newGigDetailsChatProvider";
+import ProposalsSection from "./pages/Proposals/proposals";
+import Navigation from "../src/components/navigation/navigation";
+import Footer from "../src/components/footer/footer";
 import "./App.css";
 
 function App() {
   return (
     <Router>
       <AuthProvider>
+        <Navigation />
         <Routes>
           <Route path="/" element={<ProtectedRoute element={HomePage} />} />
           <Route
@@ -55,17 +58,22 @@ function App() {
           />
           <Route
             path="/gig/:gigId"
-            element={<ProtectedRoute element={newGigDetails} />}
+            element={<ProtectedRoute element={NewGigDetails} />}
           />
           <Route
             path="/gig/newGigDetails"
-            element={<ProtectedRoute element={newGigDetails} />}
+            element={<ProtectedRoute element={NewGigDetails} />}
+          />
+          <Route
+            path="/proposals"
+            element={<ProtectedRoute element={ProposalsSection} />}
           />
           <Route
             path="/user/:userId"
             element={<ProtectedRoute element={UserProfile} />}
           />
         </Routes>
+        <Footer />
       </AuthProvider>
     </Router>
   );
