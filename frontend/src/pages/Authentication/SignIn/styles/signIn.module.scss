@@ -1,11 +1,12 @@
-@use "../../../styles/base" as base;
+@use "../../../../styles/base" as base;
 
-.signUp_wrapper {
+.signIn_wrapper {
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: row;
   background-color: #f5f5f5;
+  position: relative;
 
   .parent_cont_left {
     width: 50vw;
@@ -23,18 +24,17 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
+      gap: 15px;
 
       .h3 {
         font: base.$h3;
         color: base.$black;
-        margin:0;
       }
 
       .h4 {
-        margin:0;
-
-        font: base.$h4;
+        font: base.$h5;
         color: base.$black;
+        margin: 0;
       }
 
       .input_container {
@@ -43,42 +43,9 @@
         justify-content: center;
         align-items: center;
         gap: 15px;
-        box-sizing: border-box;
-
-        .user_type_container {
-            background-color: #f4f4f9; /* Adjust the color to match your form */
-            padding: 15px;
-            border-radius: 8px;
-            width: 100%;
-          
-
-           label {
-            font-size: 16px;
-
-
-            
-            // font-family: base.$p_reg;
-            margin: 0;
-            color: #333333; 
-          }
-
-          label {
-            display: block;
-            // margin: 10px 0;
-            color: #333333; 
-          }
-
-          .freelancerInput[type="radio"], .clientInput[type="radio"] {
-            margin-right: 10px;
-          }
-
-          /* Style for when a radio button is checked */
-         input[type="radio"]:checked {
-            /* Add styles for checked state if necessary */
-          }
-        }
 
         .input {
+          box-sizing: border-box;
           width: 450px;
           height: 60px;
           background-color: base.$background_light;
@@ -88,6 +55,23 @@
           font: base.$p_large;
           padding: 15px 20px;
           box-sizing: border-box;
+        }
+
+        .input_error {
+          border: 2px solid red;
+          animation: blink 0.5s 3;
+        }
+
+        @keyframes blink {
+          0% {
+            border-color: red;
+          }
+          50% {
+            border-color: transparent;
+          }
+          100% {
+            border-color: red;
+          }
         }
       }
 
@@ -100,6 +84,7 @@
         color: base.$background;
         font: base.$h5;
         cursor: pointer;
+        text-align: center;
       }
 
       .or_container {
@@ -121,13 +106,54 @@
         }
       }
 
+      .misc_fields {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .custom_checkbox input[type="checkbox"] {
+          display: none;
+        }
+
+        .custom_checkbox .checkbox_label:before {
+          content: "";
+          display: inline-block;
+          margin-right: 10px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #ddd;
+          background-color: #fff;
+          vertical-align: middle;
+        }
+
+        .custom_checkbox
+          input[type="checkbox"]:checked
+          + .checkbox-label:before {
+          background-color: #bada55;
+        }
+
+        .custom_checkbox .checkbox_label {
+          cursor: pointer;
+          color: base.$black;
+        }
+
+        p {
+          font: base.$p_small;
+          color: base.$primary;
+        }
+        .forgetPassLink {
+          color: base.$black;
+        }
+      }
+
       .button_secondary {
         width: 450px;
         height: 60px;
+        padding: 0;
         background-color: base.$white;
         border: 1px solid base.$black;
         border-radius: 4px;
-        padding:0;
         color: base.$black;
         font: base.$p_large;
         cursor: pointer;
@@ -138,16 +164,15 @@
         color: base.$black;
       }
 
-      .signIn_link_container {
+      .register_link_container {
         align-self: center;
       }
-      .signIn_link {
+      .register_link {
         font: base.$p_large;
         color: base.$black;
       }
     }
   }
-
   .parent_cont_right {
     display: flex;
     flex-direction: column;
@@ -155,7 +180,10 @@
     align-items: center;
     width: 50vw;
     height: 100vh;
-    background-color: base.$primary;
+    background-image: url("../../../../assets/40-min.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    // background-color: base.$primary;
 
     .h1 {
       font: base.$h1;
@@ -165,50 +193,5 @@
       font: base.$p_large;
       color: base.$background;
     }
-  }
-}
-
-
-
-
-
-.userType_container {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.userType_button {
-  width: 48%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &.selected {
-    background-color: #4a148c;
-    color: #fff;
-    border-color: #4a148c;
-  }
-}
-
-.navigation_container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-
-.nav_button {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: #f0f0f0;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #e0e0e0;
   }
 }

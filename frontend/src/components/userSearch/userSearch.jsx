@@ -50,12 +50,13 @@ function UserSearch({ onUserSelect }) {
             <li
               key={user._id}
               onClick={() => {
-                onUserSelect(user);
+                console.log("User selected:", user);
+                onUserSelect(user._id);
                 setResults([]);
                 setSearchTerm("");
               }}
             >
-              {user.firstName} {user.lastName}
+              {user.name}
             </li>
           ))}
         </ul>

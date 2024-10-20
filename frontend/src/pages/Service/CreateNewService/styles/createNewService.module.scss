@@ -1,4 +1,4 @@
-@use '../../../styles/base' as base;
+@use "../../../../styles/base" as base;
 
 .parentWrapper {
   max-width: 800px;
@@ -42,7 +42,6 @@
     color: base.$primary;
     margin-bottom: 1rem;
     font-family: "Inter", sans-serif;
-
   }
 }
 

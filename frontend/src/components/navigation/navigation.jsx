@@ -113,11 +113,8 @@ export default function Navigation() {
               <Link to="/inbox" className={styles.navbar_link}>
                 <i className="fas fa-inbox"></i> Inbox
               </Link>
-              <Link to="/proposals" className={styles.navbar_link}>
-                <i className="fas fa-letter"></i> Proposals
-              </Link>
-              <Link to="/gigs" className={styles.navbar_link}>
-                <i className="fas fa-briefcase"></i> Gigs
+              <Link to="/services" className={styles.navbar_link}>
+                <i className="fas fa-briefcase"></i> Services
               </Link>
               <div className={styles.avatar_container} ref={avatarMenuRef}>
                 <button

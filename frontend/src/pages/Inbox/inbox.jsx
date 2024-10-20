@@ -18,17 +18,15 @@ function Inbox() {
     handleUserSelect,
   } = useContext(ChatContext);
 
-  console.log("chat context in inbox:", ChatContext);
 
-  console.log("Current user in inbox component: ", currentUser);
-  console.log("User Details: ", currentUser);
+  // console.log("Current user in inbox component: ", currentUser);
 
-  console.log("Messages extract from state variable: ", messages);
+  // console.log("Messages extract from state variable: ", messages);
   console.log("Currently active conversation: ", activeConversation);
 
   return (
     <div className="app">
-      <Navigation />
+      {/* <Navigation /> */}
       {/* {userDetails ? ( */}
       <div className={styles.inboxParentContainer}>
         <div className={styles.sidebarParentContainer}>

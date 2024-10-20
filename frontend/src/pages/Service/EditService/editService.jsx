@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from "./styles/editGig.module.scss";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
-import { useAuth } from "../../contexts/AuthContext";
+import styles from "./styles/editService.module.scss";
+import { useAuth } from "../../../contexts/AuthContext";
 
-const GigEdit = () => {
+const EditService = () => {
   const { currentUser } = useAuth();
   const { gigId } = useParams();
   const navigate = useNavigate();
@@ -16,7 +14,7 @@ const GigEdit = () => {
     description: "",
     category: "",
     price: "",
-    thumbnailUrl: ""
+    thumbnailUrl: "",
   });
 
   useEffect(() => {
@@ -57,7 +55,6 @@ const GigEdit = () => {
 
   return (
     <>
-      <Navigation />
       <div className={styles.parentWrapper}>
         <form className={styles.formWrapper} onSubmit={handleSubmit}>
           <h1 className={styles.formHeading}>Edit Gig</h1>
@@ -110,12 +107,13 @@ const GigEdit = () => {
               className={styles.inputField}
             />
           </div>
-          <button type="submit" className={styles.submitButton}>Save Changes</button>
+          <button type="submit" className={styles.submitButton}>
+            Save Changes
+          </button>
         </form>
       </div>
-      <Footer />
     </>
   );
 };
 
-export default GigEdit;
+export default EditService;

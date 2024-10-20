@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
           }
 
           const data = await response.json();
-          console.log("Data from fetchUser:", data.user);
+          // console.log("Data from fetchUser:", data.user);
           setCurrentUser(data.user);
         } catch (error) {
           console.log("Failed to fetch user:", error);

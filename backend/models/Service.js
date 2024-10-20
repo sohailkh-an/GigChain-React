@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const gigSchema = new mongoose.Schema({
+const serviceSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -9,21 +9,13 @@ const gigSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  price: {
-    type: Number,
+  category: {
+    type: String,
     required: true,
-  },
-  deliveryTime: {
-    type: Number,
-    required: false,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
-  },
-  category: {
-    type: String,
     required: true,
   },
   images: [{ type: String }],
@@ -31,7 +23,6 @@ const gigSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-
   numReviews: {
     type: Number,
     default: 0,
@@ -50,6 +41,7 @@ const gigSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    enum: ["active", "inactive", "suspended"],
     default: "active",
   },
   providerProfilePicture: {
@@ -57,8 +49,26 @@ const gigSchema = new mongoose.Schema({
     default:
       "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/profile_avatar.jpg",
   },
+  completedProjects: {
+    type: Number,
+    default: 0,
+  },
+  tags: [{ type: String }],
+  priceRange: {
+    min: { type: Number },
+    max: { type: Number },
+  },
+  estimatedDeliveryTime: {
+    min: { type: Number },
+    max: { type: Number },
+  },
 });
 
-const Gig = mongoose.model("Gig", gigSchema);
+serviceSchema.pre("save", function (next) {
+  this.updateOn = new Date();
+  next();
+});
 
-module.exports = Gig;
+const Service = mongoose.model("Service", serviceSchema);
+
+module.exports = Service;

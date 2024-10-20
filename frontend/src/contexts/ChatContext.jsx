@@ -6,7 +6,6 @@ export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
-  const [ProposalConversations, setProposalConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
 
@@ -54,7 +53,7 @@ export const ChatProvider = ({ children }) => {
       }
       socket.current.disconnect("disconnect");
     };
-  }, [activeConversation]);
+  }, [activeConversation, currentUser]);
 
   const fetchConversations = async () => {
     try {
@@ -85,7 +84,45 @@ export const ChatProvider = ({ children }) => {
         sender: currentUser.id,
         text: text,
       };
-      socket.current.emit("send-message", message);
+
+      return new Promise((resolve, reject) => {
+        socket.current.emit("send-message", message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+            reject(error);
+          } else {
+            console.log("Message sent successfully");
+            resolve();
+          }
+        });
+      });
+
+      // socket.current.emit("send-message", message);
+    } else {
+      console.error("No active conversation found");
+    }
+  };
+
+  const handleSendProposalMessage = async (text, conversationId) => {
+    console.log("Sending message...", text, currentUser.id, conversationId);
+    if (conversationId) {
+      const message = {
+        conversationId: conversationId,
+        sender: currentUser.id,
+        text: text,
+      };
+
+      return new Promise((resolve, reject) => {
+        socket.current.emit("send-message", message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+            reject(error);
+          } else {
+            console.log("Message sent successfully");
+            resolve();
+          }
+        });
+      });
     } else {
       console.error("No active conversation found");
     }
@@ -105,8 +142,8 @@ export const ChatProvider = ({ children }) => {
     console.log("Messages fetched: ", data);
   };
 
-  const handleUserSelect = async (user) => {
-    if (user._id === currentUser.id || user.user == currentUser.id) {
+  const handleUserSelect = async (userId) => {
+    if (userId === currentUser.id) {
       console.error("Cannot open a conversation with yourself");
       return;
     }
@@ -126,7 +163,7 @@ export const ChatProvider = ({ children }) => {
 
     const conversationId = findConversationId(
       conversations,
-      user._id,
+      userId,
       currentUser.id
     );
 
@@ -141,24 +178,47 @@ export const ChatProvider = ({ children }) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ participant: user._id }),
+          body: JSON.stringify({ participant: userId }),
         }
       );
       const newConversation = await response.json();
       setConversations([...conversations, newConversation]);
-      setActiveConversation(newConversation._id);
+      setActiveConversation(() => {
+        console.log(
+          "Setting new conversation as active conversation: ",
+          newConversation._id
+        );
+        return newConversation._id;
+      });
+
+      console.log(
+        "New conversation set as active conversation: ",
+        activeConversation
+      );
     }
   };
 
+  function checkConversationExists(userId, currentUserId) {
+    const conversation = conversations.find((conversation) =>
+      conversation.participants.some(
+        (participant) =>
+          participant._id === userId || participant._id === currentUserId
+      )
+    );
+    return conversation ? conversation._id : null;
+  }
   return (
     <ChatContext.Provider
       value={{
         conversations,
         activeConversation,
+        setActiveConversation,
+        checkConversationExists,
         messages,
         currentUser,
         handleSelectConversation,
         handleSendMessage,
+        handleSendProposalMessage,
         handleUserSelect,
       }}
     >

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "redaxios";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
-import styles from "./styles/page.module.scss";
+import styles from "./styles/profile.module.scss";
 // import { EditorState, convertToRaw, ContentState } from "draft-js";
 // import { Editor } from "react-draft-wysiwyg";
 // import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -163,8 +161,6 @@ const CurrentUserProfile = () => {
 
   return (
     <div>
-      <Navigation />
-
       <div className={styles.coverPictureContainer}>
         <img
           src={coverPicture}
@@ -288,8 +284,6 @@ const CurrentUserProfile = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

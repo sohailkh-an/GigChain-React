@@ -1,6 +1,4 @@
-@use "../../../styles/base" as base;
-
-
+@use "../../../../styles/base" as base;
 
 .loadingWrapper {
   display: flex;
@@ -36,25 +34,23 @@
   color: #555;
 }
 
-
 .gigsParentWrapper {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 
-    width: 100%;
-    min-height: 70vh;
+  .gigsActionsWrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
-
-    .gigsActionsWrapper{
-      display:flex;
-      flex-direction:row;
-      align-items:center;
-      justify-content:space-between;
-      width:100%;
-      padding:0 50px; 
-      margin-top:50px;
-    }
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 50px;
+    margin-top: 50px;
+  }
   .gigsWrapper {
     width: 100%;
     background-color: #ffffff;
@@ -69,8 +65,7 @@
   }
 }
 
-
-.createGigBtn{
+.createGigBtn {
   background-color: base.$primary;
-  color:white;
+  color: white;
 }

@@ -27,8 +27,6 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-
-  
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -82,6 +80,9 @@ app.use("/api/users", cors(), userRoutes);
 
 const gigRoutes = require("./routes/gig");
 app.use("/api/gig", cors(), gigRoutes);
+
+const serviceRoutes = require("./routes/services");
+app.use("/api/services", cors(), serviceRoutes);
 
 const messageRoutes = require("./routes/conversations");
 app.use("/api/conversations", cors(), messageRoutes);

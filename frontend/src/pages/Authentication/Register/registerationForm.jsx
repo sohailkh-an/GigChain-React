@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import axios from "redaxios";
-import styles from "./styles/page.module.scss";
+import styles from "./styles/registerationForm.module.scss";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
 export default function RegistrationForm() {
   const [step, setStep] = useState(1);
@@ -197,32 +197,29 @@ export default function RegistrationForm() {
         return (
           <div className={styles.userType_container}>
             <p>Register as a:</p>
-            <button
-              type="button"
-              className={`${styles.userType_button} ${
-                userData.userType === "client" ? styles.selected : ""
-              }`}
-              onClick={() => handleUserTypeSelect("client")}
-            >
-              Client
-            </button>
-            <button
-              type="button"
-              className={`${styles.userType_button} ${
-                userData.userType === "freelancer" ? styles.selected : ""
-              }`}
-              onClick={() => handleUserTypeSelect("freelancer")}
-            >
-              Freelancer
-            </button>
+            <div className={styles.userType_buttons_container}>
+              <button
+                type="button"
+                className={`${styles.userType_button} ${
+                  userData.userType === "client" ? styles.selected : ""
+                }`}
+                onClick={() => handleUserTypeSelect("client")}
+              >
+                Client
+              </button>
+              <button
+                type="button"
+                className={`${styles.userType_button} ${
+                  userData.userType === "freelancer" ? styles.selected : ""
+                }`}
+                onClick={() => handleUserTypeSelect("freelancer")}
+              >
+                Freelancer
+              </button>
+            </div>
             {errors.userType && (
               <p className={styles.error}>{errors.userType}</p>
             )}
-            <div className={styles.signIn_link_container}>
-              <Link to="/signIn" className={styles.signIn_link}>
-                Already a GigChain user? Sign In
-              </Link>
-            </div>
           </div>
         );
 
@@ -329,9 +326,12 @@ export default function RegistrationForm() {
         <div className={styles.parent_cont_right}>
           <div>
             <h1 className={styles.h1}>GigChain</h1>
-            <p className={styles.p}>
-              The first peer-to-peer freelance marketplace
-            </p>
+            <p className={styles.p}>It belongs to you.</p>
+            <div className={styles.signIn_link_container}>
+              <Link to="/signIn" className={styles.signIn_link}>
+                Already a GigChain user? Sign In
+              </Link>
+            </div>
           </div>
         </div>
 

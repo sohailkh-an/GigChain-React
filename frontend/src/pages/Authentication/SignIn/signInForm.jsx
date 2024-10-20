@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import styles from "./styles/page.module.scss";
+import styles from "./styles/signIn.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import axios from "redaxios";
-import LoaderStyles from "../../pages/UserProfile/styles/page.module.scss";
+import LoaderStyles from "../../UserProfile/styles/page.module.scss";
 
 export default function SignInPage() {
   const { login } = useAuth();
@@ -128,11 +128,7 @@ export default function SignInPage() {
         <div className={styles.parent_cont_right}>
           <div>
             <h1 className={styles.h1}>GigChain</h1>
-            <p className={styles.p}>
-              It belongs to you.
-              Own your freedom.
-              {/* The first peer-to-peer freelance marketplace */}
-            </p>
+            <p className={styles.p}>It belongs to you.</p>
           </div>
         </div>
       </div>

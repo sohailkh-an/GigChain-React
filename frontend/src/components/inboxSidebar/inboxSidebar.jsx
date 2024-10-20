@@ -7,19 +7,22 @@ function Sidebar({
   activeConversation,
   onSelectConversation,
 }) {
-  console.log("Active Conversation in Sidebar Component: ", activeConversation);
+  // console.log("Active Conversation in Sidebar Component: ", activeConversation);
 
-  //print otheruser to the console
-  const variable = conversations.map((convo) => {
-    const otherUser = convo.participants.find(
-      (participant) => participant._id !== currentUser.id
-    );
-    console.log("The otherUser we just sent here:", otherUser);
-  });
+  // //print otheruser to the console
+  // const variable = conversations.map((convo) => {
+  //   const otherUser = convo.participants.find(
+  //     (participant) => participant._id !== currentUser.id
+  //   );
+  //   console.log("The otherUser we just sent here:", otherUser);
+  // });
+
+  console.log("Conversations in Sidebar Component: ", conversations);
 
   return (
     <div className={styles.sidebar}>
       {conversations.map((convo) => {
+        console.log("Convo in Sidebar Component: ", convo);
         const lastMessageText = convo.lastMessage
           ? convo.lastMessage.content
           : "No messages yet";
@@ -27,6 +30,8 @@ function Sidebar({
         const otherUser = convo.participants.find(
           (participant) => participant._id !== currentUser.id
         );
+
+        console.log("Other User in Sidebar Component: ", otherUser);
 
         return (
           <div
@@ -83,6 +88,6 @@ Sidebar.propTypes = {
   currentUser: PropTypes.object.isRequired,
   messages: PropTypes.array.isRequired,
   conversations: PropTypes.array.isRequired,
-  activeConversation: PropTypes.string.isRequired,
+  // activeConversation: PropTypes.string.isRequired,
   onSelectConversation: PropTypes.func.isRequired,
 };

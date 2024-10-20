@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import axios from "redaxios";
-import ServiceCard from "../../components/serviceCard/serviceCard";
-import styles from "./styles/page.module.scss";
+import ServiceCard from "../../../components/serviceCard/serviceCard";
+import styles from "./styles/listServices.module.scss";
 import { useParams } from "react-router-dom";
 
-const ViewGigs = () => {
+const ListServices = () => {
   const { gigId } = useParams();
   const { currentUser } = useAuth();
   const [userGigs, setUserGigs] = useState([]);
@@ -50,25 +50,24 @@ const ViewGigs = () => {
 
   return (
     <div>
-
       <div className={styles.gigsParentWrapper}>
         {userGigs.length === 0 ? (
           <>
             <p>
-              No gigs found.
+              No services found.
               <br />
-              Begin by creating your first gig.
+              Begin by creating your first service.
             </p>
-            <Link to="/create_gig">
-              <button>Create Gig</button>
+            <Link to="/create_service">
+              <button>Create Service</button>
             </Link>
           </>
         ) : (
           <>
             <div className={styles.gigsActionsWrapper}>
               <h2>Your Gigs</h2>
-              <Link to="/create_gig">
-                <button className={styles.createGigBtn}>Create Gig</button>
+              <Link to="/create_service">
+                <button className={styles.createGigBtn}>Create Service</button>
               </Link>
             </div>
 
@@ -95,4 +94,4 @@ const ViewGigs = () => {
   );
 };
 
-export default ViewGigs;
+export default ListServices;

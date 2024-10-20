@@ -2,19 +2,18 @@ import { useEffect, useState, useContext } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Review from "../../components/review/review";
-import GigDetailsSkeleton from "./loadingSkeleton/gigDetailsSkeleton";
-import styles from "./styles/newGigDetails.module.scss";
+import LoadingSkeleton from "./viewServiceDetailsSkeloton/viewServiceDetailsSkeleton";
+import styles from "./styles/viewServiceDetails.module.scss";
 
-import { useAuth } from "../../contexts/AuthContext";
-import { ChatContext } from "../../contexts/ChatContext";
+import { useAuth } from "../../../contexts/AuthContext";
+import { ChatContext } from "../../../contexts/ChatContext";
 
-import pImage1 from "../../assets/pImage1.jpg";
-import pImage2 from "../../assets/pImage2.jpg";
-import pImage3 from "../../assets/pImage3.jpg";
-import pImage4 from "../../assets/pImage4.jpg";
+import pImage1 from "../../../assets/pImage1.jpg";
+import pImage2 from "../../../assets/pImage2.jpg";
+import pImage3 from "../../../assets/pImage3.jpg";
+import pImage4 from "../../../assets/pImage4.jpg";
 
-const NewGigDetails = () => {
+const ViewServiceDetails = () => {
   const { currentUser } = useAuth();
   const { gigId } = useParams();
   const navigate = useNavigate();
@@ -150,7 +149,7 @@ const NewGigDetails = () => {
   // };
 
   if (!gigDetails) {
-    return <GigDetailsSkeleton />;
+    return <LoadingSkeleton />;
   }
 
   return (
@@ -277,7 +276,7 @@ const NewGigDetails = () => {
   );
 };
 
-export default NewGigDetails;
+export default ViewServiceDetails;
 
 const reviews = [
   {

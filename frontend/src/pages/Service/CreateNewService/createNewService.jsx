@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import axios from "redaxios";
-import styles from "./styles/page.module.scss";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
-import { ethers } from "ethers";
+import styles from "./styles/createNewService.module.scss";
+// import { ethers } from "ethers";
 
-import GigFactoryArtifact from "../../contracts/GigFactory.json";
+// import ServiceFactoryArtifact from "../../contracts/ServiceFactory.json";
 
-const CreateGigPage = () => {
+const CreateServicePage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -17,14 +15,23 @@ const CreateGigPage = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    price: "",
+    priceRange: { min: "", max: "" },
+    estimatedDeliveryTime: { min: "", max: "" },
     category: "",
     images: [],
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name.includes(".")) {
+      const [field, subfield] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [field]: { ...prev[field], [subfield]: value },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -46,53 +53,101 @@ const CreateGigPage = () => {
     });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     //   if (!window.ethereum) {
+  //     //     alert("Please install MetaMask to use this feature");
+  //     //     return;
+  //     //   }
+
+  //     //   await window.ethereum.request({ method: "eth_requestAccounts" });
+  //     //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     //   const signer = await provider.getSigner();
+
+  //     //   const ServiceFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  //     //   const ServiceFactoryContract = new ethers.Contract(
+  //     //     ServiceFactoryAddress,
+  //     //     ServiceFactoryArtifact.abi,
+  //     //     signer
+  //     //   );
+
+  //     //   const tx = await ServiceFactoryContract.createService(
+  //     //     formData.title,
+  //     //     formData.description,
+  //     //     ethers.utils.parseEther(formData.price.toString()),
+  //     //     formData.category
+  //     //   );
+
+  //     //   console.log("Transaction hash:", tx.hash);
+
+  //     //   const receipt = await tx.wait();
+  //     //   console.log("Transaction was mined in block:", receipt.blockNumber);
+
+  //     //   const ServiceCreatedEvent = receipt.events.find(
+  //     //     (event) => event.event === "ServiceCreated"
+  //     //   );
+
+  //     //   if (!ServiceCreatedEvent) {
+  //     //     throw new Error("ServiceCreated event not found in transaction logs");
+  //     //   }
+
+  //     //   const ServiceAddress = ServiceCreatedEvent.args.ServiceAddress;
+  //     //   console.log("New Service Address:", ServiceAddress);
+
+  //     const formDataToSend = new FormData();
+  //     formDataToSend.append("title", formData.title);
+  //     formDataToSend.append("description", formData.description);
+  //     formDataToSend.append("price", formData.price);
+  //     formDataToSend.append("category", formData.category);
+  //     formData.images.forEach((image) => {
+  //       formDataToSend.append(`images`, image);
+  //     });
+  //     formDataToSend.append("user", currentUser._id);
+  //     formDataToSend.append("serviceProvider", currentUser.name);
+  //     formDataToSend.append(
+  //       "providerProfilePicture",
+  //       currentUser.profilePictureUrl
+  //     );
+  //     // formDataToSend.append("ServiceAddress", ServiceAddress);
+
+  //     const token = localStorage.getItem("token");
+
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_API_URL}/api/services/create`,
+  //       formDataToSend,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     console.log("Service created successfully:", response.data);
+  //     navigate("/services");
+  //   } catch (error) {
+  //     console.error("Error creating service:", error);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      //   if (!window.ethereum) {
-      //     alert("Please install MetaMask to use this feature");
-      //     return;
-      //   }
-
-      //   await window.ethereum.request({ method: "eth_requestAccounts" });
-      //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-      //   const signer = await provider.getSigner();
-
-      //   const gigFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-      //   const gigFactoryContract = new ethers.Contract(
-      //     gigFactoryAddress,
-      //     GigFactoryArtifact.abi,
-      //     signer
-      //   );
-
-      //   const tx = await gigFactoryContract.createGig(
-      //     formData.title,
-      //     formData.description,
-      //     ethers.utils.parseEther(formData.price.toString()),
-      //     formData.category
-      //   );
-
-      //   console.log("Transaction hash:", tx.hash);
-
-      //   const receipt = await tx.wait();
-      //   console.log("Transaction was mined in block:", receipt.blockNumber);
-
-      //   const gigCreatedEvent = receipt.events.find(
-      //     (event) => event.event === "GigCreated"
-      //   );
-
-      //   if (!gigCreatedEvent) {
-      //     throw new Error("GigCreated event not found in transaction logs");
-      //   }
-
-      //   const gigAddress = gigCreatedEvent.args.gigAddress;
-      //   console.log("New Gig Address:", gigAddress);
-
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("price", formData.price);
+      formDataToSend.append("priceRange[min]", formData.priceRange.min);
+      formDataToSend.append("priceRange[max]", formData.priceRange.max);
+      formDataToSend.append(
+        "estimatedDeliveryTime[min]",
+        formData.estimatedDeliveryTime.min
+      );
+      formDataToSend.append(
+        "estimatedDeliveryTime[max]",
+        formData.estimatedDeliveryTime.max
+      );
       formDataToSend.append("category", formData.category);
       formData.images.forEach((image) => {
         formDataToSend.append(`images`, image);
@@ -103,12 +158,11 @@ const CreateGigPage = () => {
         "providerProfilePicture",
         currentUser.profilePictureUrl
       );
-      // formDataToSend.append("gigAddress", gigAddress);
 
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/gig/create`,
+        `${import.meta.env.VITE_API_URL}/api/services/create`,
         formDataToSend,
         {
           headers: {
@@ -117,10 +171,10 @@ const CreateGigPage = () => {
         }
       );
 
-      console.log("Gig created successfully:", response.data);
-      navigate("/gigs");
+      console.log("Service created successfully:", response.data);
+      navigate("/services");
     } catch (error) {
-      console.error("Error creating gig:", error);
+      console.error("Error creating service:", error);
     }
   };
 
@@ -129,10 +183,9 @@ const CreateGigPage = () => {
 
   return (
     <>
-      <Navigation />
       <div className={styles.parentWrapper}>
         <form onSubmit={handleSubmit} className={styles.formWrapper}>
-          <h1 className={styles.formHeading}>Create Gig</h1>
+          <h1 className={styles.formHeading}>Create Service</h1>
           <div className={styles.progressBar}>
             <div
               className={styles.progress}
@@ -212,14 +265,54 @@ const CreateGigPage = () => {
 
           {step === 3 && (
             <div className={styles.formStep}>
-              <h2>Pricing</h2>
+              <h2>Pricing and Delivery</h2>
               <div className={styles.formGroup}>
-                <label htmlFor="price">Price:</label>
+                <label htmlFor="priceRange.min">Minimum Price:</label>
                 <input
                   type="number"
-                  id="price"
-                  name="price"
-                  value={formData.price}
+                  id="priceRange.min"
+                  name="priceRange.min"
+                  value={formData.priceRange.min}
+                  onChange={handleChange}
+                  className={styles.inputField}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="priceRange.max">Maximum Price:</label>
+                <input
+                  type="number"
+                  id="priceRange.max"
+                  name="priceRange.max"
+                  value={formData.priceRange.max}
+                  onChange={handleChange}
+                  className={styles.inputField}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="estimatedDeliveryTime.min">
+                  Minimum Delivery Time (days):
+                </label>
+                <input
+                  type="number"
+                  id="estimatedDeliveryTime.min"
+                  name="estimatedDeliveryTime.min"
+                  value={formData.estimatedDeliveryTime.min}
+                  onChange={handleChange}
+                  className={styles.inputField}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="estimatedDeliveryTime.max">
+                  Maximum Delivery Time (days):
+                </label>
+                <input
+                  type="number"
+                  id="estimatedDeliveryTime.max"
+                  name="estimatedDeliveryTime.max"
+                  value={formData.estimatedDeliveryTime.max}
                   onChange={handleChange}
                   className={styles.inputField}
                   required
@@ -285,16 +378,15 @@ const CreateGigPage = () => {
                   Previous
                 </button>
                 <button type="submit" className={styles.submitButton}>
-                  Create Gig
+                  Create Service
                 </button>
               </div>
             </div>
           )}
         </form>
       </div>
-      <Footer />
     </>
   );
 };
 
-export default CreateGigPage;
+export default CreateServicePage;
