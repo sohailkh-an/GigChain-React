@@ -82,12 +82,9 @@ const gigRoutes = require("./routes/gig");
 app.use("/api/gig", cors(), gigRoutes);
 
 const serviceRoutes = require("./routes/services");
-app.use("/api/services", cors(), serviceRoutes);
+app.use("/api/service", cors(), serviceRoutes);
 
 const messageRoutes = require("./routes/conversations");
 app.use("/api/conversations", cors(), messageRoutes);
-
-const proposalRoutes = require("./routes/proposals");
-app.use("/api/proposals", cors(), proposalRoutes);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -15,7 +15,7 @@ import pImage4 from "../../../assets/pImage4.jpg";
 
 const ViewServiceDetails = () => {
   const { currentUser } = useAuth();
-  const { gigId } = useParams();
+  const { serviceId } = useParams();
   const navigate = useNavigate();
 
   // console.log("chat context in newGigDetails", ChatContext);
@@ -30,31 +30,31 @@ const ViewServiceDetails = () => {
 
   // console.log("chat context's currentUser", currentUser);
 
-  const [gigDetails, setGigDetails] = useState(null);
+  const [serviceDetails, setServiceDetails] = useState(null);
   const [message, setMessage] = useState("");
   const [providerDetails, setProviderDetails] = useState(null);
   const [budget, setBudget] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
-    const fetchGigDetails = async () => {
+    const fetchServiceDetails = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/gig/${gigId}`
+          `${import.meta.env.VITE_API_URL}/api/service/${serviceId}`
         );
-        setGigDetails(response.data.gig);
+        setServiceDetails(response.data.service);
         setProviderDetails(response.data.provider);
-        setBudget(response.data.gig.price);
+        setBudget(response.data.service.startingPrice);
         // console.log("Provider details:", response.data.provider);
       } catch (error) {
-        console.error("Error fetching gig details:", error);
+        console.error("Error fetching service details:", error);
       }
     };
-    fetchGigDetails();
-  }, [gigId]);
+    fetchServiceDetails();
+  }, [serviceId]);
 
   const handleEdit = () => {
-    navigate(`/gig/${gigId}/edit`);
+    navigate(`/service/${serviceId}/edit`);
   };
 
   const handleMessageInput = (e) => {
@@ -67,7 +67,9 @@ const ViewServiceDetails = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/gig/${gigId}`);
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/service/${serviceId}`
+      );
       navigate("/gigs");
     } catch (error) {
       console.error("Error deleting gig:", error);
@@ -92,7 +94,7 @@ const ViewServiceDetails = () => {
       //check if a conversation between these two users already exists
       let conversationId;
       const conversationExists = await checkConversationExists(
-        gigDetails.user,
+        serviceDetails.user,
         currentUser.id
       );
 
@@ -110,7 +112,8 @@ const ViewServiceDetails = () => {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
             body: JSON.stringify({
-              participant: gigDetails.user,
+              participant: serviceDetails.user,
+              serviceId: serviceDetails._id,
             }),
           }
         );
@@ -148,7 +151,7 @@ const ViewServiceDetails = () => {
   // // );
   // };
 
-  if (!gigDetails) {
+  if (!serviceDetails) {
     return <LoadingSkeleton />;
   }
 
@@ -158,19 +161,19 @@ const ViewServiceDetails = () => {
         <div className={styles.leftColumn}>
           <div className={styles.header}>
             <div className={styles.breadcrumb}>
-              Category → {gigDetails.category}
+              Category → {serviceDetails.category}
             </div>
 
             <div className={styles.headerMainContainer}>
-              <h1 className={styles.title}>{gigDetails.title}</h1>
+              <h1 className={styles.title}>{serviceDetails.title}</h1>
 
               <div className={styles.ratingAndPriceContainer}>
                 <div className={styles.ratingContainer}>
-                  <span className={styles.star}>⭐</span> {gigDetails.rating} (
-                  {gigDetails.numReviews})
+                  <span className={styles.star}>⭐</span>{" "}
+                  {serviceDetails.rating} ({serviceDetails.numReviews})
                 </div>
                 <div className={styles.priceContainer}>
-                  <h3>${gigDetails.price}</h3>
+                  <h3>${serviceDetails.startingPrice}</h3>
                 </div>
               </div>
             </div>
@@ -178,21 +181,21 @@ const ViewServiceDetails = () => {
           <div className={styles.portfolio}>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.images[0]}
+                src={serviceDetails.images[0]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.images[1]}
+                src={serviceDetails.images[1]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
             </div>
             <div className={styles.portfolioItem}>
               <img
-                src={gigDetails.images[2]}
+                src={serviceDetails.images[2]}
                 alt="Portfolio"
                 className={styles.portfolioImage}
               />
@@ -200,14 +203,13 @@ const ViewServiceDetails = () => {
           </div>
           <div className={styles.serviceDetails}>
             <p className={styles.description}>
-              {gigDetails.description}
+              {serviceDetails.description}
               <br />
               <br />
-              {gigDetails.description}
-              {gigDetails.description}
+              {serviceDetails.description}
               <br />
               <br />
-              {gigDetails.description}
+              {serviceDetails.description}
             </p>
           </div>
         </div>
@@ -216,7 +218,7 @@ const ViewServiceDetails = () => {
             <div className={styles.profileTopContainer}>
               <div className={styles.profilePicAndRatingContainer}>
                 <div className={styles.profilePicContainer}>
-                  <Link to={`/user/${gigDetails.user}`}>
+                  <Link to={`/user/${serviceDetails.user}`}>
                     <img
                       src={providerDetails.profilePictureUrl}
                       alt={providerDetails.username}
@@ -247,15 +249,15 @@ const ViewServiceDetails = () => {
             ></textarea>
             <div className={styles.budgetSection}>
               <label htmlFor="budget">
-                My Budget (Minimum ${gigDetails.price})
+                My Budget (Minimum ${serviceDetails.startingPrice})
               </label>
               <div className={styles.budgetInput}>
                 <span className={styles.currency}>$</span>
                 <input
                   type="text"
                   id="budget"
-                  defaultValue={gigDetails.price}
-                  min={gigDetails.price}
+                  defaultValue={serviceDetails.startingPrice}
+                  min={serviceDetails.startingPrice}
                   onChange={handleBudgetInput}
                 />
               </div>

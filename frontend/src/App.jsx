@@ -25,11 +25,15 @@ import "./App.css";
 
 function AppContent() {
   const location = useLocation();
-  const isAuthPage = ["/signIn", "/register"].includes(location.pathname);
+  const showNavigation = ["/signIn", "/register"].includes(location.pathname);
+
+  const showFooter = ["/inbox", "/signIn", "/register"].includes(
+    location.pathname
+  );
 
   return (
     <>
-      {!isAuthPage && <Navigation />}
+      {!showNavigation && <Navigation />}
       <Routes>
         <Route path="/" element={<ProtectedRoute element={HomePage} />} />
         <Route path="/signIn" element={<PublicRoute element={SignInPage} />} />
@@ -51,7 +55,7 @@ function AppContent() {
           element={<ProtectedRoute element={CategoryGigResults} />}
         />
         <Route
-          path="/gig/:gigId/edit"
+          path="/service/:serviceId/edit"
           element={<ProtectedRoute element={EditService} />}
         />
         <Route
@@ -59,11 +63,11 @@ function AppContent() {
           element={<ProtectedRoute element={ListServices} />}
         />
         <Route
-          path="/gig/:gigId/cu"
+          path="/service/:serviceId/chat"
           element={<ProtectedRoute element={CUGigDetails} />}
         />
         <Route
-          path="/gig/:gigId"
+          path="/service/:serviceId"
           element={<ProtectedRoute element={ViewServiceDetails} />}
         />
         <Route
@@ -71,7 +75,7 @@ function AppContent() {
           element={<ProtectedRoute element={UserProfile} />}
         />
       </Routes>
-      {!isAuthPage && <Footer />}
+      {!showFooter && <Footer />}
     </>
   );
 }

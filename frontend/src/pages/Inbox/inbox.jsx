@@ -18,7 +18,6 @@ function Inbox() {
     handleUserSelect,
   } = useContext(ChatContext);
 
-
   // console.log("Current user in inbox component: ", currentUser);
 
   // console.log("Messages extract from state variable: ", messages);
@@ -53,6 +52,7 @@ function Inbox() {
             </>
           )}
         </div>
+        <div className={styles.aboutUserContainer}>Here goes user info</div>
       </div>
       {/* </>
       ) : (

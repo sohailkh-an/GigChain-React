@@ -112,6 +112,7 @@ const NewGigDetails = () => {
             },
             body: JSON.stringify({
               participant: gigDetails.user,
+              
             }),
           }
         );

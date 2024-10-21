@@ -60,6 +60,7 @@ export const ChatProvider = ({ children }) => {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/conversations`,
         {
+          method: "GET",
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );

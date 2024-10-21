@@ -15,8 +15,7 @@ const CreateServicePage = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    priceRange: { min: "", max: "" },
-    estimatedDeliveryTime: { min: "", max: "" },
+    startingPrice: "",
     category: "",
     images: [],
   });
@@ -138,16 +137,8 @@ const CreateServicePage = () => {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("priceRange[min]", formData.priceRange.min);
-      formDataToSend.append("priceRange[max]", formData.priceRange.max);
-      formDataToSend.append(
-        "estimatedDeliveryTime[min]",
-        formData.estimatedDeliveryTime.min
-      );
-      formDataToSend.append(
-        "estimatedDeliveryTime[max]",
-        formData.estimatedDeliveryTime.max
-      );
+      formDataToSend.append("startingPrice", formData.startingPrice);
+
       formDataToSend.append("category", formData.category);
       formData.images.forEach((image) => {
         formDataToSend.append(`images`, image);
@@ -162,7 +153,7 @@ const CreateServicePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/services/create`,
+        `${import.meta.env.VITE_API_URL}/api/service/create`,
         formDataToSend,
         {
           headers: {
@@ -265,59 +256,20 @@ const CreateServicePage = () => {
 
           {step === 3 && (
             <div className={styles.formStep}>
-              <h2>Pricing and Delivery</h2>
+              <h2>Pricing</h2>
               <div className={styles.formGroup}>
-                <label htmlFor="priceRange.min">Minimum Price:</label>
+                <label htmlFor="startingPrice">Starting Price:</label>
                 <input
                   type="number"
-                  id="priceRange.min"
-                  name="priceRange.min"
-                  value={formData.priceRange.min}
+                  id="startingPrice"
+                  name="startingPrice"
+                  value={formData.startingPrice}
                   onChange={handleChange}
                   className={styles.inputField}
                   required
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="priceRange.max">Maximum Price:</label>
-                <input
-                  type="number"
-                  id="priceRange.max"
-                  name="priceRange.max"
-                  value={formData.priceRange.max}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="estimatedDeliveryTime.min">
-                  Minimum Delivery Time (days):
-                </label>
-                <input
-                  type="number"
-                  id="estimatedDeliveryTime.min"
-                  name="estimatedDeliveryTime.min"
-                  value={formData.estimatedDeliveryTime.min}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="estimatedDeliveryTime.max">
-                  Maximum Delivery Time (days):
-                </label>
-                <input
-                  type="number"
-                  id="estimatedDeliveryTime.max"
-                  name="estimatedDeliveryTime.max"
-                  value={formData.estimatedDeliveryTime.max}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
+
               <div className={styles.buttonGroup}>
                 <button
                   type="button"

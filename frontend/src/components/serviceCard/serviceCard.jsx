@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function ServiceCard(service) {
   return (
-    <Link to={`/gig/${service.gigId}`}>
+    <Link to={`/service/${service.serviceId}`}>
       <div className={styles.service_card}>
         <img
           className={styles.thumbnailImage}

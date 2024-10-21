@@ -7,32 +7,32 @@ import styles from "./styles/listServices.module.scss";
 import { useParams } from "react-router-dom";
 
 const ListServices = () => {
-  const { gigId } = useParams();
+  const { serviceId } = useParams();
   const { currentUser } = useAuth();
-  const [userGigs, setUserGigs] = useState([]);
+  const [userServices, setUserServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserGigs = async () => {
+    const fetchUserServices = async () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/gig/user`,
+          `${import.meta.env.VITE_API_URL}/api/service/user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        setUserGigs(response.data.gigs);
+        setUserServices(response.data.services);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching user gigs:", error);
+        console.error("Error fetching user services:", error);
         setIsLoading(false);
       }
     };
 
-    fetchUserGigs();
+    fetchUserServices();
   }, []);
 
   if (!currentUser) {
@@ -51,7 +51,7 @@ const ListServices = () => {
   return (
     <div>
       <div className={styles.gigsParentWrapper}>
-        {userGigs.length === 0 ? (
+        {userServices.length === 0 ? (
           <>
             <p>
               No services found.
@@ -72,18 +72,18 @@ const ListServices = () => {
             </div>
 
             <div className={styles.gigsWrapper}>
-              {userGigs.map((gig) => (
+              {userServices.map((service) => (
                 <ServiceCard
-                  key={gig._id}
-                  gigId={gig._id}
-                  title={gig.title}
-                  price={gig.price}
-                  images={gig.images}
-                  category={gig.category}
-                  serviceProvider={gig.serviceProvider}
-                  rating={gig.rating}
-                  reviews={gig.numReviews}
-                  // description={gig.description}
+                  key={service._id}
+                  serviceId={service._id}
+                  title={service.title}
+                  price={service.startingPrice}
+                  images={service.images}
+                  category={service.category}
+                  serviceProvider={service.serviceProvider}
+                  rating={service.rating}
+                  reviews={service.numReviews}
+                  // description={service.description}
                 />
               ))}
             </div>

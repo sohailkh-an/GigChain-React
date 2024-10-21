@@ -118,16 +118,8 @@ router.post(
   async (req, res) => {
     try {
       console.log("Request Body:", req.body);
-      const {
-        title,
-        description,
-        category,
-        serviceProvider,
-        "priceRange[min]": priceRangeMin,
-        "priceRange[max]": priceRangeMax,
-        "estimatedDeliveryTime[min]": estimatedDeliveryTimeMin,
-        "estimatedDeliveryTime[max]": estimatedDeliveryTimeMax,
-      } = req.body;
+      const { title, description, category, serviceProvider, startingPrice } =
+        req.body;
 
       const userId = req.user._id;
       const imageUrls = req.files.map((file) => file.location);
@@ -143,14 +135,7 @@ router.post(
         images: imageUrls,
         serviceProvider,
         providerProfilePicture,
-        priceRange: {
-          min: Number(priceRangeMin),
-          max: Number(priceRangeMax),
-        },
-        estimatedDeliveryTime: {
-          min: Number(estimatedDeliveryTimeMin),
-          max: Number(estimatedDeliveryTimeMax),
-        },
+        startingPrice,
       });
 
       await service.save();
@@ -171,14 +156,8 @@ router.post(
 router.put("/:serviceId", async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const {
-      title,
-      description,
-      priceRange,
-      estimatedDeliveryTime,
-      category,
-      thumbnailUrl,
-    } = req.body;
+    const { title, description, startingPrice, category, thumbnailUrl } =
+      req.body;
     const service = await Service.findById(serviceId);
 
     if (!service) {
@@ -191,8 +170,7 @@ router.put("/:serviceId", async (req, res) => {
 
     service.title = title;
     service.description = description;
-    service.priceRange = priceRange;
-    service.estimatedDeliveryTime = estimatedDeliveryTime;
+    service.startingPrice = startingPrice;
     service.category = category;
     service.thumbnailUrl = thumbnailUrl;
     service.updatedOn = new Date();

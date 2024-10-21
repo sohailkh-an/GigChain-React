@@ -30,77 +30,78 @@ function MessageList({
   }, [messages]);
 
   return (
-    <div className={styles.messagesWrapper}>
-      <div className={styles.receiptNameBar}>
-        <Link to={`/user/${otherUser._id}`}>
-          <h2 className={styles.receiptName}>
-            {otherUser.firstName} {otherUser.lastName}
-          </h2>
-        </Link>
-      </div>
-      {/* <div className={styles.chatContainer}> */}
-      <div className={styles.message_list} ref={messageListRef}>
-        {messages.map((message) => {
-          const messageDate = new Date(message.timestamp);
-          const currentDate = new Date();
+    <div className={styles.leftSideContainer}>
+      <div className={styles.messagesWrapper}>
+        <div className={styles.receiptNameBar}>
+          <Link to={`/user/${otherUser._id}`}>
+            <h2 className={styles.receiptName}>
+              {otherUser.firstName} {otherUser.lastName}
+            </h2>
+          </Link>
+        </div>
+        {/* <div className={styles.chatContainer}> */}
+        <div className={styles.message_list} ref={messageListRef}>
+          {messages.map((message) => {
+            const messageDate = new Date(message.timestamp);
+            const currentDate = new Date();
 
-          const messageDateOnly = new Date(
-            messageDate.getFullYear(),
-            messageDate.getMonth(),
-            messageDate.getDate()
-          );
-          const currentDateOnly = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            currentDate.getDate()
-          );
+            const messageDateOnly = new Date(
+              messageDate.getFullYear(),
+              messageDate.getMonth(),
+              messageDate.getDate()
+            );
+            const currentDateOnly = new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              currentDate.getDate()
+            );
 
-          const isToday =
-            messageDateOnly.getTime() === currentDateOnly.getTime();
-          const isYesterday =
-            messageDateOnly.getTime() ===
-            currentDateOnly.getTime() - 24 * 60 * 60 * 1000;
+            const isToday =
+              messageDateOnly.getTime() === currentDateOnly.getTime();
+            const isYesterday =
+              messageDateOnly.getTime() ===
+              currentDateOnly.getTime() - 24 * 60 * 60 * 1000;
 
-          const timeString = messageDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
+            const timeString = messageDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
 
-          let displayDateTime;
-          if (isToday) {
-            displayDateTime = timeString;
-          } else if (isYesterday) {
-            displayDateTime = `Yesterday ${timeString}`;
-          } else {
-            const dateString = messageDate.toLocaleDateString();
-            displayDateTime = `${dateString} ${timeString}`;
-          }
+            let displayDateTime;
+            if (isToday) {
+              displayDateTime = timeString;
+            } else if (isYesterday) {
+              displayDateTime = `Yesterday ${timeString}`;
+            } else {
+              const dateString = messageDate.toLocaleDateString();
+              displayDateTime = `${dateString} ${timeString}`;
+            }
 
-          return (
-            <div className={styles.main_cont_msg} key={message._id}>
-              <div
-                className={` ${styles.chatBubble} ${
-                  message.sender === currentUser.id
-                    ? styles.sent
-                    : styles.received
-                }`}
-              >
-                {message.content}
+            return (
+              <div className={styles.main_cont_msg} key={message._id}>
+                <div
+                  className={` ${styles.chatBubble} ${
+                    message.sender === currentUser.id
+                      ? styles.sent
+                      : styles.received
+                  }`}
+                >
+                  {message.content}
+                </div>
+                <p
+                  className={`${
+                    message.sender === currentUser.id
+                      ? styles.sentTimestamp
+                      : styles.receivedTimestamp
+                  }`}
+                >
+                  {displayDateTime}
+                </p>
               </div>
-              <p
-                className={`${
-                  message.sender === currentUser.id
-                    ? styles.sentTimestamp
-                    : styles.receivedTimestamp
-                }`}
-              >
-                {displayDateTime}
-              </p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-      {/* </div> */}
     </div>
   );
 }

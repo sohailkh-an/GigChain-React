@@ -70,11 +70,14 @@ const UserProfile = () => {
                     />
                   </div>
                   <div className={styles.profileDetailsContainer}>
-                    <h2 className={styles.profileName}>Sohail Khan</h2>
+                    <h2 className={styles.profileName}>
+                      {userDetails.firstName} {userDetails.lastName}
+                    </h2>
                     <p className={styles.profileLocation}>
-                      Islamabad, Pakistan
+                      Karachi, Pakistan
+                      {/* {userDetails.location} */}
                     </p>
-                    <p className={styles.profileJoined}>Joined December 2023</p>
+                    <p className={styles.profileJoined}>Joined January 2024</p>
                     {/* <p>{userDetails.expertise}</p> */}
                     {/* <p>Languages: {userDetails.languages}</p> */}
                     {/* <p>About: {userDetails.about}</p> */}

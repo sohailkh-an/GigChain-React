@@ -54,13 +54,9 @@ const serviceSchema = new mongoose.Schema({
     default: 0,
   },
   tags: [{ type: String }],
-  priceRange: {
-    min: { type: Number },
-    max: { type: Number },
-  },
-  estimatedDeliveryTime: {
-    min: { type: Number },
-    max: { type: Number },
+  startingPrice: {
+    type: Number,
+    required: true,
   },
 });
 
