@@ -145,10 +145,9 @@
         font: base.$p_small;
         color: base.$black;
       }
-
     }
   }
-  
+
   .parent_cont_right {
     display: flex;
     flex-direction: column;
@@ -156,7 +155,7 @@
     align-items: center;
     width: 50vw;
     height: 100vh;
-    background-image: url("../../../../assets/40-min.jpg");
+    background-image: url("../../../../assets/40-resized-min.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 

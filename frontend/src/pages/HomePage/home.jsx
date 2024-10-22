@@ -10,19 +10,24 @@ function HomePage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [oldSearchQuery, setOldSearchQuery] = useState("");
 
-  const handleSearch = async (query) => {
-    if (query.trim() === "") {
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() === "") {
       setSearchResults([]);
       return;
     }
 
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/gig/search?query=${query}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/service/search?query=${searchQuery}`
       );
-      console.log(response.data[0]);
+      // console.log(response.data[0]);
       setSearchResults(response.data);
+      setOldSearchQuery(searchQuery);
     } catch (error) {
       console.error("Error searching gigs:", error);
     }
@@ -31,7 +36,7 @@ function HomePage() {
   const handleInputChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    handleSearch(query);
+    // handleSearch(query);
   };
 
   return (
@@ -55,17 +60,24 @@ function HomePage() {
                 value={searchQuery}
                 onChange={handleInputChange}
               />
-              {/* <button className={styles.hero_searchButton}>Search</button> */}
+              <button
+                className={styles.hero_searchButton}
+                // onClick={handleSearch}
+              >
+                Search
+              </button>
             </form>
           </div>
         </div>
 
-        {searchQuery ? (
+        {searchResults.length > 0 ? (
           <div className={styles.searchResultsParentContainer}>
-            <h2>Search Results for &quot;{searchQuery}&quot;</h2>
+            <h2>
+              Search Results for &quot;{oldSearchQuery || searchQuery}&quot;
+            </h2>
             <div className={styles.searchResultsMainContainer}>
-              {searchResults.map((gig) => (
-                <ServiceCard key={gig._id} gig={gig} />
+              {searchResults.map((service) => (
+                <ServiceCard key={service._id} service={service} />
               ))}
             </div>
           </div>

@@ -15,7 +15,7 @@ import pImage4 from "../../../assets/pImage4.jpg";
 
 const ViewServiceDetails = () => {
   const { currentUser } = useAuth();
-  const { serviceId } = useParams();
+const { serviceId } = useParams();
   const navigate = useNavigate();
 
   // console.log("chat context in newGigDetails", ChatContext);
@@ -35,6 +35,19 @@ const ViewServiceDetails = () => {
   const [providerDetails, setProviderDetails] = useState(null);
   const [budget, setBudget] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    const recordClick = async () => {
+      try {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/service/${serviceId}/click`
+        );
+      } catch (error) {
+        console.error("Error recording click:", error);
+      }
+    };
+    recordClick();
+  }, [serviceId]);
 
   useEffect(() => {
     const fetchServiceDetails = async () => {
@@ -76,12 +89,6 @@ const ViewServiceDetails = () => {
     }
   };
 
-  // console.log("Gig Details in New Gig Details: ", gigDetails);
-
-  // const handleSendProposal = async () => {
-  //   const conversationId = await handleConversationCreation();
-  //   handleSendMessageToConversation(conversationId);
-  // };
 
   useEffect(() => {
     console.log("Active conversation in newGigDetails: ", activeConversation);

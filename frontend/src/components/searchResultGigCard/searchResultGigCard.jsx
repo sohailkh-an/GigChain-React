@@ -1,30 +1,45 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import styles from "./styles/serviceCard.module.scss";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-function ServiceCard({gig}) {
+function ServiceCard({ service }) {
   // console.log("description: ", props.service.description);
-  const Id = gig._id;
+
+  useEffect(() => {
+    const recordImpression = async () => {
+      try {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/service/${
+            service._id
+          }/impression`
+        );
+      } catch (error) {
+        console.error("Error recording impression:", error);
+      }
+    };
+
+    recordImpression();
+  }, [service._id]);
+
+  const Id = service._id;
   return (
-    <Link to={`/gig/${Id}`}>
+    <Link to={`/service/${Id}`}>
       <div className={styles.service_card}>
         <img
           className={styles.thumbnailImage}
           width={400}
           height={200}
-          src={gig.thumbnailUrl}
-          alt={gig.category}
+          src={service.thumbnailUrl || service.images[0]}
+          alt={service.category}
         />
         <div className={styles.cardDetails}>
-          <h3>{gig.title}</h3>
-          {/* <h3>{props.service.serviceProvider}</h3> */}
-          {/* <h3>{gigId}</h3> */}
+          <h3>{service.title}</h3>
           <p>
-            ⭐ {gig.rating} ({gig.numReviews})
+            ⭐ {service.rating} ({service.numReviews})
           </p>
-          <p className={styles.serviceDescription}>
-            {gig.description}{" "}
-          </p>
+          <p className={styles.serviceDescription}>{service.description}</p>
         </div>
       </div>
     </Link>

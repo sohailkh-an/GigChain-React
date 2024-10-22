@@ -58,6 +58,19 @@ const serviceSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  impressions: {
+    type: Number,
+    default: 0,
+  },
+  clicks: {
+    type: Number,
+    default: 0,
+  },
+  conversions: {
+    type: Number,
+    default: 0,
+  },
+  
 });
 
 serviceSchema.pre("save", function (next) {

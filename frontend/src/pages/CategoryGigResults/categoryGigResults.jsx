@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./styles/categoryGigResults.module.scss";
 import GigCard from "../../components/featuredGigCard/featuredGigCard";
-import Navigation from "../../components/navigation/navigation";
-import Footer from "../../components/footer/footer";
 
 const GigList = () => {
   const { mainCategory, subCategory } = useParams();
@@ -48,7 +46,6 @@ const GigList = () => {
 
   return (
     <>
-      <Navigation />
       <div className={styles.gigListWrapper}>
         <h2 className={styles.heading}>Gigs in {subCategory}</h2>
         <div className={styles.gigListContent}>
@@ -66,7 +63,6 @@ const GigList = () => {
           ))}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

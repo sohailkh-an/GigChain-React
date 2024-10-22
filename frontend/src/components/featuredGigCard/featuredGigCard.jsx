@@ -7,7 +7,7 @@ function ServiceCard(props) {
   const Id = props.service._id;
 
   return (
-    <Link to={`/gig/${Id}`}>
+    <Link to={`/service/${Id}`}>
       <div className={styles.service_card}>
         <img
           className={styles.thumbnailImage}

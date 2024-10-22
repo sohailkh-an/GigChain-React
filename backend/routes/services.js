@@ -88,18 +88,44 @@ router.get("/category/:category", async (req, res) => {
   }
 });
 
+// router.get("/user", authMiddleware, async (req, res) => {
+//   try {
+//     const { serviceId } = req.params;
+//     // console.log(serviceId);
+//     const userId = req.user._id;
+//     const services = await Service.find({ user: userId });
+//     res.json({ services });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
 router.get("/user", authMiddleware, async (req, res) => {
   try {
-    const { serviceId } = req.params;
-    // console.log(serviceId);
     const userId = req.user._id;
-    const services = await Service.find({ user: userId });
-    res.json({ services });
+    const services = await Service.find({ user: userId }).select(
+      "title images impressions clicks conversions"
+    );
+
+    const servicesWithAnalytics = services.map((service) => ({
+      _id: service._id,
+      title: service.title,
+      images: service.images,
+      impressions: service.impressions,
+      clicks: service.clicks,
+      conversions: service.conversions,
+      conversionRate:
+        service.clicks > 0 ? (service.conversions / service.clicks) * 100 : 0,
+    }));
+
+    res.json({ services: servicesWithAnalytics });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 router.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);
@@ -210,6 +236,8 @@ router.get("/:serviceId", async (req, res) => {
   try {
     const { serviceId } = req.params;
     const service = await Service.findById(serviceId);
+
+    console.log("Service found: ", service);
     const provider = await User.findById(service.user);
 
     if (!service) {
@@ -217,6 +245,94 @@ router.get("/:serviceId", async (req, res) => {
     }
 
     res.json({ service, provider });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/:serviceId/impression", async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await Service.findByIdAndUpdate(
+      serviceId,
+      { $inc: { impressions: 1 } },
+      { new: true }
+    );
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+    res.json({
+      message: "Impression recorded",
+      impressions: service.impressions,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/:serviceId/click", async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await Service.findByIdAndUpdate(
+      serviceId,
+      { $inc: { clicks: 1 } },
+      { new: true }
+    );
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+    res.json({ message: "Click recorded", clicks: service.clicks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/:serviceId/conversion", async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await Service.findByIdAndUpdate(
+      serviceId,
+      { $inc: { conversions: 1 } },
+      { new: true }
+    );
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+    res.json({
+      message: "Conversion recorded",
+      conversions: service.conversions,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/:serviceId/analytics", authMiddleware, async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await Service.findById(serviceId);
+
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    if (service.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const analytics = {
+      impressions: service.impressions,
+      clicks: service.clicks,
+      conversions: service.conversions,
+      conversionRate:
+        service.clicks > 0 ? (service.conversions / service.clicks) * 100 : 0,
+    };
+
+    res.json(analytics);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
