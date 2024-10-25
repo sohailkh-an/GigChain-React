@@ -65,7 +65,7 @@ export default function Footer() {
           <div className={styles.main_footer_secondary}>
             <h3> &copy; 2023 GigChain Global Inc.</h3>
             <div className={styles.footer_secondary_links}>
-              Build with ♥ and a lot of ☕ By Snakes 🐍 at NUML
+              Build with ♥ and a lot of ☕ at Pindi.
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ const cors = require("cors");
 const http = require("http");
 const socketIO = require("socket.io");
 const Message = require("./models/Message");
+const Proposal = require("./models/Proposal");
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
@@ -42,6 +43,7 @@ io.on("connection", (socket) => {
 
   socket.on("send-message", async (message) => {
     console.log("Received send-message event:", message);
+
     try {
       const newMessage = new Message({
         conversationId: message.conversationId,
@@ -50,21 +52,47 @@ io.on("connection", (socket) => {
         timestamp: new Date(),
       });
 
-      console.log(
-        "New message:",
-        message.conversationId,
-        message.sender,
-        message.text
-      );
       await newMessage.save();
 
       io.to(message.conversationId).emit("new message", newMessage);
-      console.log("Message saved:", newMessage);
     } catch (error) {
       socket.emit("error", error.message);
       console.error("Error saving message:", error);
     }
   });
+
+  socket.on(
+    "proposal-changes",
+    async (budget, deadline, conversationId, callback) => {
+      console.log(
+        "Received proposal-changes event:",
+        budget,
+        deadline,
+        conversationId
+      );
+
+      try {
+        const updatedProposal = await Proposal.findOneAndUpdate(
+          { conversationId },
+          { $set: { budget, deadline } },
+          { new: true, upsert: true }
+        );
+
+        io.to(conversationId).emit("proposal-updated", updatedProposal);
+
+        callback({
+          success: true,
+          data: updatedProposal,
+        });
+      } catch (error) {
+        console.error("Error updating proposal:", error);
+        callback({
+          success: false,
+          error: error.message,
+        });
+      }
+    }
+  );
 
   socket.on("disconnect", () => {
     console.log("A user disconnected");
@@ -76,6 +104,7 @@ app.get("/", (req, res) => {
 });
 
 const userRoutes = require("./routes/users");
+
 app.use("/api/users", cors(), userRoutes);
 
 const gigRoutes = require("./routes/gig");

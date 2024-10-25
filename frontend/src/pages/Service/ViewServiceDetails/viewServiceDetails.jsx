@@ -15,7 +15,7 @@ import pImage4 from "../../../assets/pImage4.jpg";
 
 const ViewServiceDetails = () => {
   const { currentUser } = useAuth();
-const { serviceId } = useParams();
+  const { serviceId } = useParams();
   const navigate = useNavigate();
 
   // console.log("chat context in newGigDetails", ChatContext);
@@ -25,7 +25,6 @@ const { serviceId } = useParams();
     setActiveConversation,
     handleSendProposalMessage,
     checkConversationExists,
-    handleUserSelect,
   } = useContext(ChatContext);
 
   // console.log("chat context's currentUser", currentUser);
@@ -34,6 +33,7 @@ const { serviceId } = useParams();
   const [message, setMessage] = useState("");
   const [providerDetails, setProviderDetails] = useState(null);
   const [budget, setBudget] = useState();
+  const [deadline, setDeadline] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
@@ -78,6 +78,10 @@ const { serviceId } = useParams();
     setBudget(e.target.value);
   };
 
+  const handleDeadlineInput = (e) => {
+    setDeadline(e.target.value);
+  };
+
   const handleDelete = async () => {
     try {
       await axios.delete(
@@ -88,7 +92,6 @@ const { serviceId } = useParams();
       console.error("Error deleting gig:", error);
     }
   };
-
 
   useEffect(() => {
     console.log("Active conversation in newGigDetails: ", activeConversation);
@@ -121,6 +124,10 @@ const { serviceId } = useParams();
             body: JSON.stringify({
               participant: serviceDetails.user,
               serviceId: serviceDetails._id,
+              proposal: {
+                budget: budget,
+                deadline: deadline,
+              },
             }),
           }
         );
@@ -235,15 +242,33 @@ const { serviceId } = useParams();
                 </div>
                 <div className={styles.ratingAndNameContainer}>
                   <h2 className={styles.designerName}>
-                    {providerDetails.name}
+                    {providerDetails?.firstName} {providerDetails?.lastName}
                   </h2>
                   <span className={styles.ratingScore}>4.8 ⭐⭐⭐⭐ (427)</span>
                 </div>
               </div>
               <div className={styles.miscInfoContainer}>
-                <span className={styles.time}>11:55 AM PST</span>
-                <p className={styles.location}>Islamabad, Pakistan</p>
-                <p className={styles.joinDate}>Joined: March 2018</p>
+                <span className={styles.time}>
+                  {providerDetails?.localTime
+                    ? providerDetails?.localTime
+                    : "N/A"}
+                  {" "}
+                </span>
+                <p className={styles.location}>
+                  {providerDetails?.location?.city
+                    ? providerDetails?.location?.city
+                    : "N/A"}
+                  ,{" "}
+                  {providerDetails?.location?.country
+                    ? providerDetails?.location?.country
+                    : "N/A"}
+                </p>
+                <p className={styles.joinDate}>
+                  Joined:{" "}
+                  {providerDetails?.joinedAt
+                    ? new Date(providerDetails?.joinedAt).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
             </div>
           </div>
@@ -252,7 +277,7 @@ const { serviceId } = useParams();
             <textarea
               className={styles.messageInput}
               onChange={handleMessageInput}
-              placeholder={`Hi! ${providerDetails.name} i noticed your profile and would like to offer you my project`}
+              placeholder={`Hi! ${providerDetails?.firstName} ${providerDetails?.lastName} i noticed your profile and would like to offer you my project`}
             ></textarea>
             <div className={styles.budgetSection}>
               <label htmlFor="budget">
@@ -268,6 +293,16 @@ const { serviceId } = useParams();
                   onChange={handleBudgetInput}
                 />
               </div>
+            </div>
+            <div className={styles.deadlineSection}>
+              <label htmlFor="deadline">Deadline</label>
+              <input
+                type="date"
+                id="deadline"
+                onChange={handleDeadlineInput}
+                required
+                className={styles.deadlineInput}
+              />
             </div>
             <button className={styles.sendButton} onClick={handleSendProposal}>
               Send

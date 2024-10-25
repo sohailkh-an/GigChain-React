@@ -31,6 +31,10 @@ export const ChatProvider = ({ children }) => {
         });
       });
 
+      socket.current.on("proposal-updated", (updatedProposal) => {
+        console.log("Recieved updated proposal:", updatedProposal);
+      });
+
       if (message.conversationId === activeConversation) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
@@ -48,6 +52,7 @@ export const ChatProvider = ({ children }) => {
     return () => {
       socket.current.off("connect");
       socket.current.off("new message");
+      socket.current.off("proposal-updated");
       if (activeConversation) {
         socket.current.emit("leave-conversation", activeConversation);
       }
@@ -104,13 +109,44 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  const handleSendProposalMessage = async (text, conversationId) => {
+  const handleProposalChanges = async (budget, deadline, conversationId) => {
+    if (conversationId) {
+      return new Promise((resolve, reject) => {
+        socket.current.emit(
+          "proposal-changes",
+          budget,
+          deadline,
+          conversationId,
+          (response) => {
+            if (response?.success) {
+              console.log("Proposal updated successfully:", response.data);
+              resolve(response.data);
+            } else {
+              console.error("Failed to update proposal:", response?.error);
+              reject(response?.error);
+            }
+          }
+        );
+      });
+    }
+  };
+
+  const handleSendProposalMessage = async (
+    text,
+    conversationId,
+    budget,
+    deadline
+  ) => {
     console.log("Sending message...", text, currentUser.id, conversationId);
     if (conversationId) {
       const message = {
         conversationId: conversationId,
         sender: currentUser.id,
         text: text,
+        proposal: {
+          budget: budget,
+          deadline: deadline,
+        },
       };
 
       return new Promise((resolve, reject) => {
@@ -201,13 +237,13 @@ export const ChatProvider = ({ children }) => {
 
   function checkConversationExists(userId, currentUserId) {
     const conversation = conversations.find((conversation) =>
-      conversation.participants.some(
-        (participant) =>
-          participant._id === userId || participant._id === currentUserId
+      [userId, currentUserId].every((id) =>
+        conversation.participants.some((participant) => participant._id === id)
       )
     );
     return conversation ? conversation._id : null;
   }
+
   return (
     <ChatContext.Provider
       value={{
@@ -220,6 +256,7 @@ export const ChatProvider = ({ children }) => {
         handleSelectConversation,
         handleSendMessage,
         handleSendProposalMessage,
+        handleProposalChanges,
         handleUserSelect,
       }}
     >

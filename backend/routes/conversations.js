@@ -3,6 +3,7 @@ const router = express.Router();
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 const authMiddleware = require("../middleware/auth");
+const Proposal = require("../models/Proposal");
 
 router.use(authMiddleware);
 
@@ -48,19 +49,55 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/:conversationId", authMiddleware, async (req, res) => {
+  try {
+    const conversationId = req.params.conversationId;
+    const conversation = await Conversation.findById(conversationId)
+      .populate({
+        path: "serviceId",
+        select: "title",
+      })
+      .exec();
+    res.json(conversation);
+  } catch (error) {
+    console.error("Error fetching conversation:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { participant, serviceId } = req.body;
-    console.log("User ID coming from conversations api route: ", req.user);
+    // console.log("User ID coming from conversations api route: ", req.user);
 
     const conversation = new Conversation({
       participants: [req.user._id, participant],
       serviceId: serviceId,
     });
     await conversation.save();
+
+    const { budget, deadline } = req.body.proposal;
+
+    const proposal = new Proposal({
+      conversationId: conversation._id,
+      budget: budget,
+      deadline: deadline,
+    });
+    await proposal.save();
     res.status(201).json(conversation);
   } catch (error) {
     console.error("Error creating conversation:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/:conversationId/proposal", authMiddleware, async (req, res) => {
+  try {
+    const conversationId = req.params.conversationId;
+    const proposal = await Proposal.findOne({ conversationId });
+    res.json(proposal);
+  } catch (error) {
+    console.error("Error fetching proposal:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

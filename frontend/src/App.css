@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Inter";
-  src: url("/public/Fonts/Inter/Inter-Regular.woff2") format("woff2");
+  src: url("/Fonts/Inter/Inter-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("/public/Fonts/Inter/Inter-Bold.woff2") format("woff2");
+  src: url("/Fonts/Inter/Inter-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("/public/Fonts/Inter/Inter-Medium.woff2") format("woff2");
+  src: url("/Fonts/Inter/Inter-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("/public/Fonts/Inter/Inter-SemiBold.woff2") format("woff2");
+  src: url("/Fonts/Inter/Inter-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -32,7 +32,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("/public/Fonts/Inter/Inter-Light.woff2") format("woff2");
+  src: url("/Fonts/Inter/Inter-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -69,9 +69,6 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-body {
 }
 
 .card {

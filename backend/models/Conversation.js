@@ -11,7 +11,7 @@ const conversationSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["proposal", "project", "completed", "cancelled"],
+    enum: ["proposal", "accepted", "rejected"],
     default: "proposal",
   },
 

@@ -2,22 +2,16 @@ const mongoose = require("mongoose");
 
 const ProposalSchema = new mongoose.Schema(
   {
-    gigId: { type: mongoose.Schema.Types.ObjectId, ref: "Gig", required: true },
-    clientId: {
+    conversationId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Conversation",
       required: true,
     },
-    freelancerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    message: { type: String, required: true },
     budget: { type: Number, required: true },
+    deadline: { type: Date, required: true },
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected", "in_progress", "completed"],
+      enum: ["pending", "accepted", "rejected"],
       default: "pending",
     },
     createdAt: { type: Date, default: Date.now },

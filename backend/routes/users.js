@@ -8,6 +8,7 @@ const { S3Client } = require("@aws-sdk/client-s3");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const { sendVerificationEmail } = require("../utils/emailService");
+const axios = require("axios");
 
 const router = express.Router();
 
@@ -85,6 +86,11 @@ router.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, userType, email, password } = req.body;
 
+    const ip = req.headers["x-forwarded-for"];
+
+    const locationResponse = await axios.get(`https://ipapi.co/${ip}/json/`);
+    const locationData = locationResponse.data;
+
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
@@ -98,6 +104,12 @@ router.post("/register", async (req, res) => {
       password,
       profilePictureUrl: defaultAvatar,
       coverPictureUrl: defaultCover,
+
+      location: {
+        city: locationData.city,
+        country: locationData.country_name,
+        timezone: locationData.timezone,
+      },
 
       verificationCode: undefined,
       verificationCodeExpires: undefined,
