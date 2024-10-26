@@ -86,7 +86,9 @@ router.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, userType, email, password } = req.body;
 
-    const ip = req.headers["x-forwarded-for"];
+    const ip = req.ip;
+
+    console.log("IP in register route:", ip);
 
     const locationResponse = await axios.get(`https://ipapi.co/${ip}/json/`);
     const locationData = locationResponse.data;
