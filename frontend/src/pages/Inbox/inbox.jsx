@@ -11,6 +11,7 @@ import ProjectInfoSidebar from "./ProjectDetailsSidebar/projectInfoSidebar";
 function Inbox() {
   const {
     conversations,
+    handleNegotiation,
     activeConversation,
     messages,
     currentUser,
@@ -44,6 +45,8 @@ function Inbox() {
                 conversations={conversations}
                 activeConversation={activeConversation}
                 messages={messages}
+                handleNegotiation={handleNegotiation}
+                conversationId={activeConversation}
               />
               <MessageInput onSendMessage={handleSendMessage} />
             </div>

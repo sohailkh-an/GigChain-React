@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
+
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
@@ -60,6 +61,33 @@ export const ChatProvider = ({ children }) => {
     };
   }, [activeConversation, currentUser]);
 
+  const handleNegotiation = async (negotiationData) => {
+    const currentUserId = currentUser?._id || currentUser?.id;
+
+    if (activeConversation) {
+      return new Promise((resolve, reject) => {
+        socket.current.emit(
+          "negotiation-update",
+          {
+            ...negotiationData,
+            sender: currentUserId,
+
+            conversationId: activeConversation,
+          },
+          (response) => {
+            if (response?.success) {
+              console.log("Negotiation updated successfully:", response.data);
+              resolve(response.data);
+            } else {
+              console.error("Failed to update negotiation:", response?.error);
+              reject(response?.error);
+            }
+          }
+        );
+      });
+    }
+  };
+
   const fetchConversations = async () => {
     try {
       const response = await fetch(
@@ -110,8 +138,6 @@ export const ChatProvider = ({ children }) => {
           }
         });
       });
-
-      // socket.current.emit("send-message", message);
     } else {
       console.error("No active conversation found");
     }
@@ -256,6 +282,7 @@ export const ChatProvider = ({ children }) => {
   }
 
   return (
+    
     <ChatContext.Provider
       value={{
         conversations,
@@ -264,6 +291,7 @@ export const ChatProvider = ({ children }) => {
         checkConversationExists,
         messages,
         currentUser,
+        handleNegotiation,
         handleSelectConversation,
         handleSendMessage,
         fetchConversations,
@@ -271,8 +299,8 @@ export const ChatProvider = ({ children }) => {
         handleProposalChanges,
         handleUserSelect,
       }}
-    >
-      {children}
+  >
+    {children}
     </ChatContext.Provider>
   );
 };
