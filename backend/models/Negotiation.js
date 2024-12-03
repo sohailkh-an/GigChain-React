@@ -1,4 +1,3 @@
-// models/Negotiation.js
 const mongoose = require("mongoose");
 
 const NegotiationSchema = new mongoose.Schema({

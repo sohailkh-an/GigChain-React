@@ -1,7 +1,6 @@
-import { createContext, useState, useEffect, useRef } from "react";
+import { createContext, useState, useEffect, useRef, useCallback } from "react";
 import io from "socket.io-client";
 import { useAuth } from "./AuthContext";
-
 
 export const ChatContext = createContext();
 
@@ -9,6 +8,7 @@ export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [unReadCount, setUnReadCount] = useState(0);
 
   const { currentUser } = useAuth();
 
@@ -23,6 +23,10 @@ export const ChatProvider = ({ children }) => {
 
     socket.current.on("new message", (message) => {
       console.log("Received new message: ", message);
+      if (message.conversationId !== activeConversation) {
+        setUnReadCount((prevCount) => prevCount + 1);
+        console.log("Unread count updated: ", unReadCount);
+      }
       setConversations((prevConversations) => {
         return prevConversations.map((convo) => {
           if (convo.id === message.conversationId) {
@@ -61,6 +65,14 @@ export const ChatProvider = ({ children }) => {
     };
   }, [activeConversation, currentUser]);
 
+  useEffect(() => {
+    setUnReadCount(0);
+  }, [activeConversation]);
+
+  const setInitialActiveConversation = (conversationId) => {
+    setActiveConversation(conversationId);
+  };
+
   const handleNegotiation = async (negotiationData) => {
     const currentUserId = currentUser?._id || currentUser?.id;
 
@@ -88,7 +100,7 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/conversations`,
@@ -103,7 +115,7 @@ export const ChatProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching conversations:", error);
     }
-  };
+  }, []);
 
   const handleSelectConversation = (id) => {
     console.log("Selected conversation:", id);
@@ -171,9 +183,8 @@ export const ChatProvider = ({ children }) => {
     budget,
     deadline
   ) => {
-    console.log("Sending message...", text, currentUser.id, conversationId);
-
     const currentUserId = currentUser?._id || currentUser?.id;
+    console.log("Sending message...", text, currentUserId, conversationId);
 
     if (conversationId) {
       const message = {
@@ -282,7 +293,6 @@ export const ChatProvider = ({ children }) => {
   }
 
   return (
-    
     <ChatContext.Provider
       value={{
         conversations,
@@ -290,6 +300,8 @@ export const ChatProvider = ({ children }) => {
         setActiveConversation,
         checkConversationExists,
         messages,
+        unReadCount,
+        setUnReadCount,
         currentUser,
         handleNegotiation,
         handleSelectConversation,
@@ -298,9 +310,10 @@ export const ChatProvider = ({ children }) => {
         handleSendProposalMessage,
         handleProposalChanges,
         handleUserSelect,
+        setInitialActiveConversation,
       }}
-  >
-    {children}
+    >
+      {children}
     </ChatContext.Provider>
   );
 };

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import styles from "./styles/inbox.module.scss";
 import UserSearch from "../../components/userSearch/userSearch";
@@ -18,8 +18,25 @@ function Inbox() {
     handleSelectConversation,
     handleSendMessage,
     handleProposalChanges,
+    fetchConversations,
     handleUserSelect,
+    setInitialActiveConversation,
   } = useContext(ChatContext);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [messages]);
+
+  useEffect(() => {
+    const storedConversationId = localStorage.getItem("activeConversation");
+
+    console.log("Stored conversation ID: ", storedConversationId);
+
+    if (storedConversationId) {
+      setInitialActiveConversation(storedConversationId);
+      localStorage.removeItem("activeConversation");
+    }
+  }, []);
 
   console.log("Currently active conversation: ", activeConversation);
 
@@ -33,6 +50,7 @@ function Inbox() {
             messages={messages}
             conversations={conversations}
             activeConversation={activeConversation}
+            fetchConversations={fetchConversations}
             onSelectConversation={handleSelectConversation}
           />
         </div>
@@ -48,7 +66,10 @@ function Inbox() {
                 handleNegotiation={handleNegotiation}
                 conversationId={activeConversation}
               />
-              <MessageInput onSendMessage={handleSendMessage} />
+              <MessageInput
+                onSendMessage={handleSendMessage}
+                fetchConversations={fetchConversations}
+              />
             </div>
             <div className={styles.aboutUserContainer}>
               <ProjectInfoSidebar

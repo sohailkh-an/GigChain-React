@@ -8,6 +8,7 @@ import { ChatContext } from "../../contexts/ChatContext";
 import { NegotiationModal } from "../Negotiation/negotiationModal/negotiationModal";
 import { NegotiationButton } from "../Negotiation/negotiationButton/negotiationButton";
 import { NegotiationMessage } from "../Negotiation/negotiationMessage/negotiationMessage";
+import ProposalMessage from "../../components/proposalMessage/proposalMessage";
 
 function MessageList({
   currentUser,
@@ -87,8 +88,6 @@ function MessageList({
             </Link>
           </div>
           <div className={styles.message_list} ref={messageListRef}>
-            
-            
             {/* <ProposalSection
               handleProposalChanges={handleProposalChanges}
               conversationId={activeConversation}
@@ -98,6 +97,8 @@ function MessageList({
               {messages.map((message) => {
                 const messageDate = new Date(message.timestamp);
                 const currentDate = new Date();
+
+                console.log("well, this is the message", message);
 
                 const messageDateOnly = new Date(
                   messageDate.getFullYear(),
@@ -152,6 +153,12 @@ function MessageList({
                         )
                       }
                     />
+                  );
+                }
+
+                if (message.messageType === "proposal") {
+                  return (
+                    <ProposalMessage key={message._id} message={message} />
                   );
                 }
 

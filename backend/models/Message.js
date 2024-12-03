@@ -11,15 +11,20 @@ const messageSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  content: { 
+  content: {
     type: String,
     required: true,
   },
 
   messageType: {
     type: String,
-    enum: ["text", "negotiation", "system"],
+    enum: ["text", "proposal", "negotiation", "system"],
     default: "text",
+  },
+
+  proposal: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Proposal",
   },
 
   metadata: {
@@ -51,6 +56,13 @@ const messageSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+messageSchema.pre("save", async function (next) {
+  if (this.messageType === "proposal") {
+    this.proposal = await Proposal.findById(this.proposalId);
+  }
+  next();
 });
 
 const Message = mongoose.model("Message", messageSchema);
