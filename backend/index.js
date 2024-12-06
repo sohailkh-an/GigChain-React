@@ -105,6 +105,7 @@ io.on("connection", (socket) => {
   );
 
   socket.on("negotiation-update", async (data, callback) => {
+    console.log("Negotiation update event received");
     try {
       const { conversationId, sender, budget, deadline, notes } = data;
 
@@ -141,16 +142,16 @@ io.on("connection", (socket) => {
         const systemMessage = new Message({
           conversationId,
           sender: sender,
-          content: JSON.stringify({
-            type: "negotiation_update",
-            negotiation_ref: newNegotiation._id,
+          metadata: {
+            type: "update",
+            negotiationId: newNegotiation._id,
             round: 0,
             changes: {
               budget,
               deadline,
               notes,
             },
-          }),
+          },
           messageType: "negotiation",
         });
 
@@ -287,6 +288,9 @@ app.use("/api/gig", cors(), gigRoutes);
 
 const serviceRoutes = require("./routes/services");
 app.use("/api/service", cors(), serviceRoutes);
+
+const projectRoutes = require("./routes/projects");
+app.use("/api/projects", cors(), projectRoutes);
 
 const messageRoutes = require("./routes/conversations");
 app.use("/api/conversations", cors(), messageRoutes);

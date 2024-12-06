@@ -90,35 +90,52 @@ router.get("/:conversationId", authMiddleware, async (req, res) => {
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { participant, serviceId } = req.body;
-
-    const conversation = new Conversation({
-      participants: [req.user._id, participant],
-      serviceId: serviceId,
-    });
-    await conversation.save();
-
+    const { participant, serviceId, conversationId } = req.body;
+    console.log(
+      "conversationId in conversations api endpoint",
+      conversationId,
+      participant,
+      serviceId
+    );
     const { messageText, budget, deadline } = req.body.proposal;
 
-    const proposal = new Proposal({
-      conversationId: conversation._id,
-      messageText: messageText,
-      budget: budget,
-      deadline: deadline,
-    });
-    await proposal.save();
-
-    const message = new Message({
-      conversationId: conversation._id,
-      sender: req.user._id,
-      content: messageText,
-      messageType: "proposal",
-      proposal: proposal._id,
+    const existingConversation = await Conversation.findOne({
+      participants: { $in: [participant] },
     });
 
-    await message.save();
+    const createMessage = async (conversationId) => {
+      const proposal = new Proposal({
+        conversationId: conversationId,
+        messageText: messageText,
+        budget: budget,
+        deadline: deadline,
+      });
+      await proposal.save();
 
-    res.status(201).json(conversation);
+      const message = new Message({
+        conversationId: conversationId,
+        sender: req.user._id,
+        content: messageText,
+        messageType: "proposal",
+        proposal: proposal._id,
+      });
+
+      await message.save();
+
+      res.status(201).json(conversationId);
+    };
+
+    if (!existingConversation) {
+      const conversation = new Conversation({
+        participants: [req.user._id, participant],
+        serviceId: serviceId,
+      });
+      await conversation.save();
+      console.log("conversation", conversation);
+      createMessage(conversation._id);
+    } else {
+      createMessage(existingConversation._id);
+    }
   } catch (error) {
     console.error("Error creating conversation:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -150,7 +167,7 @@ router.get("/:conversationId/messages", async (req, res) => {
       })
       .populate({
         path: "negotiation",
-        select: "budget deadline notes",
+        select: "rounds",
       });
 
     console.log("Messages in messages api endpoint(New): ", messages);

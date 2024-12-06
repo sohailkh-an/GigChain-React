@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true,
+    required: false,
   },
 
   messageType: {
@@ -52,6 +52,7 @@ const messageSchema = new mongoose.Schema({
       response: {
         type: String,
         enum: ["accepted", "rejected", "pending"],
+        default: "pending",
       },
     },
   },

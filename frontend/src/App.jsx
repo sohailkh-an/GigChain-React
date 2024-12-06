@@ -24,6 +24,8 @@ import Footer from "../src/components/footer/footer";
 import "./App.css";
 import { ChatProvider } from "./contexts/ChatContext";
 import EnhancedProposalPage from "./components/enhancedProposalPage/enhancedProposalPage";
+import Projects from "./pages/Projects/projects";
+import ProjectDetails from "./pages/ProjectDetails/projectDetails";
 
 function AppContent() {
   const location = useLocation();
@@ -46,6 +48,14 @@ function AppContent() {
         <Route
           path="/profile"
           element={<ProtectedRoute element={CurrentUserProfile} />}
+        />
+        <Route
+          path="/projects"
+          element={<ProtectedRoute element={Projects} />}
+        />
+        <Route
+          path="/projects/:projectId"
+          element={<ProtectedRoute element={ProjectDetails} />}
         />
         <Route path="/inbox" element={<ProtectedRoute element={Inbox} />} />
         <Route

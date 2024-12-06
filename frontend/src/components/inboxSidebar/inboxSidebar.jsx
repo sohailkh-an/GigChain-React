@@ -8,7 +8,12 @@ function Sidebar({
   conversations,
   activeConversation,
   onSelectConversation,
+  fetchConversations,
 }) {
+  useEffect(() => {
+    fetchConversations();
+  }, [messages]);
+
   useEffect(() => {
     if (activeConversation) {
       const activeElement = document.getElementById(
@@ -31,42 +36,37 @@ function Sidebar({
     return timeB - timeA;
   });
 
-  const formatNegotiationMessage = (negotiation) => {
-    if (!negotiation) return "Negotiation details not available";
-
-    const changes = negotiation.changes;
-    if (negotiation.type === "update") {
-      const updates = [];
-      if (changes.budget) updates.push(`Budget: $${changes.budget}`);
-      if (changes.deadline)
-        updates.push(
-          `Deadline: ${new Date(changes.deadline).toLocaleDateString()}`
-        );
-      if (changes.notes) updates.push(`Notes: ${changes.notes}`);
-      return `Updated: ${updates.join(", ")}`;
-    }
-
-    if (negotiation.type === "response") {
-      return `Negotiation ${negotiation.response || "pending"}`;
-    }
-
-    if (negotiation.type === "final") {
-      return "Negotiation finalized";
-    }
-
-    return "Negotiation in progress";
-  };
-
   const getLastMessageTime = (convo) => {
-    console.log("Convo: ", convo);
-    let lastMessageTime;
-    lastMessageTime = new Date(
-      convo?.lastMessage?.timestamp
-    ).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+    const lastMessageTime = convo?.lastMessage?.timestamp;
+    if (!lastMessageTime) return '';
 
-    console.log("Last message time: ", lastMessageTime);
+    const messageDate = new Date(lastMessageTime);
+    const now = new Date();
 
-    return lastMessageTime;
+    const isToday =
+      messageDate.getDate() === now.getDate() &&
+      messageDate.getMonth() === now.getMonth() &&
+      messageDate.getFullYear() === now.getFullYear();
+
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const isYesterday =
+      messageDate.getDate() === yesterday.getDate() &&
+      messageDate.getMonth() === yesterday.getMonth() &&
+      messageDate.getFullYear() === yesterday.getFullYear();
+
+    if (isToday) {
+      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (isYesterday) {
+      return 'Yesterday';
+    } else {
+      return messageDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
   };
 
   const getLastMessage = (convo) => {

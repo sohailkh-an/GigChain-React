@@ -14,14 +14,6 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: false },
     profilePictureUrl: { type: String, required: false },
 
-    location: {
-      city: {
-        type: String,
-      },
-      country: {
-        type: String,
-      },
-    },
 
     verificationCode: String,
     verificationCodeExpires: Date,

@@ -124,6 +124,9 @@ export default function Navigation() {
                   ) : null}
                 </div>
               </Link>
+              <Link to="/projects" className={styles.navbar_link}>
+                <i className="fas fa-"></i> Projects
+              </Link>
               <Link to="/services" className={styles.navbar_link}>
                 <i className="fas fa-briefcase"></i> Services
               </Link>

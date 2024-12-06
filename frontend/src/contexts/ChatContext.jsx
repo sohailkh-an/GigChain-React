@@ -74,6 +74,8 @@ export const ChatProvider = ({ children }) => {
   };
 
   const handleNegotiation = async (negotiationData) => {
+
+    console.log("Negotiation handler called in ChatContext");
     const currentUserId = currentUser?._id || currentUser?.id;
 
     if (activeConversation) {
