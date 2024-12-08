@@ -26,8 +26,11 @@ import { ChatProvider } from "./contexts/ChatContext";
 import EnhancedProposalPage from "./components/enhancedProposalPage/enhancedProposalPage";
 import Projects from "./pages/Projects/projects";
 import ProjectDetails from "./pages/ProjectDetails/projectDetails";
+import AuthRedirect from "./components/authRedirect/authRedirect";
+import { useAuth } from "./contexts/AuthContext";
 
 function AppContent() {
+  const { currentUser } = useAuth();
   const location = useLocation();
   const showNavigation = ["/signIn", "/register"].includes(location.pathname);
 
@@ -37,21 +40,46 @@ function AppContent() {
 
   return (
     <>
-      {!showNavigation && <Navigation />}
+      {!showNavigation && <Navigation key={currentUser?.userType} />}
       <Routes>
-        <Route path="/" element={<ProtectedRoute element={HomePage} />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute allowedRoles={["employer"]} element={HomePage} />
+          }
+        />
         <Route path="/signIn" element={<PublicRoute element={SignInPage} />} />
+        <Route path="/auth/success/:token/:user" element={<AuthRedirect />} />
         <Route
           path="/register"
           element={<PublicRoute element={RegisterationPage} />}
         />
         <Route
-          path="/profile"
-          element={<ProtectedRoute element={CurrentUserProfile} />}
+          path="/employer-profile"
+          element={
+            <ProtectedRoute
+              allowedRoles={["employer"]}
+              element={CurrentUserProfile}
+            />
+          }
+        />
+        <Route
+          path="/freelancer-profile"
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={CurrentUserProfile}
+            />
+          }
         />
         <Route
           path="/projects"
-          element={<ProtectedRoute element={Projects} />}
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer", "employer"]}
+              element={Projects}
+            />
+          }
         />
         <Route
           path="/projects/:projectId"
@@ -59,8 +87,13 @@ function AppContent() {
         />
         <Route path="/inbox" element={<ProtectedRoute element={Inbox} />} />
         <Route
-          path="/create_service"
-          element={<ProtectedRoute element={CreateService} />}
+          path="/create-service"
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={CreateService}
+            />
+          }
         />
         <Route
           path="/enhancedProposalPage"
@@ -68,15 +101,30 @@ function AppContent() {
         />
         <Route
           path="/category/:mainCategory/:subCategory"
-          element={<ProtectedRoute element={CategoryGigResults} />}
+          element={
+            <ProtectedRoute
+              allowedRoles={["employer"]}
+              element={CategoryGigResults}
+            />
+          }
         />
         <Route
           path="/service/:serviceId/edit"
-          element={<ProtectedRoute element={EditService} />}
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={EditService}
+            />
+          }
         />
         <Route
           path="/services"
-          element={<ProtectedRoute element={ListServices} />}
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={ListServices}
+            />
+          }
         />
         <Route
           path="/service/:serviceId/chat"
@@ -84,8 +132,23 @@ function AppContent() {
         />
         <Route
           path="/service/:serviceId"
-          element={<ProtectedRoute element={ViewServiceDetails} />}
+          element={
+            <ProtectedRoute
+              allowedRoles={["employer"]}
+              element={ViewServiceDetails}
+            />
+          }
         />
+        {/* <Route
+          path="/freelancer/service/:serviceId"
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={ViewFreelancerServiceDetails}
+            />
+          }
+        /> */}
+
         <Route
           path="/user/:userId"
           element={<ProtectedRoute element={UserProfile} />}

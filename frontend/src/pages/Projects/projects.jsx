@@ -7,76 +7,30 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const Projects = () => {
   const { currentUser } = useAuth();
-  const [projects, setProjects] = useState([
-    {
-      _id: "1",
-      serviceId: { title: "Website Design" },
-      status: "in_progress",
-      clientId: { name: "Alice Johnson" },
-      budget: 1500,
-      deadline: "2024-06-15",
-      clientReview: { rating: 4.8 },
-    },
-    {
-      _id: "2",
-      serviceId: { title: "Mobile App Development" },
-      status: "pending",
-      clientId: { name: "Bob Smith" },
-      budget: 3000,
-      deadline: "2024-07-01",
-    },
-    {
-      _id: "3",
-      serviceId: { title: "SEO Optimization" },
-      status: "completed",
-      clientId: { name: "Charlie Davis" },
-      budget: 800,
-      deadline: "2024-05-20",
-      clientReview: { rating: 5.0 },
-    },
-    {
-      _id: "4",
-      serviceId: { title: "Graphic Design" },
-      status: "in_progress",
-      clientId: { name: "Dana Lee" },
-      budget: 1200,
-      deadline: "2024-06-30",
-    },
-    {
-      _id: "5",
-      serviceId: { title: "Content Writing" },
-      status: "completed",
-      clientId: { name: "Evan Brown" },
-      budget: 600,
-      deadline: "2024-05-10",
-      clientReview: { rating: 4.5 },
-    },
-  ]);
+  const [projects, setProjects] = useState([]);
 
   const [activeTab, setActiveTab] = useState("ongoing");
 
+  const fetchProjects = async () => {
+    try {
+      console.log("fetching projects for user", currentUser._id);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/projects/${currentUser._id}?userType=${currentUser.userType}`
+      );
+      setProjects(response.data.projects);
+      console.log("projects", response.data.projects);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/projects/get-projects`,
-          //   { userId: currentUser._id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setProjects(response.data.projects);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
+    console.log("fetching projects for user", currentUser._id);
     fetchProjects();
   }, []);
 
-  const filteredProjects = projects.filter((project) => {
+  const filteredProjects = projects?.filter((project) => {
     if (activeTab === "ongoing") {
       return project.status === "in_progress" || project.status === "pending";
     }
@@ -104,7 +58,7 @@ const Projects = () => {
       </div>
 
       <div className={styles.projectsGrid}>
-        {filteredProjects.map((project) => (
+        {filteredProjects?.map((project) => (
           <Link
             to={`/projects/${project._id}`}
             key={project._id}

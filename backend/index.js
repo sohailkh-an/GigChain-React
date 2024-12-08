@@ -7,11 +7,26 @@ const socketIO = require("socket.io");
 const Message = require("./models/Message");
 const Proposal = require("./models/Proposal");
 const Negotiation = require("./models/Negotiation");
+const passport = require("passport");
+const session = require("express-session");
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
-
 const app = express();
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./config/passport");
+
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: { origin: process.env.FRONTEND_URL },
@@ -20,7 +35,12 @@ const io = socketIO(server, {
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -280,8 +300,10 @@ app.get("/", (req, res) => {
 });
 
 const userRoutes = require("./routes/users");
-
 app.use("/api/users", cors(), userRoutes);
+
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", cors(), authRoutes);
 
 const gigRoutes = require("./routes/gig");
 app.use("/api/gig", cors(), gigRoutes);

@@ -49,6 +49,11 @@ const projectSchema = new mongoose.Schema({
     ref: "Conversation",
     required: true,
   },
+  proposalId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Proposal",
+    required: true,
+  },
 
   status: {
     type: String,

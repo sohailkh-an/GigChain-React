@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/proposalMessage.module.scss";
 import { useAuth } from "../../contexts/AuthContext";
-import { NegotiationModal } from "../Negotiation/negotiationModal/negotiationModal";
-import { NegotiationButton } from "../Negotiation/negotiationButton/negotiationButton";
 import axios from "axios";
 // import LoadingUI from "../inboxSidebar/loadingUI/loadingUI";
 
@@ -15,7 +13,7 @@ const ProposalMessage = ({
 }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const currentUserId = currentUser._id;
+  const currentUserId = currentUser._id || currentUser?.id;
 
   const { sender } = message;
 
@@ -25,8 +23,8 @@ const ProposalMessage = ({
   const [conversationDetails, setConversationDetails] = useState(null);
 
   const isCurrentUser = currentUserId === sender;
+  const projectStatus = conversationDetails?.status;
 
-  // console.log("Current user id and sender id", currentUserId, sender);
   const { messageText, budget, deadline } = message.proposal;
   setCurrentProposal(message.proposal);
 
@@ -72,14 +70,14 @@ const ProposalMessage = ({
   const handleAccept = async () => {
     try {
       const projectData = {
-        proposalId: message._id,
+        serviceId: conversationDetails.serviceId._id,
         clientId: currentUser._id,
         freelancerId: sender,
-        serviceId: conversationDetails.serviceId._id,
         conversationId: message.conversationId,
         status: "in_progress",
         budget: message.proposal.budget,
         deadline: message.proposal.deadline,
+        proposalId: message._id,
       };
 
       console.log("project data", projectData);
@@ -113,13 +111,13 @@ const ProposalMessage = ({
   return (
     <div className={styles.wrapper}>
       <div
-        className={`${styles.proposalMessage} ${
+        className={`${styles.proposalMessage}  ${
           isCurrentUser ? styles.sent : styles.received
-        }`}
+        } ${message.proposal.status === "accepted" ? styles.accepted : ""}`}
       >
         <div className={styles.statusBadge}>
           <span className={styles.dot}></span>
-          Proposal expires in 48h
+          Proposal
         </div>
 
         <p className={styles.messageText}>{messageText}</p>
@@ -145,7 +143,7 @@ const ProposalMessage = ({
           </div>
         </div>
 
-        {!isCurrentUser && (
+        {!isCurrentUser && projectStatus !== "accepted" ? (
           <div className={styles.buttonsContainer}>
             <button
               className={`${styles.button} ${styles.counterOffer}`}
@@ -164,7 +162,7 @@ const ProposalMessage = ({
               Accept
             </button>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const { sendVerificationEmail } = require("../utils/emailService");
 const axios = require("axios");
+const EmailVerification = require("../models/EmailVerification");
 
 const router = express.Router();
 
@@ -84,7 +85,7 @@ router.post("/register", async (req, res) => {
     "https://servicesthumbnailbucket.s3.ap-south-1.amazonaws.com/defaultCover.png";
 
   try {
-    const { firstName, lastName, userType, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     // const ip = req.ip;
 
@@ -102,7 +103,6 @@ router.post("/register", async (req, res) => {
     user = new User({
       firstName,
       lastName,
-      userType,
       email,
       password,
       profilePictureUrl: defaultAvatar,
@@ -114,15 +114,13 @@ router.post("/register", async (req, res) => {
       //   timezone: locationData.timezone,
       // },
 
-      verificationCode: undefined,
-      verificationCodeExpires: undefined,
-      isVerified: false,
+      isVerified: true,
     });
 
     await user.save();
 
     return res.status(200).json({
-      msg: "User registered successfully, please verify your email",
+      msg: "User registered successfully",
     });
   } catch (err) {
     console.error(err);
@@ -138,17 +136,21 @@ router.post("/send-verification", async (req, res) => {
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-    const verificationCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const verificationCodeExpires = Date.now() + 10 * 60 * 1000;
 
-    let user = await User.findOne({ email });
-    if (user) {
-      user.verificationCode = verificationCode;
-      user.verificationCodeExpires = verificationCodeExpires;
+    let emailVerification = await EmailVerification.findOne({ email });
+    if (emailVerification) {
+      emailVerification.verificationCode = verificationCode;
+      emailVerification.verificationCodeExpires = verificationCodeExpires;
     } else {
-      console.log("Problem in finding user, we'll handle this later");
+      emailVerification = new EmailVerification({
+        email,
+        verificitionCode: "96925",
+        verificationCodeExpires,
+      });
     }
 
-    await sendVerificationEmail(email, verificationCode);
+    // await sendVerificationEmail(email, verificationCode);
 
     res.json({ message: "Verification code sent to your email" });
   } catch (err) {
@@ -163,14 +165,22 @@ router.post("/send-verification", async (req, res) => {
   }
 });
 
-router.get("/verify-code", async (req, res) => {
+router.post("/verify-code", async (req, res) => {
   try {
     const { email, verificationCode } = req.body;
-    const user = await User.findOne({ email });
+    console.log("Email in verify-code endpoint:", email);
+    let user = await EmailVerification.findOne({ email });
+
     console.log("User in verify-code endpoint:", user);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
+
+    console.log("Verification code in verify-code endpoint:", verificationCode);
+    console.log(
+      "User verification code in verify-code endpoint:",
+      user.verificationCode
+    );
     if (user.verificationCode !== verificationCode) {
       return res.status(400).json({ msg: "Invalid verification code" });
     }
@@ -187,9 +197,40 @@ router.get("/verify-code", async (req, res) => {
     res.status(200).json(res.data);
   } catch (err) {
     console.error("Error verifying verification code", err);
-    res.status(500).json({ msg: "Internal server error" });
+    res.status(500).json({
+      message: "Error verifying verification code",
+      error: err.message || err.toString(),
+    });
   }
 });
+
+// router.get("/verify-code", async (req, res) => {
+//   try {
+//     const { email, verificationCode } = req.body;
+//     const user = await User.findOne({ email });
+//     console.log("User in verify-code endpoint:", user);
+//     if (!user) {
+//       return res.status(404).json({ msg: "User not found" });
+//     }
+//     if (user.verificationCode !== verificationCode) {
+//       return res.status(400).json({ msg: "Invalid verification code" });
+//     }
+//     if (user.verificationCodeExpires < Date.now()) {
+//       return res.status(400).json({ msg: "Verification code expired" });
+//     }
+
+//     console.log("User data for payload:", JSON.stringify(user, null, 2));
+
+//     res.data = {
+//       success: true,
+//       message: "Verification code verified successfully",
+//     };
+//     res.status(200).json(res.data);
+//   } catch (err) {
+//     console.error("Error verifying verification code", err);
+//     res.status(500).json({ msg: "Internal server error" });
+//   }
+// });
 
 router.post("/register-google", async (req, res) => {
   const defaultAvatar =
@@ -271,6 +312,12 @@ router.post("/register-google", async (req, res) => {
   }
 });
 
+router.get("/check-availability", async (req, res) => {
+  const { email } = req.query;
+  const user = await User.findOne({ email });
+  res.json({ available: !user });
+});
+
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -310,9 +357,6 @@ router.post("/signin", async (req, res) => {
           userType: user.userType,
           profilePictureUrl: user.profilePictureUrl,
           coverPictureUrl: user.coverPictureUrl,
-          expertise: user.expertise,
-          languages: user.languages,
-          about: user.about,
         },
       };
 
@@ -337,6 +381,21 @@ router.post("/signin", async (req, res) => {
   } catch (err) {
     console.error("Server error in signin route:", err);
     res.status(500).json({ msg: "Server error" });
+  }
+});
+
+router.post("/switchRole", async (req, res) => {
+  try {
+    const { role, userId } = req.body;
+    console.log("Switching to role:", role, "for user:", userId);
+    const user = await User.findById(userId);
+    console.log("User in switchRole endpoint:", user);
+    user.userType = role;
+    await user.save();
+    res.status(200).json({ message: "User role switched successfully" });
+  } catch (error) {
+    console.error("Error switching user role:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

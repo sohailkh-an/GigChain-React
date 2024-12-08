@@ -38,7 +38,7 @@ function Sidebar({
 
   const getLastMessageTime = (convo) => {
     const lastMessageTime = convo?.lastMessage?.timestamp;
-    if (!lastMessageTime) return '';
+    if (!lastMessageTime) return "";
 
     const messageDate = new Date(lastMessageTime);
     const now = new Date();
@@ -57,14 +57,17 @@ function Sidebar({
       messageDate.getFullYear() === yesterday.getFullYear();
 
     if (isToday) {
-      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return messageDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (isYesterday) {
-      return 'Yesterday';
+      return "Yesterday";
     } else {
-      return messageDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+      return messageDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
     }
   };
@@ -73,8 +76,6 @@ function Sidebar({
     if (!convo.lastMessage) return "No messages yet";
 
     switch (convo.lastMessage.messageType) {
-      case "negotiation":
-        return "💼 Negotiation Update";
       case "proposal":
         return "💼 Proposal";
       case "text":
@@ -90,9 +91,9 @@ function Sidebar({
     <div className={styles.sidebar}>
       {sortedConversations.map((convo) => {
         const otherUser = convo.participants.find(
-          (participant) =>
-            participant._id !== (currentUser?._id || currentUser?.id)
+          (participant) => participant._id !== currentUser?._id
         );
+        console.log("convo", convo);
 
         return (
           <div

@@ -66,7 +66,6 @@ function Inbox() {
                 handleNegotiation={handleNegotiation}
                 conversationId={activeConversation}
                 fetchConversations={fetchConversations}
-                F
               />
               <MessageInput
                 onSendMessage={handleSendMessage}

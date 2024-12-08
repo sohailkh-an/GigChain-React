@@ -19,7 +19,6 @@ export const NegotiationModal = ({
   );
   const [notes, setNotes] = useState("");
   const [conversationDetails, setConversationDetails] = useState(null);
-  const [serviceId, setServiceId] = useState(null);
 
   useEffect(() => {
     if (currentProposal) {
@@ -56,17 +55,12 @@ export const NegotiationModal = ({
     fetchConversationDetails();
   }, [conversationId]);
 
-  const participant = conversationDetails?.participants.find(
-    (participant) =>
-      participant._id !== currentUser.id || participant._id !== currentUser._id
-  );
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/conversations`,
+        `${import.meta.env.VITE_API_URL}/api/conversations/counter-offer`,
         {
           method: "POST",
           headers: {
@@ -75,8 +69,8 @@ export const NegotiationModal = ({
           },
           body: JSON.stringify({
             conversationId: conversationId,
-            participant: participant,
-            serviceId: serviceId,
+            sender: currentUser._id,
+            serviceId: conversationDetails.serviceId._id,
             proposal: {
               messageText: notes,
               budget: newBudget,

@@ -1,57 +1,39 @@
-// Start of Selection
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { format } from "date-fns";
 import styles from "./styles/projectDetails.module.scss";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
+  const [isClient, setIsClient] = useState(false);
+  console.log("Current userType in project details:", isClient);
 
   useEffect(() => {
-    // Example project data to mimic API response
-    const exampleProject = {
-      _id: "proj123",
-      serviceId: { title: "Mobile App Development" },
-      status: "in_progress",
-      clientId: {
-        name: "Jane Doe",
-        avatar: "/avatars/jane-doe.png",
-      },
-      budget: 5000,
-      deadline: "2024-12-31",
-      createdAt: "2024-01-15",
-      updatedAt: "2024-06-20",
-      deliverables: [
-        {
-          status: "submitted",
-          submittedAt: "2024-07-01",
-          description: "Initial wireframes and design mockups.",
-        },
-        {
-          status: "pending",
-          description: "Final app development and testing.",
-        },
-      ],
-      clientReview: {
-        rating: 4.7,
-        comment: "Great progress so far! Excited to see the final product.",
-      },
-    };
+    try {
+      setLoading(true);
+      const fetchProject = async () => {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/projects/project/${projectId}`
+        );
+        setProject(response.data.project);
+        setIsClient(
+          response.data.project.clientId._id.toString() ===
+            (currentUser._id.toString() || currentUser?.id.toString())
+        );
+      };
 
-    // Simulate data fetching
-    const loadProjectDetails = () => {
-      // Mimicking an API call delay
-      setTimeout(() => {
-        setProject(exampleProject);
-        setLoading(false);
-      }, 1000);
-    };
-
-    loadProjectDetails();
-  }, [projectId]);
+      fetchProject();
+    } catch (error) {
+      console.error("Error fetching project details:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [projectId, currentUser]);
 
   if (loading) {
     return (
@@ -169,22 +151,50 @@ const ProjectDetails = () => {
           )}
         </div>
 
-        <aside className={styles.sidebar}>
-          <div className={styles.clientInfo}>
-            <h3>Client Information</h3>
-            <div className={styles.clientDetails}>
-              <img
-                src={project.clientId.avatar || "/default-avatar.png"}
-                alt={project.clientId.name}
-                className={styles.clientAvatar}
-              />
-              <div>
-                <h4>{project.clientId.name}</h4>
-                <button className={styles.messageButton}>Message Client</button>
+        {currentUser.userType === "freelancer" ? (
+          <aside className={styles.sidebar}>
+            <div className={styles.clientInfo}>
+              <h3>Client Information</h3>
+              <div className={styles.clientDetails}>
+                <img
+                  src={project.clientId.profilePictureUrl}
+                  alt={project.clientId.name}
+                  className={styles.clientAvatar}
+                />
+                <div>
+                  <h4>
+                    {project.clientId.firstName} {project.clientId.lastName}
+                  </h4>
+                  <button className={styles.messageButton}>
+                    Message Client
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        ) : (
+          <aside className={styles.sidebar}>
+            <div className={styles.freelancerInfo}>
+              <h3>Freelancer Information</h3>
+              <div className={styles.freelancerDetails}>
+                <img
+                  src={project.freelancerId.profilePictureUrl}
+                  alt={project.freelancerId.name}
+                  className={styles.freelancerAvatar}
+                />
+                <div>
+                  <h4>
+                    {project.freelancerId.firstName}{" "}
+                    {project.freelancerId.lastName}
+                  </h4>
+                  <button className={styles.messageButton}>
+                    Message Freelancer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </aside>
+        )}
       </div>
     </div>
   );
