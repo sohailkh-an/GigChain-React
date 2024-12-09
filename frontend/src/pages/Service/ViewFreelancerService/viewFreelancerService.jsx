@@ -2,8 +2,8 @@ import { useEffect, useState, useContext } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import LoadingSkeleton from "./viewServiceDetailsSkeloton/viewServiceDetailsSkeleton";
-import styles from "./styles/viewServiceDetails.module.scss";
+import LoadingSkeleton from "../ViewServiceDetails/viewServiceDetailsSkeloton/viewServiceDetailsSkeleton";
+import styles from "./styles/viewFreelancerService.module.scss";
 import Review from "../../../components/review/review";
 
 import { useAuth } from "../../../contexts/AuthContext";
@@ -14,7 +14,7 @@ import pImage2 from "../../../assets/pImage2.jpg";
 import pImage3 from "../../../assets/pImage3.jpg";
 import pImage4 from "../../../assets/pImage4.jpg";
 
-const ViewServiceDetails = () => {
+const ViewFreelancerService = () => {
   const { currentUser } = useAuth();
   const { serviceId } = useParams();
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const ViewServiceDetails = () => {
   }, [serviceId]);
 
   const handleEdit = () => {
-    navigate(`/service/${serviceId}/edit`);
+    navigate(`/services/${serviceId}/edit`);
   };
 
   const handleMessageInput = (e) => {
@@ -211,87 +211,6 @@ const ViewServiceDetails = () => {
             </p>
           </div>
         </div>
-        <div className={styles.rightColumn}>
-          <div className={styles.freelancerProfile}>
-            <div className={styles.profileTopContainer}>
-              <div className={styles.profilePicAndRatingContainer}>
-                <div className={styles.profilePicContainer}>
-                  <Link to={`/user/${serviceDetails.user}`}>
-                    <img
-                      src={providerDetails.profilePictureUrl}
-                      alt={providerDetails.username}
-                      className={styles.profilePic}
-                    />
-                  </Link>
-                </div>
-                <div className={styles.ratingAndNameContainer}>
-                  <h2 className={styles.designerName}>
-                    {providerDetails?.firstName} {providerDetails?.lastName}
-                  </h2>
-                  <span className={styles.ratingScore}>4.8 ⭐⭐⭐⭐ (427)</span>
-                </div>
-              </div>
-              <div className={styles.miscInfoContainer}>
-                <span className={styles.time}>
-                  {providerDetails?.localTime
-                    ? providerDetails?.localTime
-                    : "N/A"}{" "}
-                </span>
-                <p className={styles.location}>
-                  {providerDetails?.location?.city
-                    ? providerDetails?.location?.city
-                    : "N/A"}
-                  ,{" "}
-                  {providerDetails?.location?.country
-                    ? providerDetails?.location?.country
-                    : "N/A"}
-                </p>
-                <p className={styles.joinDate}>
-                  Joined:{" "}
-                  {providerDetails?.joinedAt
-                    ? new Date(providerDetails?.joinedAt).toLocaleDateString()
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className={styles.messageForm}>
-            <h3>Send a private message</h3>
-            <textarea
-              className={styles.messageInput}
-              onChange={handleMessageInput}
-              placeholder={`Hi! ${providerDetails?.firstName} ${providerDetails?.lastName} i noticed your profile and would like to offer you my project`}
-            ></textarea>
-            <div className={styles.budgetSection}>
-              <label htmlFor="budget">
-                My Budget (Minimum ${serviceDetails.startingPrice})
-              </label>
-              <div className={styles.budgetInput}>
-                <span className={styles.currency}>$</span>
-                <input
-                  type="text"
-                  id="budget"
-                  defaultValue={serviceDetails.startingPrice}
-                  min={serviceDetails.startingPrice}
-                  onChange={handleBudgetInput}
-                />
-              </div>
-            </div>
-            <div className={styles.deadlineSection}>
-              <label htmlFor="deadline">Deadline</label>
-              <input
-                type="date"
-                id="deadline"
-                onChange={handleDeadlineInput}
-                required
-                className={styles.deadlineInput}
-              />
-            </div>
-            <button className={styles.sendButton} onClick={handleSendProposal}>
-              Send
-            </button>
-          </div>
-        </div>
       </div>
       <div className={styles.reviewsContainer}>
         <h2>Recent Reviews</h2>
@@ -303,7 +222,7 @@ const ViewServiceDetails = () => {
   );
 };
 
-export default ViewServiceDetails;
+export default ViewFreelancerService;
 
 const reviews = [
   {

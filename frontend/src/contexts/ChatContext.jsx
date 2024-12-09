@@ -115,7 +115,7 @@ export const ChatProvider = ({ children }) => {
       if (currentUser?.userType === "freelancer") {
         const filteredConversations = data.filter((convo) => {
           return convo.freelancerId === currentUser._id || currentUser?.id;
-        });
+      });
         setConversations(filteredConversations);
         console.log("Filtered conversations:", filteredConversations);
       } else if (currentUser?.userType === "employer") {

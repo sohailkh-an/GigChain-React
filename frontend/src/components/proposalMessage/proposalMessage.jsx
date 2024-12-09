@@ -71,13 +71,13 @@ const ProposalMessage = ({
     try {
       const projectData = {
         serviceId: conversationDetails.serviceId._id,
-        clientId: currentUser._id,
-        freelancerId: sender,
+        employerId: sender,
+        freelancerId: currentUser._id,
         conversationId: message.conversationId,
         status: "in_progress",
         budget: message.proposal.budget,
         deadline: message.proposal.deadline,
-        proposalId: message._id,
+        proposalId: message.proposal._id,
       };
 
       console.log("project data", projectData);

@@ -9,7 +9,7 @@ const authMiddleware = require("../middleware/auth");
 router.post("/accept-proposal", authMiddleware, async (req, res) => {
   const {
     proposalId,
-    clientId,
+    employerId,
     freelancerId,
     serviceId,
     conversationId,
@@ -17,10 +17,11 @@ router.post("/accept-proposal", authMiddleware, async (req, res) => {
     deadline,
     status,
   } = req.body;
+
   try {
     const project = await Project.create({
       serviceId,
-      clientId,
+      employerId,
       freelancerId,
       conversationId,
       proposalId,
@@ -29,15 +30,20 @@ router.post("/accept-proposal", authMiddleware, async (req, res) => {
       deadline,
     });
 
+    console.log("project created", project);
+
     await Conversation.findByIdAndUpdate(conversationId, {
       projectId: project._id,
       status: "accepted",
     });
 
     try {
-      const proposal = await Proposal.findById(proposalId);
+      console.log("proposalId", proposalId);
+      let proposal = await Proposal.findOne({ _id: proposalId });
+      console.log("proposal", proposal);
       proposal.status = "accepted";
       await proposal.save();
+      console.log("proposal updated", proposal);
     } catch (error) {
       console.error("Error updating proposal status:", error);
     }
@@ -88,7 +94,7 @@ router.get("/project/:projectId", async (req, res) => {
   try {
     const project = await Project.findById(projectId)
       .populate("serviceId")
-      .populate("clientId", "firstName lastName profilePictureUrl")
+      .populate("employerId", "firstName lastName profilePictureUrl")
       .populate("freelancerId", "firstName lastName profilePictureUrl");
     res.status(200).json({ project });
     console.log("project", project);

@@ -28,6 +28,8 @@ import Projects from "./pages/Projects/projects";
 import ProjectDetails from "./pages/ProjectDetails/projectDetails";
 import AuthRedirect from "./components/authRedirect/authRedirect";
 import { useAuth } from "./contexts/AuthContext";
+import ViewFreelancerService from "./pages/Service/ViewFreelancerService/viewFreelancerService";
+import FreelancerProfile from "./pages/Profile/freelancer/freelancer_profile";
 
 function AppContent() {
   const { currentUser } = useAuth();
@@ -68,7 +70,7 @@ function AppContent() {
           element={
             <ProtectedRoute
               allowedRoles={["freelancer"]}
-              element={CurrentUserProfile}
+              element={FreelancerProfile}
             />
           }
         />
@@ -95,6 +97,17 @@ function AppContent() {
             />
           }
         />
+
+        {/* <Route
+          path="/freelancer-service/:serviceId"
+          element={
+            <ProtectedRoute
+              allowedRoles={["freelancer"]}
+              element={ViewFreelancerService}
+            />
+          }
+        /> */}
+
         <Route
           path="/enhancedProposalPage"
           element={<ProtectedRoute element={EnhancedProposalPage} />}
@@ -139,15 +152,15 @@ function AppContent() {
             />
           }
         />
-        {/* <Route
+        <Route
           path="/freelancer/service/:serviceId"
           element={
             <ProtectedRoute
               allowedRoles={["freelancer"]}
-              element={ViewFreelancerServiceDetails}
+              element={ViewFreelancerService}
             />
           }
-        /> */}
+        />
 
         <Route
           path="/user/:userId"

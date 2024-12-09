@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const Freelancer = require("../models/Freelancer");
+const Employer = require("../models/Employer");
 const { S3Client } = require("@aws-sdk/client-s3");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -41,6 +43,32 @@ const upload = multer({
   }),
 });
 
+router.put("/:userId/update-skills", async (req, res) => {
+  const { skills } = req.body;
+  const userId = req.params.userId;
+  let user = await Freelancer.findOne({ user: userId });
+  if (!user) {
+    user = new Freelancer({ user: userId });
+  }
+
+  user.skills = skills;
+  await user.save();
+  res.status(200).json({ msg: "Skills updated successfully" });
+});
+
+router.put("/:userId/update-languages", async (req, res) => {
+  const { languages } = req.body;
+  const userId = req.params.userId;
+  const user = await Freelancer.findOne({ user: userId });
+  if (!user) {
+    user = new Freelancer({ user: userId });
+  }
+
+  user.languages = languages;
+  await user.save();
+  res.status(200).json({ msg: "Languages updated successfully" });
+});
+
 router.get("/user/:userId", async (req, res) => {
   console.log("This is the userid in user api endpoint ", req.params.userId);
   try {
@@ -51,7 +79,13 @@ router.get("/user/:userId", async (req, res) => {
     }
     console.log("User in user api endpoint:", user);
 
-    res.json({ user });
+    if (user.userType === "freelancer") {
+      const freelancer = await Freelancer.findOne({ user: userId });
+      res.json({ user, freelancer });
+    } else if (user.userType === "employer") {
+      const employer = await Employer.findOne({ user: userId });
+      res.json({ user, employer });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -138,21 +172,34 @@ router.post("/send-verification", async (req, res) => {
     ).toString();
     const verificationCodeExpires = Date.now() + 10 * 60 * 1000;
 
-    let emailVerification = await EmailVerification.findOne({ email });
-    if (emailVerification) {
-      emailVerification.verificationCode = verificationCode;
-      emailVerification.verificationCodeExpires = verificationCodeExpires;
-    } else {
-      emailVerification = new EmailVerification({
+    let emailVerification;
+    try {
+      emailVerification = await EmailVerification.create({
         email,
-        verificitionCode: "96925",
-        verificationCodeExpires,
+        verificationCode: "96925",
+        verificationCodeExpires: Date.now() + 10 * 60 * 1000,
       });
+
+      res.status(200).json({ msg: "Verification code sent to your email" });
+    } catch (err) {
+      console.error("Error finding user in send-verification endpoint:", err);
+      return res.status(500).json({ msg: "Internal server error" });
     }
+
+    // if (emailVerification) {
+    //   emailVerification.verificationCode = verificationCode;
+    //   emailVerification.verificationCodeExpires = verificationCodeExpires;
+    // } else {
+    //   emailVerification = new EmailVerification({
+    //     email,
+    //     verificitionCode: "96925",
+    //     verificationCodeExpires,
+    //   });
+    // }
 
     // await sendVerificationEmail(email, verificationCode);
 
-    res.json({ message: "Verification code sent to your email" });
+    // res.json({ message: "Verification code sent to your email" });
   } catch (err) {
     console.error(
       "Error sending verification code (Error occured in backend)",
@@ -169,7 +216,14 @@ router.post("/verify-code", async (req, res) => {
   try {
     const { email, verificationCode } = req.body;
     console.log("Email in verify-code endpoint:", email);
-    let user = await EmailVerification.findOne({ email });
+
+    let user;
+    try {
+      user = await EmailVerification.findOne({ email });
+    } catch (err) {
+      console.error("Error finding user in verify-code endpoint:", err);
+      return res.status(500).json({ msg: "Internal server error" });
+    }
 
     console.log("User in verify-code endpoint:", user);
     if (!user) {

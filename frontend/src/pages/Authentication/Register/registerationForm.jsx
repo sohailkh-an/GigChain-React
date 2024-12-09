@@ -28,7 +28,7 @@ export default function RegistrationForm() {
   });
   const [errors, setErrors] = useState({});
 
-  // const isResendDisabled = remainingTime > 0;
+  // const isResendDisabled = remainingTime > 0;  ]=[-0987654321]0
 
   const handleChangeEmail = () => {
     setEmailVerified(false);
@@ -391,9 +391,9 @@ export default function RegistrationForm() {
                   </div>
                 )}
 
-                {/* {emailVerified && (
+                {emailVerified && (
                   <p className={styles.verifiedBadge}>✓ Email Verified</p>
-                )} */}
+                )}
 
                 {notification.message && (
                   <p

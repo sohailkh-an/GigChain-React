@@ -90,10 +90,19 @@ function Sidebar({
   return (
     <div className={styles.sidebar}>
       {sortedConversations.map((convo) => {
-        const otherUser = convo.participants.find(
-          (participant) => participant._id !== currentUser?._id
-        );
+        const otherUser = convo.participants.find((participant) => {
+          console.log("participant", participant._id);
+          console.log("currentUser", currentUser?._id);
+
+          return participant._id !== currentUser?._id;
+        });
         console.log("convo", convo);
+        console.log("otherUser", otherUser);
+        console.log(
+          "currentUserId and otherUserId",
+          currentUser?._id,
+          otherUser
+        );
 
         return (
           <div

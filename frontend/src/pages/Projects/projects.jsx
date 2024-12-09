@@ -12,8 +12,8 @@ const Projects = () => {
   const [activeTab, setActiveTab] = useState("ongoing");
 
   const fetchProjects = async () => {
+    console.log("fetchprojects for user", currentUser._id);
     try {
-      console.log("fetching projects for user", currentUser._id);
       const token = localStorage.getItem("token");
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/projects/${currentUser._id}?userType=${currentUser.userType}`
@@ -73,7 +73,7 @@ const Projects = () => {
             <div className={styles.projectInfo}>
               <div className={styles.infoItem}>
                 <span className={styles.label}>Client:</span>
-                <span>{project.clientId.name}</span>
+                <span>{project.employerId.name}</span>
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.label}>Budget:</span>

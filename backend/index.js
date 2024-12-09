@@ -25,6 +25,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 require("./config/passport");
 
 const server = http.createServer(app);
@@ -41,8 +44,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(express.json());
 
 mongoose
   .connect(process.env.MONGODB_URI, {})
@@ -309,7 +310,7 @@ const gigRoutes = require("./routes/gig");
 app.use("/api/gig", cors(), gigRoutes);
 
 const serviceRoutes = require("./routes/services");
-app.use("/api/service", cors(), serviceRoutes);
+app.use("/api/services", cors(), serviceRoutes);
 
 const projectRoutes = require("./routes/projects");
 app.use("/api/projects", cors(), projectRoutes);

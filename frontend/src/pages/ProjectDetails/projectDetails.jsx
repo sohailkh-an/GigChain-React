@@ -157,13 +157,13 @@ const ProjectDetails = () => {
               <h3>Client Information</h3>
               <div className={styles.clientDetails}>
                 <img
-                  src={project.clientId.profilePictureUrl}
-                  alt={project.clientId.name}
+                  src={project.employerId.profilePictureUrl}
+                  alt={project.employerId.name}
                   className={styles.clientAvatar}
                 />
                 <div>
                   <h4>
-                    {project.clientId.firstName} {project.clientId.lastName}
+                    {project.employerId.firstName} {project.employerId.lastName}
                   </h4>
                   <button className={styles.messageButton}>
                     Message Client
